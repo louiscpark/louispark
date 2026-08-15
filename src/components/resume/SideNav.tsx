@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { SECTIONS } from "@/content/resume";
 
 export function SideNav() {
-  const [active, setActive] = useState(SECTIONS[0].id);
+  const [active, setActive] = useState<string>(SECTIONS[0]?.id ?? "intro");
 
   useEffect(() => {
     const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(
