@@ -63,7 +63,7 @@ export function ProofAsset({ proof }: { proof: Proof }) {
 }
 
 /** 16:9 embed slot. Accepts YouTube / Vimeo / Loom URLs. */
-export function VideoFrame({ src, title }: { src?: string; title: string }) {
+export function VideoFrame({ src, title }: { src?: string | undefined; title: string }) {
   if (!src) {
     return (
       <div className="flex aspect-video w-full items-center justify-center border border-dashed border-border bg-muted/50">
