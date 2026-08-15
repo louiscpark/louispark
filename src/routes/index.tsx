@@ -176,7 +176,10 @@ function Proof({ onOpen }: { onOpen: (m: Metric) => void }) {
             </Reveal>
           );
         })}
+        {/* filler keeps the ruled grid complete at 3 columns */}
+        <div className="hidden bg-card xl:block" aria-hidden />
       </div>
+
     </section>
   );
 }
