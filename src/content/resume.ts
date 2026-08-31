@@ -20,10 +20,23 @@ export type Proof = {
   caption?: string;
 };
 
+export type MetricNumber = {
+  prefix?: string;
+  /** final value the counter lands on */
+  value: number;
+  suffix?: string;
+  decimals?: number;
+  /** starting value — only used for ranges like 3.5 → 4.4 */
+  from?: number;
+  /** static text rendered before the counter (e.g. "3.5 → ") */
+  before?: string;
+};
+
 export type Metric = {
   value: string;
   label: string;
   proof: Proof;
+  number: MetricNumber;
 };
 
 export const METRICS: Metric[] = [
@@ -31,42 +44,50 @@ export const METRICS: Metric[] = [
     value: "$12.9M",
     label: "Annual revenue generated within 12 months",
     proof: { type: "none" },
+    number: { prefix: "$", value: 12.9, suffix: "M", decimals: 1 },
   },
   {
     value: "$25M",
     label:
       "Real estate investment funding secured (Kiavi, Easy Street Capital, KPRE Group)",
     proof: { type: "none" },
+    number: { prefix: "$", value: 25, suffix: "M" },
   },
   {
     value: "$9M+",
     label: "Assets acquired in Year 1 under a new division",
     proof: { type: "none" },
+    number: { prefix: "$", value: 9, suffix: "M+" },
   },
   {
     value: "60,000",
     label: "Lead database activated with zero added headcount",
     proof: { type: "none" },
+    number: { value: 60000 },
   },
   {
     value: "48",
     label: "Off-market California properties acquired, $200K+ ARV each",
     proof: { type: "none" },
+    number: { value: 48 },
   },
   {
     value: "+34%",
     label: "Customer LTV increase after repositioning to residential",
     proof: { type: "none" },
+    number: { prefix: "+", value: 34, suffix: "%" },
   },
   {
     value: "3.5 → 4.4",
     label: "Google rating, 9 to 150 reviews in 2 months",
     proof: { type: "none" },
+    number: { before: "3.5 → ", value: 4.4, from: 3.5, decimals: 1 },
   },
   {
     value: "48,000+",
     label: "Real estate agents reached via email campaign",
     proof: { type: "none" },
+    number: { value: 48000, suffix: "+" },
   },
 ];
 

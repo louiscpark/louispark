@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { Reveal } from "@/components/resume/Reveal";
 import { SideNav } from "@/components/resume/SideNav";
 import {
