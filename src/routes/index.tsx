@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { Reveal } from "@/components/resume/Reveal";
 import { SideNav } from "@/components/resume/SideNav";
 import {
@@ -167,7 +168,12 @@ function Proof({ onOpen }: { onOpen: (m: Metric) => void }) {
                   clickable && "transition-colors hover:bg-secondary",
                 )}
               >
-                <span className="numeral text-5xl lg:text-6xl">{m.value}</span>
+                <span className="numeral text-5xl lg:text-6xl">
+                  <AnimatedNumber
+                    {...m.number}
+                    delay={i * 80}
+                  />
+                </span>
                 <span className="mt-5 max-w-[26ch] text-sm leading-relaxed text-muted-foreground">
                   {m.label}
                 </span>
