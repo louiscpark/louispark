@@ -28,8 +28,6 @@ export type MetricNumber = {
   decimals?: number;
   /** starting value — only used for ranges like 3.5 → 4.4 */
   from?: number;
-  /** static text rendered before the counter (e.g. "3.5 → ") */
-  before?: string;
 };
 
 export type Metric = {
