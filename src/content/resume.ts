@@ -81,7 +81,7 @@ export const METRICS: Metric[] = [
     value: "3.5 → 4.4",
     label: "Google rating, 9 to 150 reviews in 2 months",
     proof: { type: "none" },
-    number: { before: "3.5 → ", value: 4.4, from: 3.5, decimals: 1 },
+    number: { prefix: "3.5 → ", value: 4.4, from: 3.5, decimals: 1 },
   },
   {
     value: "48,000+",
