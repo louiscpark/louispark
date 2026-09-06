@@ -260,6 +260,10 @@
     opacity: 1;
   }
 
+  .stack-tool:hover .stack-fallback {
+    color: var(--primary);
+  }
+
   .stack-fallback {
     line-height: 1;
   }
