@@ -326,7 +326,7 @@ function Stack() {
   return (
     <section
       id="stack"
-      className={cn(shell, "stack-section relative overflow-hidden border-y border-border py-12")}
+      className={cn(shell, "stack-section relative overflow-hidden border-y border-border py-12 lg:py-9")}
     >
       <div className="stack-grid" aria-hidden />
       <div className="relative">
