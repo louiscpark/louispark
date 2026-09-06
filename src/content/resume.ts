@@ -140,6 +140,52 @@ export const DIVISIONS: Division[] = [
   },
 ];
 
+export type StackTool = {
+  name: string;
+  slug?: "meta" | "googleads" | "n8n" | "make" | "claude" | "figma" | "notion" | "asana";
+  brandHex?: string;
+};
+
+export type StackGroup = {
+  label: string;
+  tools: StackTool[];
+};
+
+export const STACK_GROUPS: StackGroup[] = [
+  {
+    label: "Demand",
+    tools: [
+      { name: "Meta Ads", slug: "meta", brandHex: "0467DF" },
+      { name: "Google Ads", slug: "googleads", brandHex: "4285F4" },
+    ],
+  },
+  {
+    label: "Automation",
+    tools: [
+      { name: "n8n", slug: "n8n", brandHex: "EA4B71" },
+      { name: "Make.com", slug: "make", brandHex: "6D00CC" },
+      { name: "Follow Up Boss" },
+    ],
+  },
+  {
+    label: "AI & Build",
+    tools: [
+      { name: "Claude Cowork", slug: "claude", brandHex: "D97757" },
+      { name: "Lovable" },
+      { name: "Bolt.new" },
+      { name: "HeyGen" },
+    ],
+  },
+  {
+    label: "Design & Ops",
+    tools: [
+      { name: "Figma", slug: "figma", brandHex: "F24E1E" },
+      { name: "Notion", slug: "notion", brandHex: "000000" },
+      { name: "Asana", slug: "asana", brandHex: "F06A6A" },
+    ],
+  },
+];
+
 // --- Rewrite this block for every application ------------------------------
 export const company = {
   companyName: "[Company]",
@@ -168,6 +214,7 @@ export const SECTIONS = [
   { id: "home-ready-program", label: "Home-Ready Program" },
   { id: "eagle-pacific-properties", label: "Eagle Pacific Properties" },
   { id: "eagle-pacific-real-estate", label: "Eagle Pacific Real Estate" },
+  { id: "stack", label: "Stack" },
   { id: "for-company", label: `For ${company.companyName}` },
   { id: "contact", label: "Contact" },
 ];

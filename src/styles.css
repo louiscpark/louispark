@@ -206,8 +206,77 @@
   }
 }
 
+@keyframes stack-grid-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 24px 24px;
+  }
+}
+
+@layer components {
+  .stack-grid {
+    position: absolute;
+    inset: 0;
+    color: var(--foreground);
+    opacity: 0.035;
+    background-image:
+      linear-gradient(to right, currentColor 1px, transparent 1px),
+      linear-gradient(to bottom, currentColor 1px, transparent 1px);
+    background-size: 24px 24px;
+    animation: stack-grid-drift 18s linear infinite;
+    pointer-events: none;
+  }
+
+  .stack-tool,
+  .stack-logo-neutral,
+  .stack-logo-brand {
+    transition: color 200ms ease, opacity 200ms ease;
+  }
+
+  .stack-tool {
+    opacity: 0.45;
+  }
+
+  .stack-tool:hover {
+    color: var(--foreground);
+    opacity: 1;
+  }
+
+  .stack-logo-neutral {
+    opacity: 1;
+  }
+
+  .stack-logo-brand {
+    opacity: 0;
+  }
+
+  .stack-tool:hover .stack-logo-neutral {
+    opacity: 0;
+  }
+
+  .stack-tool:hover .stack-logo-brand {
+    opacity: 1;
+  }
+
+  .stack-fallback {
+    line-height: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .stack-grid {
+    animation: none;
   }
 }

@@ -21,9 +21,11 @@ import {
   HEADLINE,
   METRICS,
   RESUME_PDF_URL,
+  STACK_GROUPS,
   SUBHEAD,
   company,
   type Metric,
+  type StackTool,
 } from "@/content/resume";
 import { cn } from "@/lib/utils";
 
@@ -65,6 +67,7 @@ function Index() {
         {DIVISIONS.map((d, i) => (
           <DivisionSection key={d.id} division={d} flip={i % 2 === 1} />
         ))}
+        <Stack />
         <ForCompany />
         <Contact />
       </main>
@@ -237,7 +240,7 @@ function DivisionSection({
 function ForCompany() {
   return (
     <section id="for-company" className={cn(shell, "py-24 lg:py-32")}>
-      <SectionHead index="05" title={`For ${company.companyName}`} />
+      <SectionHead index="06" title={`For ${company.companyName}`} />
 
       <Reveal>
         <p className="max-w-3xl font-display text-2xl leading-snug sm:text-3xl">
@@ -280,6 +283,73 @@ function ForCompany() {
               </Reveal>
             ))}
           </ol>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function StackLogo({ tool }: { tool: StackTool }) {
+  if (!tool.slug || !tool.brandHex) {
+    return (
+      <span className="stack-fallback inline-flex h-7 items-center rounded-full border border-current px-2.5 text-[0.6875rem] font-medium whitespace-nowrap">
+        {tool.name}
+      </span>
+    );
+  }
+
+  const neutralSrc = `https://cdn.simpleicons.org/${tool.slug}/77736D`;
+  const brandSrc = `https://cdn.simpleicons.org/${tool.slug}/${tool.brandHex}`;
+
+  return (
+    <span className="relative block h-7 w-8 shrink-0" title={tool.name}>
+      <img
+        src={neutralSrc}
+        alt={tool.name}
+        className="stack-logo-neutral absolute inset-0 size-7 object-contain"
+        loading="lazy"
+      />
+      <img
+        src={brandSrc}
+        alt=""
+        aria-hidden="true"
+        className="stack-logo-brand absolute inset-0 size-7 object-contain"
+        loading="lazy"
+      />
+    </span>
+  );
+}
+
+function Stack() {
+  let toolIndex = 0;
+
+  return (
+    <section
+      id="stack"
+      className={cn(shell, "stack-section relative overflow-hidden border-y border-border py-16 lg:py-20")}
+    >
+      <div className="stack-grid" aria-hidden />
+      <div className="relative">
+        <SectionHead index="05" title="Stack" />
+        <div className="grid grid-cols-2 gap-px bg-border lg:grid-cols-4">
+          {STACK_GROUPS.map((group) => (
+            <div key={group.label} className="bg-background px-4 py-2 first:pl-0 sm:px-6 lg:px-8 lg:first:pl-0">
+              <p className="eyebrow">{group.label}</p>
+              <div className="mt-5 flex min-h-16 flex-wrap content-start items-center gap-x-4 gap-y-3">
+                {group.tools.map((tool) => {
+                  const delay = toolIndex * 60;
+                  toolIndex += 1;
+                  return (
+                    <Reveal key={tool.name} delay={delay}>
+                      <div className="stack-tool flex h-8 items-center text-muted-foreground">
+                        <StackLogo tool={tool} />
+                      </div>
+                    </Reveal>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
