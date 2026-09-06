@@ -164,16 +164,16 @@ export const STACK_GROUPS: StackGroup[] = [
     tools: [
       { name: "n8n", slug: "n8n", brandHex: "EA4B71" },
       { name: "Make.com", slug: "make", brandHex: "6D00CC" },
-      { name: "Follow Up Boss" },
+      { name: "Follow Up Boss", brandHex: "1F7A8C" },
     ],
   },
   {
     label: "AI & Build",
     tools: [
       { name: "Claude Cowork", slug: "claude", brandHex: "D97757" },
-      { name: "Lovable" },
-      { name: "Bolt.new" },
-      { name: "HeyGen" },
+      { name: "Lovable", brandHex: "FF4785" },
+      { name: "Bolt.new", brandHex: "1389FD" },
+      { name: "HeyGen", brandHex: "7C3AED" },
     ],
   },
   {

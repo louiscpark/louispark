@@ -292,31 +292,25 @@ function ForCompany() {
 function StackLogo({ tool }: { tool: StackTool }) {
   if (!tool.slug || !tool.brandHex) {
     return (
-      <span className="stack-fallback inline-flex h-7 items-center rounded-full border border-current px-2.5 text-[0.6875rem] font-medium whitespace-nowrap">
+      <span
+        className="inline-flex h-10 items-center rounded-full border px-4 text-[0.8125rem] font-medium whitespace-nowrap"
+        style={{
+          color: `#${tool.brandHex ?? "77736D"}`,
+          borderColor: `#${tool.brandHex ?? "77736D"}59`,
+        }}
+      >
         {tool.name}
       </span>
     );
   }
 
-  const neutralSrc = `https://cdn.simpleicons.org/${tool.slug}/77736D`;
-  const brandSrc = `https://cdn.simpleicons.org/${tool.slug}/${tool.brandHex}`;
-
   return (
-    <span className="relative block h-7 w-8 shrink-0" title={tool.name}>
-      <img
-        src={neutralSrc}
-        alt={tool.name}
-        className="stack-logo-neutral absolute inset-0 size-7 object-contain"
-        loading="lazy"
-      />
-      <img
-        src={brandSrc}
-        alt=""
-        aria-hidden="true"
-        className="stack-logo-brand absolute inset-0 size-7 object-contain"
-        loading="lazy"
-      />
-    </span>
+    <img
+      src={`https://cdn.simpleicons.org/${tool.slug}/${tool.brandHex}`}
+      alt={tool.name}
+      className="block h-10 w-auto shrink-0 object-contain"
+      loading="lazy"
+    />
   );
 }
 
@@ -326,25 +320,37 @@ function Stack() {
   return (
     <section
       id="stack"
-      className={cn(shell, "stack-section relative overflow-hidden border-y border-border py-12 lg:py-9")}
+      className={cn(shell, "stack-section relative overflow-hidden border-y border-border py-16 lg:py-20")}
     >
+      <Reveal className="stack-sweep" aria-hidden>
+        <span className="stack-sweep-line" />
+      </Reveal>
       <div className="stack-grid" aria-hidden />
       <div className="relative">
-        <Reveal className="mb-8 flex items-baseline gap-6 border-b border-border pb-4">
+        <Reveal className="mb-10 flex items-baseline gap-6 border-b border-border pb-4">
           <span className="eyebrow">05</span>
           <h2 className="text-3xl sm:text-4xl">Stack</h2>
         </Reveal>
-        <div className="grid grid-cols-2 gap-px bg-border lg:grid-cols-4">
-          {STACK_GROUPS.map((group) => (
-            <div key={group.label} className="bg-background px-4 py-2 first:pl-0 sm:px-6 lg:px-8 lg:first:pl-0">
-              <p className="eyebrow">{group.label}</p>
-              <div className="mt-5 flex min-h-16 flex-wrap content-start items-center gap-x-4 gap-y-3">
+        <div className="flex flex-wrap justify-center gap-y-12 lg:flex-nowrap">
+          {STACK_GROUPS.map((group, gi) => (
+            <div
+              key={group.label}
+              className={cn(
+                "flex flex-auto basis-1/2 flex-col items-center px-6 sm:px-10 lg:basis-auto lg:px-12",
+                gi > 0 && "lg:border-l lg:border-border",
+              )}
+            >
+              <p className="eyebrow text-xs">{group.label}</p>
+              <div className="mt-6 flex flex-nowrap items-center gap-x-5">
                 {group.tools.map((tool) => {
                   const delay = toolIndex * 60;
                   toolIndex += 1;
                   return (
                     <Reveal key={tool.name} delay={delay}>
-                      <div className="stack-tool flex h-8 items-center text-muted-foreground">
+                      <div
+                        className="stack-tool relative flex h-10 items-center"
+                        style={{ "--brand": `#${tool.brandHex ?? "77736D"}` } as React.CSSProperties}
+                      >
                         <StackLogo tool={tool} />
                       </div>
                     </Reveal>
