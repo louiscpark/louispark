@@ -215,6 +215,15 @@
   }
 }
 
+@keyframes stack-sweep {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 @layer components {
   .stack-grid {
     position: absolute;
@@ -299,5 +308,15 @@
 
   .stack-grid {
     animation: none;
+  }
+
+  .stack-sweep-line {
+    transform: scaleX(1);
+    animation: none !important;
+  }
+
+  .stack-tool,
+  .stack-tool::before {
+    transition: none;
   }
 }
