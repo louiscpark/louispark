@@ -215,12 +215,21 @@
   }
 }
 
+@keyframes stack-sweep {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 @layer components {
   .stack-grid {
     position: absolute;
     inset: 0;
     color: var(--foreground);
-    opacity: 0.035;
+    opacity: 0.06;
     background-image:
       linear-gradient(to right, currentColor 1px, transparent 1px),
       linear-gradient(to bottom, currentColor 1px, transparent 1px);
@@ -229,43 +238,60 @@
     pointer-events: none;
   }
 
-  .stack-tool,
-  .stack-logo-neutral,
-  .stack-logo-brand {
-    transition: color 200ms ease, opacity 200ms ease;
+  .stack-sweep {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    pointer-events: none;
+  }
+
+  .stack-sweep-line {
+    display: block;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--primary) 35%,
+      var(--primary) 65%,
+      transparent
+    );
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .stack-sweep[data-visible="true"] .stack-sweep-line {
+    animation: stack-sweep 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
   .stack-tool {
-    opacity: 0.45;
+    opacity: 0.85;
+    transition:
+      opacity 200ms ease,
+      transform 200ms ease;
+  }
+
+  .stack-tool::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 9999px;
+    background: var(--brand);
+    opacity: 0;
+    filter: blur(24px);
+    transition: opacity 200ms ease;
+    z-index: -1;
+    pointer-events: none;
   }
 
   .stack-tool:hover {
-    color: var(--foreground);
     opacity: 1;
+    transform: scale(1.06);
   }
 
-  .stack-logo-neutral {
-    opacity: 1;
-  }
-
-  .stack-logo-brand {
-    opacity: 0;
-  }
-
-  .stack-tool:hover .stack-logo-neutral {
-    opacity: 0;
-  }
-
-  .stack-tool:hover .stack-logo-brand {
-    opacity: 1;
-  }
-
-  .stack-tool:hover .stack-fallback {
-    color: var(--primary);
-  }
-
-  .stack-fallback {
-    line-height: 1;
+  .stack-tool:hover::before {
+    opacity: 0.12;
   }
 }
 
@@ -282,5 +308,15 @@
 
   .stack-grid {
     animation: none;
+  }
+
+  .stack-sweep-line {
+    transform: scaleX(1);
+    animation: none !important;
+  }
+
+  .stack-tool,
+  .stack-tool::before {
+    transition: none;
   }
 }
