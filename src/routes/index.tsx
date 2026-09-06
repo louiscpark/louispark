@@ -330,7 +330,10 @@ function Stack() {
     >
       <div className="stack-grid" aria-hidden />
       <div className="relative">
-        <SectionHead index="05" title="Stack" />
+        <Reveal className="mb-8 flex items-baseline gap-6 border-b border-border pb-4">
+          <span className="eyebrow">05</span>
+          <h2 className="text-3xl sm:text-4xl">Stack</h2>
+        </Reveal>
         <div className="grid grid-cols-2 gap-px bg-border lg:grid-cols-4">
           {STACK_GROUPS.map((group) => (
             <div key={group.label} className="bg-background px-4 py-2 first:pl-0 sm:px-6 lg:px-8 lg:first:pl-0">
