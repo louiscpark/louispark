@@ -2,25 +2,29 @@ import { useState } from "react";
 import { Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type VideoFacadeProps = {
+export type LazyVimeoProps = {
   vimeoId: string;
-  posterSrc?: string;
   title: string;
+  posterSrc?: string;
+  /** Describes the poster frame. Falls back to a sentence built from the title. */
+  posterAlt?: string;
   caption?: string;
   className?: string;
 };
 
 /**
  * Lazy Vimeo facade: no iframe (and no third-party script) until the user
- * clicks play. Poster + centered play control + title at rest.
+ * clicks play. At rest it is a poster, a centered play control, and the title.
+ * With no poster it falls back to a flat neutral surface.
  */
-export function VideoFacade({
+export function LazyVimeo({
   vimeoId,
-  posterSrc,
   title,
+  posterSrc,
+  posterAlt,
   caption,
   className,
-}: VideoFacadeProps) {
+}: LazyVimeoProps) {
   const [playing, setPlaying] = useState(false);
 
   const embedSrc = `https://player.vimeo.com/video/${vimeoId}?title=0&byline=0&portrait=0&dnt=1&autoplay=1`;
@@ -40,19 +44,20 @@ export function VideoFacade({
           <button
             type="button"
             onClick={() => setPlaying(true)}
-            aria-label={`Play ${title}`}
-            className="group absolute inset-0 flex size-full flex-col items-center justify-center gap-4"
+            aria-label={`Play video: ${title}`}
+            className="lazy-vimeo-trigger absolute inset-0 flex size-full flex-col items-center justify-center gap-4"
           >
             {posterSrc ? (
               <img
                 src={posterSrc}
-                alt={title}
+                alt={posterAlt ?? `Opening frame of the ${title} video`}
                 loading="lazy"
+                decoding="async"
                 className="absolute inset-0 size-full object-cover"
               />
             ) : null}
-            <span className="relative flex size-14 items-center justify-center rounded-full border border-foreground/30 bg-background/80 transition-colors group-hover:border-foreground">
-              <Play className="size-5 translate-x-[1px] text-foreground" aria-hidden />
+            <span className="lazy-vimeo-play relative flex size-14 items-center justify-center rounded-full border border-foreground/30 bg-background/80">
+              <Play className="size-5 translate-x-px text-foreground" aria-hidden />
             </span>
             <span className="relative px-6 text-center text-sm tracking-wide text-foreground">
               {title}

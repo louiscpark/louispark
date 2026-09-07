@@ -341,3 +341,22 @@
     transform: none;
   }
 }
+
+@layer components {
+  .lazy-vimeo-play {
+    transition:
+      border-color 200ms ease,
+      background-color 200ms ease;
+  }
+
+  .lazy-vimeo-trigger:hover .lazy-vimeo-play,
+  .lazy-vimeo-trigger:focus-visible .lazy-vimeo-play {
+    border-color: var(--foreground);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lazy-vimeo-play {
+    transition: none;
+  }
+}

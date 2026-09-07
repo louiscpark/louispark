@@ -93,6 +93,8 @@ export type DivisionVideo = {
   vimeoId: string;
   title: string;
   posterSrc?: string;
+  /** Describes the poster frame — required whenever posterSrc is set. */
+  posterAlt?: string;
   caption?: string;
   /** primary = full column width, secondary = 60% width */
   size: "primary" | "secondary";

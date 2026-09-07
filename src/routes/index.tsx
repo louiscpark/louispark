@@ -11,7 +11,7 @@ import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { Reveal } from "@/components/resume/Reveal";
 import { SideNav } from "@/components/resume/SideNav";
 import { ProofAsset, ProofBadge } from "@/components/resume/ProofSlot";
-import { VideoFacade } from "@/components/resume/VideoFacade";
+import { LazyVimeo } from "@/components/resume/LazyVimeo";
 import { DocumentViewer } from "@/components/resume/DocumentViewer";
 import {
   CONTACT,
@@ -200,12 +200,13 @@ function DivisionMedia({ division }: { division: (typeof DIVISIONS)[number] }) {
       {videos.map((v) => (
         <div
           key={v.vimeoId}
-          className={cn("mt-6 first:mt-0", v.size === "secondary" && "w-[60%]")}
+          className={cn("mt-6 first:mt-0", v.size === "secondary" && "w-full sm:w-[60%]")}
         >
-          <VideoFacade
+          <LazyVimeo
             vimeoId={v.vimeoId}
             title={v.title}
             {...(v.posterSrc ? { posterSrc: v.posterSrc } : {})}
+            {...(v.posterAlt ? { posterAlt: v.posterAlt } : {})}
             {...(v.caption ? { caption: v.caption } : {})}
           />
         </div>
