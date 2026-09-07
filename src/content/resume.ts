@@ -89,80 +89,113 @@ export const METRICS: Metric[] = [
   },
 ];
 
-export type DivisionVideo = {
+export type FunnelVideo = {
   vimeoId: string;
+  /** Shown bottom-left over the poster, and used for the play control label. */
   title: string;
+  /** Overrides the poster resolved at build time from Vimeo's oEmbed API. */
   posterSrc?: string;
-  /** Describes the poster frame — required whenever posterSrc is set. */
-  posterAlt?: string;
-  caption?: string;
-  /** primary = full column width, secondary = 60% width */
-  size: "primary" | "secondary";
+  /** Describes the poster frame. Required whenever a poster is shown. */
+  posterAlt: string;
 };
 
-export type DivisionDocument = {
-  title: string;
-  pages: string[];
+/**
+ * Which of the three palette tones a step carries.
+ * a = setup (1-3), b = targeting and reach (4-5), c = the result (6).
+ */
+export type FunnelTone = "a" | "b" | "c";
+
+export type FunnelStep = {
+  /** "01" … "06" — printed on the node and in the right column. */
+  index: string;
+  /** Node label, e.g. CAPITAL. Rendered uppercase. */
+  label: string;
+  /** Counts up once, when the step first activates. */
+  number: MetricNumber;
+  /** Unit that trails the number, e.g. "properties". */
+  unit?: string;
+  tone: FunnelTone;
+  /** The one-line statement that carries the narrative. */
+  statement: string;
+  /** The supporting detail underneath it. */
+  body: string;
+  video?: FunnelVideo;
 };
 
-export type Division = {
-  id: string;
-  name: string;
-  description: string;
-  videos?: DivisionVideo[];
-  documents?: DivisionDocument[];
-  bullets: string[];
-};
-
-export const DIVISIONS: Division[] = [
+/**
+ * The funnel, in the order it was built: money, then inventory, then channel,
+ * then targeting, then reach, then revenue.
+ */
+export const FUNNEL_STEPS: FunnelStep[] = [
   {
-    id: "home-ready-program",
-    name: "Home-Ready Program",
-    description:
-      "Zero-upfront-cost, 30-day pre-listing renovation program for homeowners and realtors across Orange County, LA, and the Bay Area.",
-    videos: [
-      { vimeoId: "1224464075", title: "Home-Ready Program", size: "primary" },
-      { vimeoId: "1224464015", title: "HRP campaign spot", size: "secondary" },
-    ],
-    bullets: [
-      "Launched the program that converted 5 consecutive years of losses into $12.9M in annual revenue within 12 months",
-      "Targeted 34,000 high-income, under-valued, and distressed-seller homes across NorCal and SoCal",
-      "Ran B2B GTM to 1,100+ regional directors and top agents at Berkshire Hathaway, Keller Williams, Coldwell Banker, eXp Realty, Sotheby's International, Zoom Casa",
-      "Built cross-marketing partnerships with The Agency, Intero, Century 21; webinar campaign converted 24 agents into partners",
-      "Architected AI lead-gen engine: Meta/YouTube capture → Make.com routing → Follow Up Boss → voice/SMS AI that engages, qualifies, books, and live-transfers 24/7",
-    ],
+    index: "01",
+    label: "Capital",
+    number: { prefix: "$", value: 25, suffix: "M" },
+    tone: "a",
+    statement: "Money first. Nothing moves without it.",
+    body: "Secured $25M from Kiavi, Easy Street Capital, and KPRE Group.",
   },
   {
-    id: "eagle-pacific-properties",
-    name: "Eagle Pacific Properties",
-    description: "Property acquisition division launched from zero.",
-    videos: [
-      { vimeoId: "1224464076", title: "Eagle Pacific Properties", size: "primary" },
-    ],
-    bullets: [
-      "$9M+ in assets acquired in Year 1",
-      "48 off-market California investment properties, minimum $200K ARV profit each, via New Western ($17B+ platform)",
-      "4,900+ ready-to-buy off-market property records sourced through national wholesale disposition network",
-      "Partnerships with Story Homes, New Western, and InvestorLift",
-    ],
+    index: "02",
+    label: "Supply",
+    number: { value: 48 },
+    unit: "properties",
+    tone: "a",
+    statement: "Then inventory.",
+    body: "48 off-market California properties at $200K+ ARV each, plus 4,900 ready-to-buy records through national disposition networks.",
+    video: {
+      vimeoId: "1224464076",
+      title: "Eagle Pacific Properties",
+      posterAlt:
+        "Opening frame of the Eagle Pacific Properties video, introducing the off-market acquisition division.",
+    },
   },
   {
-    id: "eagle-pacific-real-estate",
-    name: "Eagle Pacific Real Estate",
-    description:
-      "Lead generation and acquisition strategy for distressed and motivated sellers.",
-    documents: [
-      {
-        title: "Seller outreach flyer",
-        pages: ["/flyer-1.png", "/flyer-2.png", "/flyer-3.png", "/flyer-4.png"],
-      },
-    ],
-    bullets: [
-      "Built pipeline of 63,000+ motivated/distressed seller leads ($1–3M range, LTV below 50%)",
-      "Sequenced direct mail to 32,000 homes: flyers, door hangers, sticky notes, 3D dimensional mailers",
-      "Partnership with 182 probate attorneys; 6,549+ probate leads from California court data",
-      "2,000+ tired-landlord leads identified and worked",
-    ],
+    index: "03",
+    label: "Distribution",
+    number: { value: 1100, suffix: "+" },
+    unit: "leaders",
+    tone: "a",
+    statement: "Then the channel.",
+    body: "B2B go-to-market to 1,100+ brokerage directors and top agents. Partnerships with The Agency, Berkshire Hathaway, eXp, Intero.",
+    video: {
+      vimeoId: "1224464075",
+      title: "Home-Ready Program kickoff",
+      posterAlt:
+        "Opening frame of the Home-Ready Program kickoff video, presented to brokerage partners.",
+    },
+  },
+  {
+    index: "04",
+    label: "Targeting",
+    number: { value: 12 },
+    unit: "profiles",
+    tone: "b",
+    statement: "Then who.",
+    body: "Segmented the distressed-seller market into 12 owner profiles and tested messaging against each to find the highest-converting segments.",
+  },
+  {
+    index: "05",
+    label: "Demand",
+    number: { value: 80000 },
+    unit: "touches",
+    tone: "b",
+    statement: "Then reach.",
+    body: "Direct mail to 32,000 homes, email to 48,000+ agents, paid social across 12 high-equity cities.",
+    video: {
+      vimeoId: "1224464015",
+      title: "Home-Ready Program campaign spot",
+      posterAlt:
+        "Opening frame of the Home-Ready Program campaign spot, the paid-social ad run in high-equity cities.",
+    },
+  },
+  {
+    index: "06",
+    label: "Revenue",
+    number: { prefix: "$", value: 12.9, suffix: "M", decimals: 1 },
+    tone: "c",
+    statement: "The result.",
+    body: "$12.9M in annual revenue. $9M in assets acquired. 15 months.",
   },
 ];
 
@@ -242,9 +275,7 @@ export const CONTACT = {
 export const SECTIONS = [
   { id: "intro", label: "Intro" },
   { id: "proof", label: "Proof" },
-  { id: "home-ready-program", label: "Home-Ready Program" },
-  { id: "eagle-pacific-properties", label: "Eagle Pacific Properties" },
-  { id: "eagle-pacific-real-estate", label: "Eagle Pacific Real Estate" },
+  { id: "funnel", label: "The Funnel" },
   { id: "stack", label: "Stack" },
   { id: "for-company", label: `For ${company.companyName}` },
   { id: "contact", label: "Contact" },

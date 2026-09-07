@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Counts from 0 (or `from`) to `value` when scrolled into view (threshold 0.3),
- * once only, with an easeOutExpo curve. Respects prefers-reduced-motion.
+ * Counts from 0 (or `from`) to `value` once only, with an easeOutExpo curve.
+ * Starts when scrolled into view (threshold 0.3), or — when `start` is passed —
+ * when the caller flips it to true. Respects prefers-reduced-motion.
  */
 export function AnimatedNumber({
   prefix = "",
@@ -13,6 +14,7 @@ export function AnimatedNumber({
   duration = 1600,
   from = 0,
   delay = 0,
+  start,
   className,
 }: {
   prefix?: string;
@@ -22,6 +24,8 @@ export function AnimatedNumber({
   duration?: number;
   from?: number;
   delay?: number;
+  /** Caller-driven trigger. When set, it replaces the built-in observer. */
+  start?: boolean;
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -38,6 +42,11 @@ export function AnimatedNumber({
       return;
     }
 
+    if (start !== undefined) {
+      if (start) setStarted(true);
+      return;
+    }
+
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
@@ -49,7 +58,7 @@ export function AnimatedNumber({
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [value]);
+  }, [value, start]);
 
   useEffect(() => {
     if (!started) return;

@@ -11,11 +11,9 @@ import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { Reveal } from "@/components/resume/Reveal";
 import { SideNav } from "@/components/resume/SideNav";
 import { ProofAsset, ProofBadge } from "@/components/resume/ProofSlot";
-import { LazyVimeo } from "@/components/resume/LazyVimeo";
-import { DocumentViewer } from "@/components/resume/DocumentViewer";
+import { Funnel } from "@/components/resume/Funnel";
 import {
   CONTACT,
-  DIVISIONS,
   HEADLINE,
   METRICS,
   RESUME_PDF_URL,
@@ -62,9 +60,7 @@ function Index() {
       <main className="pt-14 lg:ml-64 lg:pt-0 xl:ml-72">
         <Intro />
         <Proof onOpen={setOpenMetric} />
-        {DIVISIONS.map((d, i) => (
-          <DivisionSection key={d.id} division={d} flip={i % 2 === 1} />
-        ))}
+        <FunnelSection />
         <Stack />
         <ForCompany />
         <Contact />
@@ -191,77 +187,11 @@ function Proof({ onOpen }: { onOpen: (m: Metric) => void }) {
   );
 }
 
-function DivisionMedia({ division }: { division: (typeof DIVISIONS)[number] }) {
-  const videos = division.videos ?? [];
-  const documents = division.documents ?? [];
-
+function FunnelSection() {
   return (
-    <>
-      {videos.map((v) => (
-        <div
-          key={v.vimeoId}
-          className={cn("mt-6 first:mt-0", v.size === "secondary" && "w-full sm:w-[60%]")}
-        >
-          <LazyVimeo
-            vimeoId={v.vimeoId}
-            title={v.title}
-            {...(v.posterSrc ? { posterSrc: v.posterSrc } : {})}
-            {...(v.posterAlt ? { posterAlt: v.posterAlt } : {})}
-            {...(v.caption ? { caption: v.caption } : {})}
-          />
-        </div>
-      ))}
-
-      {documents.map((doc) => (
-        <div key={doc.title} className="mt-6 first:mt-0">
-          <p className="eyebrow mb-3">{doc.title}</p>
-          <DocumentViewer pages={doc.pages} title={doc.title} />
-        </div>
-      ))}
-    </>
-  );
-}
-
-function DivisionSection({
-  division,
-  flip,
-}: {
-  division: (typeof DIVISIONS)[number];
-  flip: boolean;
-}) {
-  const idx = DIVISIONS.findIndex((d) => d.id === division.id) + 2;
-
-  return (
-    <section id={division.id} className={cn(shell, "py-24 lg:py-32")}>
-      <SectionHead
-        index={String(idx).padStart(2, "0")}
-        title={division.name}
-      />
-
-      <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
-        <Reveal className={cn(flip && "lg:order-2")}>
-          <DivisionMedia division={division} />
-        </Reveal>
-
-        <div className={cn(flip && "lg:order-1")}>
-          <Reveal delay={60}>
-            <p className="max-w-xl font-display text-xl leading-snug sm:text-2xl">
-              {division.description}
-            </p>
-          </Reveal>
-
-          <ul className="mt-10 space-y-6">
-            {division.bullets.map((b, i) => (
-              <Reveal as="li" key={i} delay={80 + i * 60} className="flex gap-4">
-                <span className="mt-2 h-px w-5 shrink-0 bg-primary" />
-                <span className="text-sm leading-relaxed text-muted-foreground">
-                  {b}
-                </span>
-              </Reveal>
-            ))}
-          </ul>
-        </div>
-      </div>
+    <section id="funnel" className={cn(shell, "pt-24 pb-16 lg:pt-32")}>
+      <SectionHead index="02" title="The Funnel" />
+      <Funnel />
     </section>
   );
 }
@@ -269,7 +199,7 @@ function DivisionSection({
 function ForCompany() {
   return (
     <section id="for-company" className={cn(shell, "py-24 lg:py-32")}>
-      <SectionHead index="06" title={`For ${company.companyName}`} />
+      <SectionHead index="04" title={`For ${company.companyName}`} />
 
       <Reveal>
         <p className="max-w-3xl font-display text-2xl leading-snug sm:text-3xl">
@@ -358,7 +288,7 @@ function Stack() {
       <div className="stack-grid" aria-hidden />
       <div className="relative">
         <Reveal className="mb-10 flex items-baseline gap-6 border-b border-border pb-4">
-          <span className="eyebrow">05</span>
+          <span className="eyebrow">03</span>
           <h2 className="text-3xl sm:text-4xl">Stack</h2>
         </Reveal>
         <div className="flex flex-wrap justify-center gap-y-10">

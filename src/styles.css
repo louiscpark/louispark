@@ -343,20 +343,130 @@
 }
 
 @layer components {
+  /* --- Lazy Vimeo facade: cover-fit poster, scrim, solid play control ------ */
+  .lazy-vimeo-scrim {
+    background: linear-gradient(
+      to top,
+      rgb(0 0 0 / 0.6),
+      rgb(0 0 0 / 0.14) 55%,
+      rgb(0 0 0 / 0.28)
+    );
+    transition: opacity 200ms ease;
+  }
+
+  .lazy-vimeo-trigger:hover .lazy-vimeo-scrim,
+  .lazy-vimeo-trigger:focus-visible .lazy-vimeo-scrim {
+    opacity: 0.7;
+  }
+
   .lazy-vimeo-play {
-    transition:
-      border-color 200ms ease,
-      background-color 200ms ease;
+    transform: translate(-50%, -50%);
+    transition: transform 200ms ease;
   }
 
   .lazy-vimeo-trigger:hover .lazy-vimeo-play,
   .lazy-vimeo-trigger:focus-visible .lazy-vimeo-play {
-    border-color: var(--foreground);
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+
+  /* No poster resolved: fall back to the flat neutral surface. */
+  .lazy-vimeo-trigger[data-poster="false"] .lazy-vimeo-play {
+    border: 1px solid var(--border);
+  }
+
+  .lazy-vimeo-title {
+    color: var(--foreground);
+  }
+
+  .lazy-vimeo-trigger[data-poster="true"] .lazy-vimeo-title {
+    color: #fff;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.45);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lazy-vimeo-play {
+  .lazy-vimeo-play,
+  .lazy-vimeo-scrim {
+    transition: none;
+  }
+
+  .lazy-vimeo-trigger:hover .lazy-vimeo-play,
+  .lazy-vimeo-trigger:focus-visible .lazy-vimeo-play {
+    transform: translate(-50%, -50%);
+  }
+
+  .lazy-vimeo-trigger:hover .lazy-vimeo-scrim,
+  .lazy-vimeo-trigger:focus-visible .lazy-vimeo-scrim {
+    opacity: 1;
+  }
+}
+
+@layer components {
+  /* --- Funnel diagram ----------------------------------------------------- */
+  .funnel-diagram {
+    /* nodes translate 8 units on their way in — don't clip them */
+    overflow: visible;
+  }
+
+  .funnel-node {
+    transition:
+      opacity 400ms ease-out,
+      transform 400ms ease-out;
+  }
+
+  .funnel-node[data-state="hidden"] {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  /* Already-passed stages stay on screen, quietly. */
+  .funnel-node[data-state="past"] {
+    opacity: 0.4;
+  }
+
+  .funnel-node[data-state="active"],
+  .funnel-node[data-state="static"] {
+    opacity: 1;
+  }
+
+  .funnel-node-box {
+    fill: var(--card);
+    stroke: var(--border);
+    stroke-width: 1;
+  }
+
+  .funnel-node[data-state="active"] .funnel-node-box {
+    stroke: var(--tone);
+  }
+
+  .funnel-node-label {
+    font-family: var(--font-sans);
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    fill: var(--muted-foreground);
+  }
+
+  .funnel-node-index {
+    fill: var(--tone);
+  }
+
+  .funnel-node-metric {
+    font-family: var(--font-display);
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    fill: var(--tone);
+  }
+
+  .funnel-connector {
+    stroke: var(--border);
+    stroke-width: 1;
+    transition: stroke-dashoffset 300ms ease-out;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .funnel-node,
+  .funnel-connector {
     transition: none;
   }
 }

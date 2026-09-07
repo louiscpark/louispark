@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Play } from "lucide-react";
+import { VIMEO_POSTERS } from "@/content/vimeo-posters.generated";
 import { cn } from "@/lib/utils";
 
 export type LazyVimeoProps = {
   vimeoId: string;
   title: string;
+  /** Overrides the poster resolved at build time by scripts/fetch-vimeo-posters.mjs. */
   posterSrc?: string;
   /** Describes the poster frame. Falls back to a sentence built from the title. */
   posterAlt?: string;
@@ -14,8 +16,9 @@ export type LazyVimeoProps = {
 
 /**
  * Lazy Vimeo facade: no iframe (and no third-party script) until the user
- * clicks play. At rest it is a poster, a centered play control, and the title.
- * With no poster it falls back to a flat neutral surface.
+ * clicks play. At rest it is a cover-fit poster under a soft dark scrim, a
+ * solid play control, and the title bottom-left. With no poster — the build
+ * could not resolve one — it falls back to a flat neutral surface.
  */
 export function LazyVimeo({
   vimeoId,
@@ -27,6 +30,7 @@ export function LazyVimeo({
 }: LazyVimeoProps) {
   const [playing, setPlaying] = useState(false);
 
+  const poster = posterSrc ?? VIMEO_POSTERS[vimeoId];
   const embedSrc = `https://player.vimeo.com/video/${vimeoId}?title=0&byline=0&portrait=0&dnt=1&autoplay=1`;
 
   return (
@@ -45,21 +49,27 @@ export function LazyVimeo({
             type="button"
             onClick={() => setPlaying(true)}
             aria-label={`Play video: ${title}`}
-            className="lazy-vimeo-trigger absolute inset-0 flex size-full flex-col items-center justify-center gap-4"
+            data-poster={poster ? "true" : "false"}
+            className="lazy-vimeo-trigger absolute inset-0 size-full"
           >
-            {posterSrc ? (
-              <img
-                src={posterSrc}
-                alt={posterAlt ?? `Opening frame of the ${title} video`}
-                loading="lazy"
-                decoding="async"
-                className="absolute inset-0 size-full object-cover"
-              />
+            {poster ? (
+              <>
+                <img
+                  src={poster}
+                  alt={posterAlt ?? `Opening frame of the ${title} video`}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 size-full object-cover"
+                />
+                <span className="lazy-vimeo-scrim absolute inset-0" aria-hidden />
+              </>
             ) : null}
-            <span className="lazy-vimeo-play relative flex size-14 items-center justify-center rounded-full border border-foreground/30 bg-background/80">
+
+            <span className="lazy-vimeo-play absolute top-1/2 left-1/2 flex size-14 items-center justify-center rounded-full bg-background">
               <Play className="size-5 translate-x-px text-foreground" aria-hidden />
             </span>
-            <span className="relative px-6 text-center text-sm tracking-wide text-foreground">
+
+            <span className="lazy-vimeo-title absolute bottom-0 left-0 max-w-[80%] p-4 text-left text-sm tracking-wide">
               {title}
             </span>
           </button>

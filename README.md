@@ -16,9 +16,11 @@ Single page, vertical scroll, with a sticky left sidebar navigation
 
 mobile the sidebar collapses to a slim top bar. Smooth scroll to anchors.
 
-Sections: Intro / Proof / Home-Ready Program / Eagle Pacific Properties / 
+Sections: Intro / Proof / The Funnel / Stack / For [Company] / Contact
 
-Eagle Pacific Real Estate / For [Company] / Contact
+On the page only the middle four carry a printed numeral — Proof is 01, 
+
+The Funnel 02, Stack 03, For [Company] 04.
 
 === 1. INTRO (full viewport height) ===
 
@@ -78,83 +80,89 @@ Metrics:
 
 - 48,000+ — Real estate agents reached via email campaign
 
-=== 3-5. DIVISION SECTIONS ===
+=== 3. THE FUNNEL (scroll-driven) ===
 
-Three sections, identical layout, alternating left/right. Each has: 
+Replaces the three division sections. Sticky scrollytelling: on desktop a 
 
-division name, a one-line description, a 16:9 video embed slot 
+sticky left column (45%) holds an SVG funnel diagram, vertically centred; 
 
-(placeholder for now, accept YouTube/Vimeo/Loom URL), and 3-5 bullet 
+the right column (55%) scrolls through six text blocks of min-height 90vh. 
 
-achievements. Keep bullets short.
+An IntersectionObserver with rootMargin "-45% 0px -45% 0px" activates the 
 
-A) HOME-READY PROGRAM (HRP)
+step crossing the vertical centre, so the diagram assembles a node at a 
 
-Zero-upfront-cost, 30-day pre-listing renovation program for homeowners 
+time and scrubs cleanly in reverse. Under 900px there is no sticky column: 
 
-and realtors across Orange County, LA, and the Bay Area.
+the steps stack as six cards, each with its own node fragment above the 
 
-- Launched the program that converted 5 consecutive years of losses into 
+copy. Never hijacks scroll or wheel events.
 
-  $12.9M in annual revenue within 12 months
+Colour runs in three tones from the existing palette — muted for steps 
 
-- Targeted 34,000 high-income, under-valued, and distressed-seller homes 
+1-3, ink for 4-5, accent for step 6. Under prefers-reduced-motion all six 
 
-  across NorCal and SoCal
+nodes show at once, with no scroll binding and no count-up.
 
-- Ran B2B GTM to 1,100+ regional directors and top agents at Berkshire 
+Steps (node label / metric / statement / body):
 
-  Hathaway, Keller Williams, Coldwell Banker, eXp Realty, Sotheby's 
+01 CAPITAL — $25M — "Money first. Nothing moves without it."
 
-  International, Zoom Casa
+   Secured $25M from Kiavi, Easy Street Capital, and KPRE Group.
 
-- Built cross-marketing partnerships with The Agency, Intero, Century 21; 
+02 SUPPLY — 48 properties — "Then inventory."
 
-  webinar campaign converted 24 agents into partners
+   48 off-market California properties at $200K+ ARV each, plus 4,900 
 
-- Architected AI lead-gen engine: Meta/YouTube capture → Make.com routing 
+   ready-to-buy records through national disposition networks.
 
-  → Follow Up Boss → voice/SMS AI that engages, qualifies, books, and 
+03 DISTRIBUTION — 1,100+ leaders — "Then the channel."
 
-  live-transfers 24/7
+   B2B go-to-market to 1,100+ brokerage directors and top agents. 
 
-B) EAGLE PACIFIC PROPERTIES
+   Partnerships with The Agency, Berkshire Hathaway, eXp, Intero.
 
-Property acquisition division launched from zero.
+04 TARGETING — 12 profiles — "Then who."
 
-- $9M+ in assets acquired in Year 1
+   Segmented the distressed-seller market into 12 owner profiles and 
 
-- 48 off-market California investment properties, minimum $200K ARV 
+   tested messaging against each to find the highest-converting segments.
 
-  profit each, via New Western ($17B+ platform)
+05 DEMAND — 80,000 touches — "Then reach."
 
-- 4,900+ ready-to-buy off-market property records sourced through 
+   Direct mail to 32,000 homes, email to 48,000+ agents, paid social 
 
-  national wholesale disposition network
+   across 12 high-equity cities.
 
-- Partnerships with Story Homes, New Western, and InvestorLift
+06 REVENUE — $12.9M — "The result."
 
-C) EAGLE PACIFIC REAL ESTATE
+   $12.9M in annual revenue. $9M in assets acquired. 15 months.
 
-Lead generation and acquisition strategy for distressed and motivated 
+Videos sit in steps 02, 03, and 05 via <LazyVimeo>. Poster frames are 
 
-sellers.
+resolved at BUILD time from Vimeo's public oEmbed endpoint by 
 
-- Built pipeline of 63,000+ motivated/distressed seller leads 
+scripts/fetch-vimeo-posters.mjs (runs on `prebuild`, or `npm run 
 
-  ($1–3M range, LTV below 50%)
+posters`), which writes src/content/vimeo-posters.generated.ts. Nothing is 
 
-- Sequenced direct mail to 32,000 homes: flyers, door hangers, sticky 
+fetched on page load; a failed fetch keeps the previously generated URL, 
 
-  notes, 3D dimensional mailers
+and an id with no poster at all falls back to a flat neutral surface. A 
 
-- Partnership with 182 probate attorneys; 6,549+ probate leads from 
+per-video posterSrc overrides the fetched thumbnail.
 
-  California court data
+=== 4. STACK ===
 
-- 2,000+ tired-landlord leads identified and worked
+A single ruled row of tool logos, grouped by what each tool is for: 
 
-=== 6. FOR [COMPANY] ===
+Demand, Automation, CRM, AI & Build, Design & Ops. Logos come from Simple 
+
+Icons at brand colour, with a monogram fallback for tools it does not 
+
+carry.
+
+=== 5. FOR [COMPANY] ===
 
 A section built to be rewritten per application. Structure it so all the 
 
@@ -168,7 +176,7 @@ columns — "What I see" and "What I'd do in the first 90 days".
 
 Fill with clearly-marked placeholder text for now.
 
-=== 7. CONTACT ===
+=== 6. CONTACT ===
 
 Email, LinkedIn, and a "Download resume PDF" link. No contact form.
 
