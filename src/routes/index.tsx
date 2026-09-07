@@ -360,24 +360,24 @@ function Stack() {
           <span className="eyebrow">05</span>
           <h2 className="text-3xl sm:text-4xl">Stack</h2>
         </Reveal>
-        <div className="flex flex-wrap justify-center gap-y-12 lg:flex-nowrap">
+        <div className="flex flex-wrap justify-center gap-y-10">
           {STACK_GROUPS.map((group, gi) => (
             <div
               key={group.label}
               className={cn(
-                "flex flex-auto basis-1/2 flex-col items-center px-5 sm:px-8 lg:basis-auto lg:px-10",
-                gi > 0 && "lg:border-l lg:border-border",
+                "flex flex-auto basis-1/2 flex-col items-center px-4 sm:basis-auto sm:px-6 lg:px-7",
+                gi > 0 && "sm:border-l sm:border-border",
               )}
             >
               <p className="eyebrow text-xs">{group.label}</p>
-              <div className="mt-6 flex flex-nowrap items-start gap-x-6">
+              <div className="mt-6 flex flex-nowrap items-start gap-x-4">
                 {group.tools.map((tool) => {
                   const delay = toolIndex * 60;
                   toolIndex += 1;
                   return (
                     <Reveal key={tool.name} delay={delay}>
                       <div
-                        className="stack-tool relative flex w-20 flex-col items-center gap-2"
+                        className="stack-tool relative flex w-[68px] flex-col items-center gap-2"
                         style={{ "--brand": `#${tool.brandHex ?? "77736D"}` } as React.CSSProperties}
                       >
                         <StackLogo tool={tool} />
