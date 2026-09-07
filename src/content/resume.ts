@@ -144,6 +144,8 @@ export type StackTool = {
   name: string;
   slug?: "meta" | "googleads" | "n8n" | "make" | "claude" | "figma" | "notion" | "asana";
   brandHex?: string;
+  /** monogram used when Simple Icons has no mark for the tool */
+  mark?: string;
 };
 
 export type StackGroup = {
@@ -164,16 +166,19 @@ export const STACK_GROUPS: StackGroup[] = [
     tools: [
       { name: "n8n", slug: "n8n", brandHex: "EA4B71" },
       { name: "Make.com", slug: "make", brandHex: "6D00CC" },
-      { name: "Follow Up Boss", brandHex: "1F7A8C" },
     ],
+  },
+  {
+    label: "CRM",
+    tools: [{ name: "Follow Up Boss", brandHex: "1F7A8C", mark: "FUB" }],
   },
   {
     label: "AI & Build",
     tools: [
       { name: "Claude Cowork", slug: "claude", brandHex: "D97757" },
-      { name: "Lovable", brandHex: "FF4785" },
-      { name: "Bolt.new", brandHex: "1389FD" },
-      { name: "HeyGen", brandHex: "7C3AED" },
+      { name: "Lovable", brandHex: "FF4785", mark: "LV" },
+      { name: "Bolt.new", brandHex: "1389FD", mark: "BN" },
+      { name: "HeyGen", brandHex: "7C3AED", mark: "HG" },
     ],
   },
   {
