@@ -10,11 +10,9 @@ import {
 import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { Reveal } from "@/components/resume/Reveal";
 import { SideNav } from "@/components/resume/SideNav";
-import {
-  ProofAsset,
-  ProofBadge,
-  VideoFrame,
-} from "@/components/resume/ProofSlot";
+import { ProofAsset, ProofBadge } from "@/components/resume/ProofSlot";
+import { VideoFacade } from "@/components/resume/VideoFacade";
+import { DocumentViewer } from "@/components/resume/DocumentViewer";
 import {
   CONTACT,
   DIVISIONS,
@@ -193,6 +191,36 @@ function Proof({ onOpen }: { onOpen: (m: Metric) => void }) {
   );
 }
 
+function DivisionMedia({ division }: { division: (typeof DIVISIONS)[number] }) {
+  const videos = division.videos ?? [];
+  const documents = division.documents ?? [];
+
+  return (
+    <>
+      {videos.map((v) => (
+        <div
+          key={v.vimeoId}
+          className={cn("mt-6 first:mt-0", v.size === "secondary" && "w-[60%]")}
+        >
+          <VideoFacade
+            vimeoId={v.vimeoId}
+            title={v.title}
+            {...(v.posterSrc ? { posterSrc: v.posterSrc } : {})}
+            {...(v.caption ? { caption: v.caption } : {})}
+          />
+        </div>
+      ))}
+
+      {documents.map((doc) => (
+        <div key={doc.title} className="mt-6 first:mt-0">
+          <p className="eyebrow mb-3">{doc.title}</p>
+          <DocumentViewer pages={doc.pages} title={doc.title} />
+        </div>
+      ))}
+    </>
+  );
+}
+
 function DivisionSection({
   division,
   flip,
@@ -211,7 +239,7 @@ function DivisionSection({
 
       <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
         <Reveal className={cn(flip && "lg:order-2")}>
-          <VideoFrame src={division.videoUrl} title={division.name} />
+          <DivisionMedia division={division} />
         </Reveal>
 
         <div className={cn(flip && "lg:order-1")}>
@@ -290,16 +318,17 @@ function ForCompany() {
 }
 
 function StackLogo({ tool }: { tool: StackTool }) {
-  if (!tool.slug || !tool.brandHex) {
+  const hex = `#${tool.brandHex ?? "77736D"}`;
+
+  if (!tool.slug) {
     return (
       <span
-        className="inline-flex h-10 items-center rounded-full border px-4 text-[0.8125rem] font-medium whitespace-nowrap"
-        style={{
-          color: `#${tool.brandHex ?? "77736D"}`,
-          borderColor: `#${tool.brandHex ?? "77736D"}59`,
-        }}
+        role="img"
+        aria-label={tool.name}
+        className="flex size-10 items-center justify-center rounded-full border-2 text-[0.6875rem] font-semibold tracking-wide"
+        style={{ color: hex, borderColor: `${hex}66` }}
       >
-        {tool.name}
+        {tool.mark ?? tool.name.slice(0, 2).toUpperCase()}
       </span>
     );
   }
@@ -331,27 +360,30 @@ function Stack() {
           <span className="eyebrow">05</span>
           <h2 className="text-3xl sm:text-4xl">Stack</h2>
         </Reveal>
-        <div className="flex flex-wrap justify-center gap-y-12 lg:flex-nowrap">
+        <div className="flex flex-wrap justify-center gap-y-10">
           {STACK_GROUPS.map((group, gi) => (
             <div
               key={group.label}
               className={cn(
-                "flex flex-auto basis-1/2 flex-col items-center px-6 sm:px-10 lg:basis-auto lg:px-12",
-                gi > 0 && "lg:border-l lg:border-border",
+                "flex flex-auto basis-1/2 flex-col items-center px-4 sm:basis-auto sm:px-6 lg:px-7",
+                gi > 0 && "sm:border-l sm:border-border",
               )}
             >
               <p className="eyebrow text-xs">{group.label}</p>
-              <div className="mt-6 flex flex-nowrap items-center gap-x-5">
+              <div className="mt-6 flex flex-nowrap items-start gap-x-4">
                 {group.tools.map((tool) => {
                   const delay = toolIndex * 60;
                   toolIndex += 1;
                   return (
                     <Reveal key={tool.name} delay={delay}>
                       <div
-                        className="stack-tool relative flex h-10 items-center"
+                        className="stack-tool relative flex w-[68px] flex-col items-center gap-2"
                         style={{ "--brand": `#${tool.brandHex ?? "77736D"}` } as React.CSSProperties}
                       >
                         <StackLogo tool={tool} />
+                        <span className="text-center text-[0.6875rem] leading-tight text-muted-foreground">
+                          {tool.name}
+                        </span>
                       </div>
                     </Reveal>
                   );

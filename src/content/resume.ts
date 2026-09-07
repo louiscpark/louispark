@@ -89,12 +89,26 @@ export const METRICS: Metric[] = [
   },
 ];
 
+export type DivisionVideo = {
+  vimeoId: string;
+  title: string;
+  posterSrc?: string;
+  caption?: string;
+  /** primary = full column width, secondary = 60% width */
+  size: "primary" | "secondary";
+};
+
+export type DivisionDocument = {
+  title: string;
+  pages: string[];
+};
+
 export type Division = {
   id: string;
   name: string;
   description: string;
-  /** YouTube / Vimeo / Loom embed URL — leave empty for placeholder */
-  videoUrl?: string;
+  videos?: DivisionVideo[];
+  documents?: DivisionDocument[];
   bullets: string[];
 };
 
@@ -104,7 +118,10 @@ export const DIVISIONS: Division[] = [
     name: "Home-Ready Program",
     description:
       "Zero-upfront-cost, 30-day pre-listing renovation program for homeowners and realtors across Orange County, LA, and the Bay Area.",
-    videoUrl: "",
+    videos: [
+      { vimeoId: "1224464075", title: "Home-Ready Program", size: "primary" },
+      { vimeoId: "1224464015", title: "HRP campaign spot", size: "secondary" },
+    ],
     bullets: [
       "Launched the program that converted 5 consecutive years of losses into $12.9M in annual revenue within 12 months",
       "Targeted 34,000 high-income, under-valued, and distressed-seller homes across NorCal and SoCal",
@@ -117,7 +134,9 @@ export const DIVISIONS: Division[] = [
     id: "eagle-pacific-properties",
     name: "Eagle Pacific Properties",
     description: "Property acquisition division launched from zero.",
-    videoUrl: "",
+    videos: [
+      { vimeoId: "1224464076", title: "Eagle Pacific Properties", size: "primary" },
+    ],
     bullets: [
       "$9M+ in assets acquired in Year 1",
       "48 off-market California investment properties, minimum $200K ARV profit each, via New Western ($17B+ platform)",
@@ -130,7 +149,12 @@ export const DIVISIONS: Division[] = [
     name: "Eagle Pacific Real Estate",
     description:
       "Lead generation and acquisition strategy for distressed and motivated sellers.",
-    videoUrl: "",
+    documents: [
+      {
+        title: "Seller outreach flyer",
+        pages: ["/flyer-1.png", "/flyer-2.png", "/flyer-3.png", "/flyer-4.png"],
+      },
+    ],
     bullets: [
       "Built pipeline of 63,000+ motivated/distressed seller leads ($1–3M range, LTV below 50%)",
       "Sequenced direct mail to 32,000 homes: flyers, door hangers, sticky notes, 3D dimensional mailers",
@@ -144,6 +168,8 @@ export type StackTool = {
   name: string;
   slug?: "meta" | "googleads" | "n8n" | "make" | "claude" | "figma" | "notion" | "asana";
   brandHex?: string;
+  /** monogram used when Simple Icons has no mark for the tool */
+  mark?: string;
 };
 
 export type StackGroup = {
@@ -164,16 +190,19 @@ export const STACK_GROUPS: StackGroup[] = [
     tools: [
       { name: "n8n", slug: "n8n", brandHex: "EA4B71" },
       { name: "Make.com", slug: "make", brandHex: "6D00CC" },
-      { name: "Follow Up Boss", brandHex: "1F7A8C" },
     ],
+  },
+  {
+    label: "CRM",
+    tools: [{ name: "Follow Up Boss", brandHex: "1F7A8C", mark: "FUB" }],
   },
   {
     label: "AI & Build",
     tools: [
       { name: "Claude Cowork", slug: "claude", brandHex: "D97757" },
-      { name: "Lovable", brandHex: "FF4785" },
-      { name: "Bolt.new", brandHex: "1389FD" },
-      { name: "HeyGen", brandHex: "7C3AED" },
+      { name: "Lovable", brandHex: "FF4785", mark: "LV" },
+      { name: "Bolt.new", brandHex: "1389FD", mark: "BN" },
+      { name: "HeyGen", brandHex: "7C3AED", mark: "HG" },
     ],
   },
   {
