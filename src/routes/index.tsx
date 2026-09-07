@@ -10,11 +10,9 @@ import {
 import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { Reveal } from "@/components/resume/Reveal";
 import { SideNav } from "@/components/resume/SideNav";
-import {
-  ProofAsset,
-  ProofBadge,
-  VideoFrame,
-} from "@/components/resume/ProofSlot";
+import { ProofAsset, ProofBadge } from "@/components/resume/ProofSlot";
+import { VideoFacade } from "@/components/resume/VideoFacade";
+import { DocumentViewer } from "@/components/resume/DocumentViewer";
 import {
   CONTACT,
   DIVISIONS,
@@ -193,6 +191,36 @@ function Proof({ onOpen }: { onOpen: (m: Metric) => void }) {
   );
 }
 
+function DivisionMedia({ division }: { division: (typeof DIVISIONS)[number] }) {
+  const videos = division.videos ?? [];
+  const documents = division.documents ?? [];
+
+  return (
+    <>
+      {videos.map((v) => (
+        <div
+          key={v.vimeoId}
+          className={cn("mt-6 first:mt-0", v.size === "secondary" && "w-[60%]")}
+        >
+          <VideoFacade
+            vimeoId={v.vimeoId}
+            title={v.title}
+            {...(v.posterSrc ? { posterSrc: v.posterSrc } : {})}
+            {...(v.caption ? { caption: v.caption } : {})}
+          />
+        </div>
+      ))}
+
+      {documents.map((doc) => (
+        <div key={doc.title} className="mt-6 first:mt-0">
+          <p className="eyebrow mb-3">{doc.title}</p>
+          <DocumentViewer pages={doc.pages} title={doc.title} />
+        </div>
+      ))}
+    </>
+  );
+}
+
 function DivisionSection({
   division,
   flip,
@@ -211,7 +239,7 @@ function DivisionSection({
 
       <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
         <Reveal className={cn(flip && "lg:order-2")}>
-          <VideoFrame src={division.videoUrl} title={division.name} />
+          <DivisionMedia division={division} />
         </Reveal>
 
         <div className={cn(flip && "lg:order-1")}>
