@@ -290,16 +290,17 @@ function ForCompany() {
 }
 
 function StackLogo({ tool }: { tool: StackTool }) {
-  if (!tool.slug || !tool.brandHex) {
+  const hex = `#${tool.brandHex ?? "77736D"}`;
+
+  if (!tool.slug) {
     return (
       <span
-        className="inline-flex h-10 items-center rounded-full border px-4 text-[0.8125rem] font-medium whitespace-nowrap"
-        style={{
-          color: `#${tool.brandHex ?? "77736D"}`,
-          borderColor: `#${tool.brandHex ?? "77736D"}59`,
-        }}
+        role="img"
+        aria-label={tool.name}
+        className="flex size-10 items-center justify-center rounded-full border-2 text-[0.6875rem] font-semibold tracking-wide"
+        style={{ color: hex, borderColor: `${hex}66` }}
       >
-        {tool.name}
+        {tool.mark ?? tool.name.slice(0, 2).toUpperCase()}
       </span>
     );
   }
@@ -336,22 +337,25 @@ function Stack() {
             <div
               key={group.label}
               className={cn(
-                "flex flex-auto basis-1/2 flex-col items-center px-6 sm:px-10 lg:basis-auto lg:px-12",
+                "flex flex-auto basis-1/2 flex-col items-center px-5 sm:px-8 lg:basis-auto lg:px-10",
                 gi > 0 && "lg:border-l lg:border-border",
               )}
             >
               <p className="eyebrow text-xs">{group.label}</p>
-              <div className="mt-6 flex flex-nowrap items-center gap-x-5">
+              <div className="mt-6 flex flex-nowrap items-start gap-x-6">
                 {group.tools.map((tool) => {
                   const delay = toolIndex * 60;
                   toolIndex += 1;
                   return (
                     <Reveal key={tool.name} delay={delay}>
                       <div
-                        className="stack-tool relative flex h-10 items-center"
+                        className="stack-tool relative flex w-20 flex-col items-center gap-2"
                         style={{ "--brand": `#${tool.brandHex ?? "77736D"}` } as React.CSSProperties}
                       >
                         <StackLogo tool={tool} />
+                        <span className="text-center text-[0.6875rem] leading-tight text-muted-foreground">
+                          {tool.name}
+                        </span>
                       </div>
                     </Reveal>
                   );
