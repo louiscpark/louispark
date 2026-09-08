@@ -89,7 +89,7 @@ export const METRICS: Metric[] = [
   },
 ];
 
-export type FunnelVideo = {
+export type StepVideo = {
   vimeoId: string;
   /** Shown bottom-left over the poster, and used for the play control label. */
   title: string;
@@ -100,37 +100,45 @@ export type FunnelVideo = {
 };
 
 /**
- * Which of the three palette tones a step carries.
- * a = setup (1-3), b = targeting and reach (4-5), c = the result (6).
+ * Which of the three palette tones a step carries, by position:
+ * a = steps 1-2 (quietest), b = steps 3-5 (mid), c = step 6 (accent).
  */
-export type FunnelTone = "a" | "b" | "c";
+export type StepTone = "a" | "b" | "c";
 
-export type FunnelStep = {
+/** One counted figure. A step can carry more than one when a single total would misrepresent it. */
+export type StepMetric = {
+  number: MetricNumber;
+  /** Unit that trails the number, e.g. "properties". */
+  unit?: string;
+};
+
+export type SystemStep = {
   /** "01" … "06" — printed on the node and in the right column. */
   index: string;
   /** Node label, e.g. CAPITAL. Rendered uppercase. */
   label: string;
-  /** Counts up once, when the step first activates. */
-  number: MetricNumber;
-  /** Unit that trails the number, e.g. "properties". */
-  unit?: string;
-  tone: FunnelTone;
+  /** Each counts up once, when the step first activates. */
+  metrics: StepMetric[];
+  tone: StepTone;
   /** The one-line statement that carries the narrative. */
   statement: string;
   /** The supporting detail underneath it. */
   body: string;
-  video?: FunnelVideo;
+  video?: StepVideo;
 };
 
 /**
- * The funnel, in the order it was built: money, then inventory, then channel,
- * then targeting, then reach, then revenue.
+ * What was built, in the order it was built: money, then inventory, then who
+ * to sell to, then the channel to reach them, then reach, then revenue.
+ *
+ * Order is chronological, not causal — the diagram shows a sequence of things
+ * that were stood up, not a claim that each one produced the next.
  */
-export const FUNNEL_STEPS: FunnelStep[] = [
+export const SYSTEM_STEPS: SystemStep[] = [
   {
     index: "01",
     label: "Capital",
-    number: { prefix: "$", value: 25, suffix: "M" },
+    metrics: [{ number: { prefix: "$", value: 25, suffix: "M" } }],
     tone: "a",
     statement: "Money first. Nothing moves without it.",
     body: "Secured $25M from Kiavi, Easy Street Capital, and KPRE Group.",
@@ -138,8 +146,7 @@ export const FUNNEL_STEPS: FunnelStep[] = [
   {
     index: "02",
     label: "Supply",
-    number: { value: 48 },
-    unit: "properties",
+    metrics: [{ number: { value: 48 }, unit: "properties" }],
     tone: "a",
     statement: "Then inventory.",
     body: "48 off-market California properties at $200K+ ARV each, plus 4,900 ready-to-buy records through national disposition networks.",
@@ -152,10 +159,17 @@ export const FUNNEL_STEPS: FunnelStep[] = [
   },
   {
     index: "03",
+    label: "Targeting",
+    metrics: [{ number: { value: 12 }, unit: "profiles" }],
+    tone: "b",
+    statement: "Then who.",
+    body: "Segmented the distressed-seller market into 12 owner profiles and tested messaging against each to find the highest-converting segments.",
+  },
+  {
+    index: "04",
     label: "Distribution",
-    number: { value: 1100, suffix: "+" },
-    unit: "leaders",
-    tone: "a",
+    metrics: [{ number: { value: 1100, suffix: "+" }, unit: "leaders" }],
+    tone: "b",
     statement: "Then the channel.",
     body: "B2B go-to-market to 1,100+ brokerage directors and top agents. Partnerships with The Agency, Berkshire Hathaway, eXp, Intero.",
     video: {
@@ -166,19 +180,14 @@ export const FUNNEL_STEPS: FunnelStep[] = [
     },
   },
   {
-    index: "04",
-    label: "Targeting",
-    number: { value: 12 },
-    unit: "profiles",
-    tone: "b",
-    statement: "Then who.",
-    body: "Segmented the distressed-seller market into 12 owner profiles and tested messaging against each to find the highest-converting segments.",
-  },
-  {
     index: "05",
     label: "Demand",
-    number: { value: 80000 },
-    unit: "touches",
+    // Two audiences on two channels — kept apart rather than summed into a
+    // single total that would describe neither.
+    metrics: [
+      { number: { value: 32000 }, unit: "homes" },
+      { number: { value: 48000 }, unit: "agents" },
+    ],
     tone: "b",
     statement: "Then reach.",
     body: "Direct mail to 32,000 homes, email to 48,000+ agents, paid social across 12 high-equity cities.",
@@ -192,7 +201,7 @@ export const FUNNEL_STEPS: FunnelStep[] = [
   {
     index: "06",
     label: "Revenue",
-    number: { prefix: "$", value: 12.9, suffix: "M", decimals: 1 },
+    metrics: [{ number: { prefix: "$", value: 12.9, suffix: "M", decimals: 1 } }],
     tone: "c",
     statement: "The result.",
     body: "$12.9M in annual revenue. $9M in assets acquired. 15 months.",
@@ -201,9 +210,15 @@ export const FUNNEL_STEPS: FunnelStep[] = [
 
 export type StackTool = {
   name: string;
+  /** Simple Icons slug, for the tools it carries a mark for. */
   slug?: "meta" | "googleads" | "n8n" | "make" | "claude" | "figma" | "notion" | "asana";
+  /**
+   * Brand domain, for the tools Simple Icons has no mark for. Its icon is
+   * downloaded into public/logos/ at build time by scripts/fetch-brand-logos.mjs.
+   */
+  domain?: string;
   brandHex?: string;
-  /** monogram used when Simple Icons has no mark for the tool */
+  /** monogram, used only when neither a Simple Icons mark nor a downloaded icon resolves */
   mark?: string;
 };
 
@@ -229,15 +244,22 @@ export const STACK_GROUPS: StackGroup[] = [
   },
   {
     label: "CRM",
-    tools: [{ name: "Follow Up Boss", brandHex: "1F7A8C", mark: "FUB" }],
+    tools: [
+      {
+        name: "Follow Up Boss",
+        domain: "followupboss.com",
+        brandHex: "1F7A8C",
+        mark: "FUB",
+      },
+    ],
   },
   {
     label: "AI & Build",
     tools: [
       { name: "Claude Cowork", slug: "claude", brandHex: "D97757" },
-      { name: "Lovable", brandHex: "FF4785", mark: "LV" },
-      { name: "Bolt.new", brandHex: "1389FD", mark: "BN" },
-      { name: "HeyGen", brandHex: "7C3AED", mark: "HG" },
+      { name: "Lovable", domain: "lovable.dev", brandHex: "FF4785", mark: "LV" },
+      { name: "Bolt.new", domain: "bolt.new", brandHex: "1389FD", mark: "BN" },
+      { name: "HeyGen", domain: "heygen.com", brandHex: "7C3AED", mark: "HG" },
     ],
   },
   {
@@ -268,14 +290,17 @@ export const company = {
 };
 
 export const CONTACT = {
-  email: "louis@example.com",
-  linkedin: "https://www.linkedin.com/in/",
+  phone: "661 612 4137",
+  /** E.164 so it dials correctly from a phone. */
+  phoneHref: "tel:+16616124137",
+  linkedin: "https://www.linkedin.com/in/louiscpark/",
+  linkedinLabel: "linkedin.com/in/louiscpark",
 };
 
 export const SECTIONS = [
   { id: "intro", label: "Intro" },
   { id: "proof", label: "Proof" },
-  { id: "funnel", label: "The Funnel" },
+  { id: "system", label: "The System" },
   { id: "stack", label: "Stack" },
   { id: "for-company", label: `For ${company.companyName}` },
   { id: "contact", label: "Contact" },

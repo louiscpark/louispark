@@ -11,7 +11,8 @@ import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { Reveal } from "@/components/resume/Reveal";
 import { SideNav } from "@/components/resume/SideNav";
 import { ProofAsset, ProofBadge } from "@/components/resume/ProofSlot";
-import { Funnel } from "@/components/resume/Funnel";
+import { BRAND_LOGOS } from "@/content/brand-logos.generated";
+import { System } from "@/components/resume/System";
 import {
   CONTACT,
   HEADLINE,
@@ -60,7 +61,7 @@ function Index() {
       <main className="pt-14 lg:ml-64 lg:pt-0 xl:ml-72">
         <Intro />
         <Proof onOpen={setOpenMetric} />
-        <FunnelSection />
+        <SystemSection />
         <Stack />
         <ForCompany />
         <Contact />
@@ -187,11 +188,11 @@ function Proof({ onOpen }: { onOpen: (m: Metric) => void }) {
   );
 }
 
-function FunnelSection() {
+function SystemSection() {
   return (
-    <section id="funnel" className={cn(shell, "pt-24 pb-16 lg:pt-32")}>
-      <SectionHead index="02" title="The Funnel" />
-      <Funnel />
+    <section id="system" className={cn(shell, "pt-24 pb-16 lg:pt-32")}>
+      <SectionHead index="02" title="The System" />
+      <System />
     </section>
   );
 }
@@ -248,10 +249,23 @@ function ForCompany() {
   );
 }
 
+/**
+ * Every mark sits in the same 40px box so the twelve tools share one optical
+ * cap height and one baseline. Simple Icons marks are bare glyphs and fill the
+ * box; downloaded favicons carry their own padding — or are full-bleed app
+ * tiles — so they render a little smaller inside it. They are raster and will
+ * read softer than the SVGs; they are not upscaled to hide that.
+ *
+ * If either image fails to load, the tool falls back to its monogram. Never a
+ * broken image.
+ */
 function StackLogo({ tool }: { tool: StackTool }) {
+  const [failed, setFailed] = useState(false);
   const hex = `#${tool.brandHex ?? "77736D"}`;
+  const downloaded = tool.domain ? BRAND_LOGOS[tool.domain] : undefined;
+  const src = tool.slug ? `https://cdn.simpleicons.org/${tool.slug}/${tool.brandHex}` : downloaded;
 
-  if (!tool.slug) {
+  if (!src || failed) {
     return (
       <span
         role="img"
@@ -265,15 +279,18 @@ function StackLogo({ tool }: { tool: StackTool }) {
   }
 
   return (
-    <img
-      src={`https://cdn.simpleicons.org/${tool.slug}/${tool.brandHex}`}
-      alt={tool.name}
-      className="block h-10 w-auto shrink-0 object-contain"
-      loading="lazy"
-    />
+    <span className="flex size-10 shrink-0 items-center justify-center">
+      <img
+        src={src}
+        alt={tool.name}
+        onError={() => setFailed(true)}
+        loading="lazy"
+        decoding="async"
+        className={cn("block object-contain", tool.slug ? "h-10 w-auto" : "size-9 rounded-md")}
+      />
+    </span>
   );
 }
-
 function Stack() {
   let toolIndex = 0;
 
@@ -330,8 +347,8 @@ function Stack() {
 
 function Contact() {
   const links = [
-    { label: "Email", value: CONTACT.email, href: `mailto:${CONTACT.email}` },
-    { label: "LinkedIn", value: "linkedin.com/in/", href: CONTACT.linkedin },
+    { label: "Phone", value: CONTACT.phone, href: CONTACT.phoneHref },
+    { label: "LinkedIn", value: CONTACT.linkedinLabel, href: CONTACT.linkedin },
     { label: "Resume", value: "Download PDF", href: RESUME_PDF_URL },
   ];
 

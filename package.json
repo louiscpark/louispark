@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "vite dev",
     "posters": "node scripts/fetch-vimeo-posters.mjs",
-    "prebuild": "node scripts/fetch-vimeo-posters.mjs",
+    "logos": "node scripts/fetch-brand-logos.mjs",
+    "prebuild": "npm run posters && npm run logos",
     "build": "vite build",
-    "prebuild:dev": "node scripts/fetch-vimeo-posters.mjs",
+    "prebuild:dev": "npm run posters && npm run logos",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",

@@ -16,11 +16,11 @@ Single page, vertical scroll, with a sticky left sidebar navigation
 
 mobile the sidebar collapses to a slim top bar. Smooth scroll to anchors.
 
-Sections: Intro / Proof / The Funnel / Stack / For [Company] / Contact
+Sections: Intro / Proof / The System / Stack / For [Company] / Contact
 
 On the page only the middle four carry a printed numeral — Proof is 01, 
 
-The Funnel 02, Stack 03, For [Company] 04.
+The System 02, Stack 03, For [Company] 04.
 
 === 1. INTRO (full viewport height) ===
 
@@ -80,15 +80,15 @@ Metrics:
 
 - 48,000+ — Real estate agents reached via email campaign
 
-=== 3. THE FUNNEL (scroll-driven) ===
+=== 3. THE SYSTEM (scroll-driven) ===
 
 Replaces the three division sections. Sticky scrollytelling: on desktop a 
 
-sticky left column (45%) holds an SVG funnel diagram, vertically centred; 
+sticky left column (45%) holds an SVG diagram, vertically centred; the 
 
-the right column (55%) scrolls through six text blocks of min-height 90vh. 
+right column (55%) scrolls through six text blocks of min-height 90vh. An 
 
-An IntersectionObserver with rootMargin "-45% 0px -45% 0px" activates the 
+IntersectionObserver with rootMargin "-45% 0px -45% 0px" activates the 
 
 step crossing the vertical centre, so the diagram assembles a node at a 
 
@@ -98,11 +98,41 @@ the steps stack as six cards, each with its own node fragment above the
 
 copy. Never hijacks scroll or wheel events.
 
-Colour runs in three tones from the existing palette — muted for steps 
+Called "The System", not "The Funnel" — the stack of connected nodes shows 
 
-1-3, ink for 4-5, accent for step 6. Under prefers-reduced-motion all six 
+the order things were stood up, and should not be read as a claim that 
 
-nodes show at once, with no scroll binding and no count-up.
+each step caused the next.
+
+Colour runs in three tones from the existing palette, by position — the 
+
+quietest tone for steps 1-2, the mid tone for 3-5, the rust accent for step 
+
+6. Each node is filled with a 7% tint of its own phase colour behind a 1.5px 
+
+border of the same colour at 35%; the step number and label sit at 70% 
+
+opacity and the metric at 100%. The ACTIVE node lifts to a 14% fill, a 2px 
+
+border at 50%, and a soft outer glow in its phase colour at 10%. Revealed 
+
+nodes that are no longer active keep their fill and halve their border and 
+
+text rather than fading out. Connectors are 2px in the phase tint of the 
+
+node they leave.
+
+Tints come from fill-opacity / stroke-opacity on a solid --tone, not from 
+
+colour-mix: the minifier emits a plain colour fallback ahead of any 
+
+colour-mix, and a browser that took that fallback would paint the nodes as 
+
+solid ink boxes.
+
+Under prefers-reduced-motion all six nodes show at once, with no scroll 
+
+binding and no count-up.
 
 Steps (node label / metric / statement / body):
 
@@ -116,19 +146,19 @@ Steps (node label / metric / statement / body):
 
    ready-to-buy records through national disposition networks.
 
-03 DISTRIBUTION — 1,100+ leaders — "Then the channel."
-
-   B2B go-to-market to 1,100+ brokerage directors and top agents. 
-
-   Partnerships with The Agency, Berkshire Hathaway, eXp, Intero.
-
-04 TARGETING — 12 profiles — "Then who."
+03 TARGETING — 12 profiles — "Then who."
 
    Segmented the distressed-seller market into 12 owner profiles and 
 
    tested messaging against each to find the highest-converting segments.
 
-05 DEMAND — 80,000 touches — "Then reach."
+04 DISTRIBUTION — 1,100+ leaders — "Then the channel."
+
+   B2B go-to-market to 1,100+ brokerage directors and top agents. 
+
+   Partnerships with The Agency, Berkshire Hathaway, eXp, Intero.
+
+05 DEMAND — 32,000 homes · 48,000 agents — "Then reach."
 
    Direct mail to 32,000 homes, email to 48,000+ agents, paid social 
 
@@ -138,29 +168,73 @@ Steps (node label / metric / statement / body):
 
    $12.9M in annual revenue. $9M in assets acquired. 15 months.
 
-Videos sit in steps 02, 03, and 05 via <LazyVimeo>. Poster frames are 
+Who to sell to is defined before the channel to reach them, so TARGETING 
 
-resolved at BUILD time from Vimeo's public oEmbed endpoint by 
+precedes DISTRIBUTION. Step 05 carries two separate figures rather than one 
 
-scripts/fetch-vimeo-posters.mjs (runs on `prebuild`, or `npm run 
+aggregate: they are different channels reaching different audiences, and a 
 
-posters`), which writes src/content/vimeo-posters.generated.ts. Nothing is 
+combined total would describe neither. A step with two figures stacks them 
 
-fetched on page load; a failed fetch keeps the previously generated URL, 
+on two lines in the node and grows the node by one line; the type does not 
 
-and an id with no poster at all falls back to a flat neutral surface. A 
+shrink.
 
-per-video posterSrc overrides the fetched thumbnail.
+Videos sit in steps 02, 04, and 05 via <LazyVimeo>, following the steps 
+
+they belong to. Poster frames AND frame shapes are resolved at BUILD time 
+
+from Vimeo's public oEmbed endpoint by scripts/fetch-vimeo-posters.mjs 
+
+(runs on `prebuild`, or `npm run posters`), which writes 
+
+src/content/vimeo-posters.generated.ts. Nothing is fetched on page load; a 
+
+failed fetch keeps the previously generated entry, and an id with nothing 
+
+at all falls back to a flat neutral surface in a 16:9 frame. A per-video 
+
+posterSrc overrides the fetched thumbnail.
+
+The frame follows the video's own dimensions rather than assuming 16:9 — 
+
+landscape videos get 16/9, portrait videos 9/16, so a vertical ad is not 
+
+letterboxed. Two of the three are portrait. Portrait frames are capped at 
+
+520px tall from 640px up and centred in the column; below 640px they take 
+
+the full column width.
 
 === 4. STACK ===
 
 A single ruled row of tool logos, grouped by what each tool is for: 
 
-Demand, Automation, CRM, AI & Build, Design & Ops. Logos come from Simple 
+Demand, Automation, CRM, AI & Build, Design & Ops.
 
-Icons at brand colour, with a monogram fallback for tools it does not 
+Eight tools use Simple Icons at brand colour, by slug. The four Simple 
 
-carry.
+Icons has no mark for — Follow Up Boss, HeyGen, Lovable, Bolt.new — carry 
+
+a `domain` instead, and scripts/fetch-brand-logos.mjs downloads each 
+
+brand's icon from Google's public favicon service into public/logos/ at 
+
+build time (runs on `prebuild`, or `npm run logos`), writing the manifest 
+
+to src/content/brand-logos.generated.ts.
+
+All twelve marks render inside the same 40px box so they share one optical 
+
+cap height and one baseline. Downloaded icons are raster and read softer 
+
+than the SVGs; they are not upscaled to hide that. A download that fails 
+
+keeps whatever icon is already on disk, and a tool with no icon at all — 
+
+or whose image fails to load in the browser — falls back to its text 
+
+monogram. Never a broken image.
 
 === 5. FOR [COMPANY] ===
 
@@ -178,7 +252,9 @@ Fill with clearly-marked placeholder text for now.
 
 === 6. CONTACT ===
 
-Email, LinkedIn, and a "Download resume PDF" link. No contact form.
+Phone (as a tel: link, so it is tappable on mobile), LinkedIn, and a 
+
+"Download resume PDF" link. No contact form, no email address.
 
 === DESIGN ===
 

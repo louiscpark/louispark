@@ -402,71 +402,113 @@
 }
 
 @layer components {
-  /* --- Funnel diagram ----------------------------------------------------- */
-  .funnel-diagram {
-    /* nodes translate 8 units on their way in — don't clip them */
+  /* --- System diagram ----------------------------------------------------- */
+  /*
+   * Phase colour is carried in as --tone and tinted with fill-opacity /
+   * stroke-opacity rather than colour-mix, so the tint never depends on a
+   * colour function the browser might not have — a missed colour-mix would
+   * fall back to a solid ink box.
+   */
+  .system-diagram {
+    /* nodes translate 8 units on their way in, and the active one glows */
     overflow: visible;
   }
 
-  .funnel-node {
+  .system-node {
     transition:
       opacity 400ms ease-out,
       transform 400ms ease-out;
   }
 
-  .funnel-node[data-state="hidden"] {
+  /*
+   * Only the un-revealed state fades the whole node. Revealed-but-behind
+   * nodes keep their fill and step back through element-level values, so a
+   * passed phase stays legible instead of dissolving into the page.
+   */
+  .system-node[data-state="hidden"] {
     opacity: 0;
     transform: translateY(8px);
   }
 
-  /* Already-passed stages stay on screen, quietly. */
-  .funnel-node[data-state="past"] {
-    opacity: 0.4;
+  .system-node-glow {
+    fill: var(--tone);
+    opacity: 0;
+    filter: blur(8px);
+    transition: opacity 400ms ease-out;
   }
 
-  .funnel-node[data-state="active"],
-  .funnel-node[data-state="static"] {
-    opacity: 1;
+  .system-node[data-state="active"] .system-node-glow {
+    opacity: 0.1;
   }
 
-  .funnel-node-box {
-    fill: var(--card);
-    stroke: var(--border);
-    stroke-width: 1;
-  }
-
-  .funnel-node[data-state="active"] .funnel-node-box {
+  .system-node-box {
+    fill: var(--tone);
+    fill-opacity: 0.07;
     stroke: var(--tone);
+    stroke-opacity: 0.35;
+    stroke-width: 1.5;
+    transition:
+      fill-opacity 400ms ease-out,
+      stroke-opacity 400ms ease-out,
+      stroke-width 400ms ease-out;
   }
 
-  .funnel-node-label {
+  .system-node[data-state="active"] .system-node-box {
+    fill-opacity: 0.14;
+    stroke-opacity: 0.5;
+    stroke-width: 2;
+  }
+
+  .system-node[data-state="past"] .system-node-box {
+    stroke-opacity: 0.17;
+  }
+
+  .system-node-label {
     font-family: var(--font-sans);
     font-size: 9.5px;
     letter-spacing: 0.16em;
     fill: var(--muted-foreground);
+    /* the label sits behind its own metric, not level with it */
+    opacity: 0.7;
+    transition: opacity 400ms ease-out;
   }
 
-  .funnel-node-index {
+  .system-node-index {
     fill: var(--tone);
   }
 
-  .funnel-node-metric {
+  .system-node-metric {
     font-family: var(--font-display);
     font-size: 15px;
     letter-spacing: -0.01em;
     fill: var(--tone);
+    opacity: 1;
+    transition: opacity 400ms ease-out;
   }
 
-  .funnel-connector {
-    stroke: var(--border);
-    stroke-width: 1;
+  .system-node[data-state="past"] .system-node-label {
+    opacity: 0.35;
+  }
+
+  .system-node[data-state="past"] .system-node-metric {
+    opacity: 0.5;
+  }
+
+  .system-connector {
+    stroke: var(--tone);
+    stroke-opacity: 0.35;
+    stroke-width: 2;
     transition: stroke-dashoffset 300ms ease-out;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .funnel-node,
-  .funnel-connector {
+  .system-node,
+  .system-node-glow,
+  .system-node-box,
+  .system-node-label,
+  .system-node-metric,
+  .system-connector {
     transition: none;
   }
 }

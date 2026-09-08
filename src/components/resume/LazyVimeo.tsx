@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Play } from "lucide-react";
-import { VIMEO_POSTERS } from "@/content/vimeo-posters.generated";
+import { VIMEO_META } from "@/content/vimeo-posters.generated";
 import { cn } from "@/lib/utils";
 
 export type LazyVimeoProps = {
@@ -19,6 +19,11 @@ export type LazyVimeoProps = {
  * clicks play. At rest it is a cover-fit poster under a soft dark scrim, a
  * solid play control, and the title bottom-left. With no poster — the build
  * could not resolve one — it falls back to a flat neutral surface.
+ *
+ * The frame follows the video's own shape, resolved at build time: 16:9 for
+ * landscape, 9:16 for portrait, so a vertical ad is never letterboxed. Portrait
+ * frames are capped in height above 640px so they do not run away with the
+ * column; on a phone they take the full column width.
  */
 export function LazyVimeo({
   vimeoId,
@@ -30,12 +35,20 @@ export function LazyVimeo({
 }: LazyVimeoProps) {
   const [playing, setPlaying] = useState(false);
 
-  const poster = posterSrc ?? VIMEO_POSTERS[vimeoId];
+  const meta = VIMEO_META[vimeoId];
+  const poster = posterSrc ?? meta?.poster;
+  // Anything we could not measure is treated as landscape.
+  const portrait = (meta?.aspectRatio ?? 16 / 9) < 1;
   const embedSrc = `https://player.vimeo.com/video/${vimeoId}?title=0&byline=0&portrait=0&dnt=1&autoplay=1`;
 
   return (
     <figure className={cn("w-full", className)}>
-      <div className="relative aspect-video w-full overflow-hidden rounded-sm border border-border bg-muted">
+      <div
+        className={cn(
+          "relative w-full overflow-hidden rounded-sm border border-border bg-muted",
+          portrait ? "aspect-[9/16] sm:mx-auto sm:h-[520px] sm:w-auto" : "aspect-video",
+        )}
+      >
         {playing ? (
           <iframe
             src={embedSrc}

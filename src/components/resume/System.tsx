@@ -1,29 +1,33 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { LazyVimeo } from "@/components/resume/LazyVimeo";
-import {
-  FUNNEL_STEPS,
-  type FunnelStep,
-  type FunnelTone,
-  type MetricNumber,
-} from "@/content/resume";
+import { SYSTEM_STEPS, type MetricNumber, type StepTone, type SystemStep } from "@/content/resume";
 import { cn } from "@/lib/utils";
 
 // --- diagram geometry (SVG user units) -------------------------------------
 const VB_W = 300;
-const NODE_H = 54;
+const BASE_H = 54;
+/** A second counted figure adds one line, and one line of height, to a node. */
+const METRIC_LINE_H = 18;
 const GAP = 28;
 const PAD = 3;
-const COUNT = FUNNEL_STEPS.length;
-const VB_H = PAD * 2 + COUNT * NODE_H + (COUNT - 1) * GAP;
 
-const nodeY = (i: number) => PAD + i * (NODE_H + GAP);
-/** Widths taper top to bottom so the stack reads as a funnel. */
+const NODE_H = SYSTEM_STEPS.map((s) => BASE_H + (s.metrics.length - 1) * METRIC_LINE_H);
+
+const NODE_Y: number[] = [];
+NODE_H.reduce((y, h, i) => {
+  NODE_Y[i] = y;
+  return y + h + GAP;
+}, PAD);
+
+const VB_H = NODE_Y[NODE_Y.length - 1]! + NODE_H[NODE_H.length - 1]! + PAD;
+
+/** Widths taper top to bottom so the stack reads as one narrowing shape. */
 const nodeW = (i: number) => 280 - i * 18;
 const nodeX = (i: number) => (VB_W - nodeW(i)) / 2;
 
 /** Three tones, all already in the palette: quiet → ink → accent. */
-const TONE: Record<FunnelTone, string> = {
+const TONE: Record<StepTone, string> = {
   a: "var(--muted-foreground)",
   b: "var(--foreground)",
   c: "var(--primary)",
@@ -36,66 +40,81 @@ function formatNumber({ prefix = "", value, suffix = "", decimals = 0 }: MetricN
   })}${suffix}`;
 }
 
-const nodeMetric = (step: FunnelStep) =>
-  step.unit ? `${formatNumber(step.number)} ${step.unit}` : formatNumber(step.number);
+const metricLines = (step: SystemStep) =>
+  step.metrics.map((m) =>
+    m.unit ? `${formatNumber(m.number)} ${m.unit}` : formatNumber(m.number),
+  );
 
 type NodeState = "hidden" | "past" | "active" | "static";
 
-function FunnelNode({
+function SystemNode({
   step,
   x,
   y,
   w,
+  h,
   state,
 }: {
-  step: FunnelStep;
+  step: SystemStep;
   x: number;
   y: number;
   w: number;
+  h: number;
   state: NodeState;
 }) {
   return (
     <g
-      className="funnel-node"
+      className="system-node"
       data-state={state}
       style={{ "--tone": TONE[step.tone] } as React.CSSProperties}
     >
+      {/* soft outer glow, painted behind the box and only lit while active */}
+      <rect x={x} y={y} width={w} height={h} rx={6} className="system-node-glow" aria-hidden />
       <rect
         x={x}
         y={y}
         width={w}
-        height={NODE_H}
+        height={h}
         rx={6}
-        className="funnel-node-box"
+        className="system-node-box"
         vectorEffect="non-scaling-stroke"
       />
-      <text x={VB_W / 2} y={y + 21} textAnchor="middle" className="funnel-node-label">
-        <tspan className="funnel-node-index">{step.index}</tspan>
+      <text x={VB_W / 2} y={y + 21} textAnchor="middle" className="system-node-label">
+        <tspan className="system-node-index">{step.index}</tspan>
         <tspan dx="7">{step.label.toUpperCase()}</tspan>
       </text>
-      <text x={VB_W / 2} y={y + 40} textAnchor="middle" className="funnel-node-metric">
-        {nodeMetric(step)}
-      </text>
+      {/* Multi-part metrics stack rather than shrink — the type stays put. */}
+      {metricLines(step).map((line, k) => (
+        <text
+          key={line}
+          x={VB_W / 2}
+          y={y + 40 + k * METRIC_LINE_H}
+          textAnchor="middle"
+          className="system-node-metric"
+        >
+          {line}
+        </text>
+      ))}
     </g>
   );
 }
 
-const diagramLabel = `Funnel diagram, six stages in the order they were built: ${FUNNEL_STEPS.map(
-  (s) => `${s.index} ${s.label}, ${nodeMetric(s)}`,
+const diagramLabel = `Diagram of the system, six stages in the order they were built: ${SYSTEM_STEPS.map(
+  (s) => `${s.index} ${s.label}, ${metricLines(s).join(" and ")}`,
 ).join("; ")}.`;
 
 /** The full stack, assembled one node at a time as the reader scrolls. */
-function FunnelDiagram({ active, reduced }: { active: number; reduced: boolean }) {
+function SystemDiagram({ active, reduced }: { active: number; reduced: boolean }) {
   return (
     <svg
       viewBox={`0 0 ${VB_W} ${VB_H}`}
       role="img"
       aria-label={diagramLabel}
-      className="funnel-diagram h-auto max-h-[78vh] w-full max-w-[380px]"
+      className="system-diagram h-auto max-h-[78vh] w-full max-w-[380px]"
     >
-      {FUNNEL_STEPS.slice(0, -1).map((step, i) => {
-        const y1 = nodeY(i) + NODE_H;
-        const y2 = nodeY(i + 1);
+      {SYSTEM_STEPS.slice(0, -1).map((step, i) => {
+        const y1 = NODE_Y[i]! + NODE_H[i]!;
+        const y2 = NODE_Y[i + 1]!;
         const len = y2 - y1;
         const drawn = reduced || active > i;
         return (
@@ -105,20 +124,27 @@ function FunnelDiagram({ active, reduced }: { active: number; reduced: boolean }
             y1={y1}
             x2={VB_W / 2}
             y2={y2}
-            className="funnel-connector"
-            style={{ strokeDasharray: len, strokeDashoffset: drawn ? 0 : len }}
+            className="system-connector"
+            style={
+              {
+                "--tone": TONE[step.tone],
+                strokeDasharray: len,
+                strokeDashoffset: drawn ? 0 : len,
+              } as React.CSSProperties
+            }
             vectorEffect="non-scaling-stroke"
           />
         );
       })}
 
-      {FUNNEL_STEPS.map((step, i) => (
-        <FunnelNode
+      {SYSTEM_STEPS.map((step, i) => (
+        <SystemNode
           key={step.index}
           step={step}
           x={nodeX(i)}
-          y={nodeY(i)}
+          y={NODE_Y[i]!}
           w={nodeW(i)}
+          h={NODE_H[i]!}
           state={reduced ? "static" : i > active ? "hidden" : i === active ? "active" : "past"}
         />
       ))}
@@ -127,15 +153,15 @@ function FunnelDiagram({ active, reduced }: { active: number; reduced: boolean }
 }
 
 /** Under 900px each step carries its own node above the copy. */
-function FunnelNodeFragment({ step }: { step: FunnelStep }) {
+function SystemNodeFragment({ step, h }: { step: SystemStep; h: number }) {
   return (
     <svg
-      viewBox={`0 0 ${VB_W} ${NODE_H + PAD * 2}`}
+      viewBox={`0 0 ${VB_W} ${h + PAD * 2}`}
       role="img"
-      aria-label={`Funnel stage ${step.index}, ${step.label}: ${nodeMetric(step)}.`}
-      className="funnel-diagram w-full max-w-[300px]"
+      aria-label={`Stage ${step.index}, ${step.label}: ${metricLines(step).join(" and ")}.`}
+      className="system-diagram w-full max-w-[300px]"
     >
-      <FunnelNode step={step} x={20} y={PAD} w={260} state="active" />
+      <SystemNode step={step} x={20} y={PAD} w={260} h={h} state="active" />
     </svg>
   );
 }
@@ -205,7 +231,7 @@ function useActiveStep(reduced: boolean) {
   return { blocks, active };
 }
 
-export function Funnel() {
+export function System() {
   const reduced = usePrefersReducedMotion();
   const { blocks, active } = useActiveStep(reduced);
   const [maxSeen, setMaxSeen] = useState(0);
@@ -219,12 +245,12 @@ export function Funnel() {
     <div className="flex flex-col gap-8 min-[900px]:flex-row min-[900px]:gap-12 lg:gap-16">
       <div className="hidden min-[900px]:block min-[900px]:w-[45%]">
         <div className="sticky top-14 flex h-[calc(100vh-3.5rem)] items-center justify-center lg:top-0 lg:h-screen">
-          <FunnelDiagram active={active} reduced={reduced} />
+          <SystemDiagram active={active} reduced={reduced} />
         </div>
       </div>
 
       <div className="min-[900px]:w-[55%]">
-        {FUNNEL_STEPS.map((step, i) => (
+        {SYSTEM_STEPS.map((step, i) => (
           <div
             key={step.index}
             ref={(el) => {
@@ -239,20 +265,38 @@ export function Funnel() {
             )}
           >
             <div className="mb-8 min-[900px]:hidden">
-              <FunnelNodeFragment step={step} />
+              <SystemNodeFragment step={step} h={NODE_H[i]!} />
             </div>
 
             <p className="eyebrow">
               {step.index} — {step.label}
             </p>
 
-            <p className="numeral mt-5 text-5xl lg:text-6xl" style={{ color: TONE[step.tone] }}>
-              <AnimatedNumber {...step.number} start={reduced || maxSeen >= i} />
-              {step.unit ? (
-                <span className="ml-3 font-sans text-sm tracking-wide text-muted-foreground">
-                  {step.unit}
-                </span>
-              ) : null}
+            <p
+              className="numeral mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-5xl lg:text-6xl"
+              style={{ color: TONE[step.tone] }}
+            >
+              {step.metrics.map((metric, k) => (
+                <Fragment key={metric.unit ?? k}>
+                  {k > 0 ? (
+                    <span aria-hidden className="text-muted-foreground">
+                      ·
+                    </span>
+                  ) : null}
+                  <span className="inline-flex items-baseline gap-3">
+                    <AnimatedNumber
+                      {...metric.number}
+                      delay={k * 120}
+                      start={reduced || maxSeen >= i}
+                    />
+                    {metric.unit ? (
+                      <span className="font-sans text-sm tracking-wide text-muted-foreground">
+                        {metric.unit}
+                      </span>
+                    ) : null}
+                  </span>
+                </Fragment>
+              ))}
             </p>
 
             <p className="mt-7 max-w-xl font-display text-2xl leading-snug sm:text-3xl">
