@@ -26,11 +26,11 @@ const VB_H = NODE_Y[NODE_Y.length - 1]! + NODE_H[NODE_H.length - 1]! + PAD;
 const nodeW = (i: number) => 280 - i * 18;
 const nodeX = (i: number) => (VB_W - nodeW(i)) / 2;
 
-/** Three tones, all already in the palette: quiet → ink → accent. */
+/** The three phase hues: teal → amber → rust. */
 const TONE: Record<StepTone, string> = {
-  a: "var(--muted-foreground)",
-  b: "var(--foreground)",
-  c: "var(--primary)",
+  a: "var(--phase-1)",
+  b: "var(--phase-2)",
+  c: "var(--phase-3)",
 };
 
 function formatNumber({ prefix = "", value, suffix = "", decimals = 0 }: MetricNumber) {

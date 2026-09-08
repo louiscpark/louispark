@@ -13,6 +13,7 @@ import { SideNav } from "@/components/resume/SideNav";
 import { ProofAsset, ProofBadge } from "@/components/resume/ProofSlot";
 import { BRAND_LOGOS } from "@/content/brand-logos.generated";
 import { System } from "@/components/resume/System";
+import { ScrollCue } from "@/components/resume/ScrollCue";
 import {
   CONTACT,
   HEADLINE,
@@ -93,7 +94,7 @@ function Intro() {
       id="intro"
       className={cn(
         shell,
-        "flex min-h-[92vh] flex-col justify-center py-24 lg:min-h-screen",
+        "relative flex min-h-[92vh] flex-col justify-center py-24 lg:min-h-screen",
       )}
     >
       <Reveal>
@@ -129,6 +130,8 @@ function Intro() {
           </a>
         </div>
       </Reveal>
+
+      <ScrollCue href="#proof" />
     </section>
   );
 }
@@ -308,17 +311,14 @@ function Stack() {
           <span className="eyebrow">03</span>
           <h2 className="text-3xl sm:text-4xl">Stack</h2>
         </Reveal>
-        <div className="flex flex-wrap justify-center gap-y-10">
-          {STACK_GROUPS.map((group, gi) => (
+        <div className="stack-groups">
+          {STACK_GROUPS.map((group) => (
             <div
               key={group.label}
-              className={cn(
-                "flex flex-auto basis-1/2 flex-col items-center px-4 sm:basis-auto sm:px-6 lg:px-7",
-                gi > 0 && "sm:border-l sm:border-border",
-              )}
+              className="stack-group flex flex-col items-center px-4 sm:px-6 lg:px-7"
             >
               <p className="eyebrow text-xs">{group.label}</p>
-              <div className="mt-6 flex flex-nowrap items-start gap-x-4">
+              <div className="mt-6 flex flex-wrap items-start justify-center gap-x-4 gap-y-6">
                 {group.tools.map((tool) => {
                   const delay = toolIndex * 60;
                   toolIndex += 1;

@@ -24,6 +24,9 @@
   --color-ink: var(--ink);
   --color-paper: var(--paper);
   --color-rule: var(--rule);
+  --color-phase-1: var(--phase-1);
+  --color-phase-2: var(--phase-2);
+  --color-phase-3: var(--phase-3);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -80,6 +83,13 @@
   --popover-foreground: var(--ink);
   --primary: oklch(0.52 0.16 42);
   --primary-foreground: oklch(0.985 0.005 85);
+  /*
+   * The three phases of the system diagram. Saturated on purpose: these are
+   * read as tints at 8-16%, so a near-neutral hue resolves to grey on cream.
+   */
+  --phase-1: oklch(0.52 0.1 195);
+  --phase-2: oklch(0.62 0.12 70);
+  --phase-3: var(--primary);
   --secondary: oklch(0.94 0.008 85);
   --secondary-foreground: var(--ink);
   --muted: oklch(0.94 0.008 85);
@@ -116,6 +126,10 @@
   --popover-foreground: oklch(0.984 0.003 247.858);
   --primary: oklch(0.929 0.013 255.508);
   --primary-foreground: oklch(0.208 0.042 265.755);
+  /* lifted for legibility on a dark ground */
+  --phase-1: oklch(0.72 0.1 195);
+  --phase-2: oklch(0.78 0.12 70);
+  --phase-3: var(--primary);
   --secondary: oklch(0.279 0.041 260.031);
   --secondary-foreground: oklch(0.984 0.003 247.858);
   --muted: oklch(0.279 0.041 260.031);
@@ -206,6 +220,18 @@
   }
 }
 
+@keyframes scroll-cue-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 0.35;
+  }
+}
+
 @keyframes stack-grid-drift {
   from {
     background-position: 0 0;
@@ -225,6 +251,23 @@
 }
 
 @layer components {
+  .scroll-cue {
+    /* the 50% opacity lives here so the icon's own fade can multiply into it */
+    transform: translateX(-50%);
+    opacity: 0.5;
+    color: var(--muted-foreground);
+    transition: opacity 500ms ease;
+  }
+
+  .scroll-cue[data-gone="true"] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .scroll-cue-icon {
+    animation: scroll-cue-bob 1.8s ease-in-out infinite;
+  }
+
   .stack-grid {
     position: absolute;
     inset: 0;
@@ -263,6 +306,42 @@
 
   .stack-sweep[data-visible="true"] .stack-sweep-line {
     animation: stack-sweep 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /*
+   * Five groups do not fit one row: 2-up below lg, 3-up above, so they wrap to
+   * two rows on desktop. Fixed flex-basis keeps the wrap points deterministic,
+   * which is what lets the nth-child rules below know where a row starts.
+   */
+  .stack-groups {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 2.5rem;
+  }
+
+  .stack-group {
+    flex: 0 1 50%;
+    border-left: 1px solid var(--border);
+  }
+
+  /* a group that starts a row never carries a divider */
+  .stack-groups > .stack-group:nth-child(2n + 1) {
+    border-left: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .stack-group {
+      flex-basis: 33.3333%;
+    }
+
+    .stack-groups > .stack-group:nth-child(2n + 1) {
+      border-left: 1px solid var(--border);
+    }
+
+    .stack-groups > .stack-group:nth-child(3n + 1) {
+      border-left: 0;
+    }
   }
 
   .stack-tool {
@@ -308,6 +387,16 @@
 
   .stack-grid {
     animation: none;
+  }
+
+  .scroll-cue {
+    transition: none;
+  }
+
+  .scroll-cue-icon {
+    animation: none;
+    transform: none;
+    opacity: 1;
   }
 
   .stack-sweep-line {
@@ -433,19 +522,20 @@
   .system-node-glow {
     fill: var(--tone);
     opacity: 0;
-    filter: blur(8px);
+    /* blur() takes a standard deviation, so half the intended 24px spread */
+    filter: blur(12px);
     transition: opacity 400ms ease-out;
   }
 
   .system-node[data-state="active"] .system-node-glow {
-    opacity: 0.1;
+    opacity: 0.14;
   }
 
   .system-node-box {
     fill: var(--tone);
-    fill-opacity: 0.07;
+    fill-opacity: 0.08;
     stroke: var(--tone);
-    stroke-opacity: 0.35;
+    stroke-opacity: 0.3;
     stroke-width: 1.5;
     transition:
       fill-opacity 400ms ease-out,
@@ -454,13 +544,9 @@
   }
 
   .system-node[data-state="active"] .system-node-box {
-    fill-opacity: 0.14;
-    stroke-opacity: 0.5;
+    fill-opacity: 0.16;
+    stroke-opacity: 0.7;
     stroke-width: 2;
-  }
-
-  .system-node[data-state="past"] .system-node-box {
-    stroke-opacity: 0.17;
   }
 
   .system-node-label {
@@ -469,7 +555,7 @@
     letter-spacing: 0.16em;
     fill: var(--muted-foreground);
     /* the label sits behind its own metric, not level with it */
-    opacity: 0.7;
+    opacity: 0.55;
     transition: opacity 400ms ease-out;
   }
 
@@ -482,21 +568,21 @@
     font-size: 15px;
     letter-spacing: -0.01em;
     fill: var(--tone);
-    opacity: 1;
+    opacity: 0.75;
     transition: opacity 400ms ease-out;
   }
 
-  .system-node[data-state="past"] .system-node-label {
-    opacity: 0.35;
+  .system-node[data-state="active"] .system-node-label {
+    opacity: 0.7;
   }
 
-  .system-node[data-state="past"] .system-node-metric {
-    opacity: 0.5;
+  .system-node[data-state="active"] .system-node-metric {
+    opacity: 1;
   }
 
   .system-connector {
     stroke: var(--tone);
-    stroke-opacity: 0.35;
+    stroke-opacity: 0.4;
     stroke-width: 2;
     transition: stroke-dashoffset 300ms ease-out;
   }

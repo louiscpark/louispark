@@ -211,7 +211,7 @@ export const SYSTEM_STEPS: SystemStep[] = [
 export type StackTool = {
   name: string;
   /** Simple Icons slug, for the tools it carries a mark for. */
-  slug?: "meta" | "googleads" | "n8n" | "make" | "claude" | "figma" | "notion" | "asana";
+  slug?: "meta" | "googleads" | "n8n" | "make" | "claude" | "figma" | "notion" | "asana" | "github";
   /**
    * Brand domain, for the tools Simple Icons has no mark for. Its icon is
    * downloaded into public/logos/ at build time by scripts/fetch-brand-logos.mjs.
@@ -240,11 +240,6 @@ export const STACK_GROUPS: StackGroup[] = [
     tools: [
       { name: "n8n", slug: "n8n", brandHex: "EA4B71" },
       { name: "Make.com", slug: "make", brandHex: "6D00CC" },
-    ],
-  },
-  {
-    label: "CRM",
-    tools: [
       {
         name: "Follow Up Boss",
         domain: "followupboss.com",
@@ -256,9 +251,16 @@ export const STACK_GROUPS: StackGroup[] = [
   {
     label: "AI & Build",
     tools: [
-      { name: "Claude Cowork", slug: "claude", brandHex: "D97757" },
+      { name: "Claude Code", slug: "claude", brandHex: "D97757" },
       { name: "Lovable", domain: "lovable.dev", brandHex: "FF4785", mark: "LV" },
       { name: "Bolt.new", domain: "bolt.new", brandHex: "1389FD", mark: "BN" },
+    ],
+  },
+  {
+    label: "Video",
+    tools: [
+      { name: "Higgsfield", domain: "higgsfield.ai", brandHex: "CCFF00", mark: "HF" },
+      { name: "CapCut", domain: "capcut.com", brandHex: "000000", mark: "CC" },
       { name: "HeyGen", domain: "heygen.com", brandHex: "7C3AED", mark: "HG" },
     ],
   },
@@ -268,6 +270,7 @@ export const STACK_GROUPS: StackGroup[] = [
       { name: "Figma", slug: "figma", brandHex: "F24E1E" },
       { name: "Notion", slug: "notion", brandHex: "000000" },
       { name: "Asana", slug: "asana", brandHex: "F06A6A" },
+      { name: "GitHub", slug: "github", brandHex: "181717" },
     ],
   },
 ];

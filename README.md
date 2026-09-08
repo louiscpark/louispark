@@ -44,6 +44,16 @@ Two buttons: "See the proof" (scrolls to Proof) and "Download resume PDF"
 
 (placeholder link).
 
+At the foot of the hero, centred, a small downward chevron in 
+
+--muted-foreground at 50% that bobs 6px and fades on a 1.8s loop. It is a 
+
+link to the next section, and it fades out for good once the reader is 15% 
+
+of a viewport down the page — it never comes back. Under 
+
+prefers-reduced-motion it renders static and still works as a link.
+
 Keep this section restrained — lots of whitespace, one strong typeface, 
 
 no stock imagery, no gradients, no illustration.
@@ -104,27 +114,33 @@ the order things were stood up, and should not be read as a claim that
 
 each step caused the next.
 
-Colour runs in three tones from the existing palette, by position — the 
+Colour runs in three explicit phase hues, defined directly in :root as 
 
-quietest tone for steps 1-2, the mid tone for 3-5, the rust accent for step 
+--phase-1 (deep teal), --phase-2 (warm amber) and --phase-3 (the existing 
 
-6. Each node is filled with a 7% tint of its own phase colour behind a 1.5px 
+rust --primary). They are NOT derived from --muted-foreground or the chart 
 
-border of the same colour at 35%; the step number and label sit at 70% 
+tokens: a near-neutral hue resolves to grey once it is tinted down to 8%, 
 
-opacity and the metric at 100%. The ACTIVE node lifts to a 14% fill, a 2px 
+which is what the first pass got wrong. Steps 01-02 take phase-1, 03-05 
 
-border at 50%, and a soft outer glow in its phase colour at 10%. Revealed 
+phase-2, 06 phase-3.
 
-nodes that are no longer active keep their fill and halve their border and 
+An inactive node is filled with its phase colour at 8% behind a 1.5px 
 
-text rather than fading out. Connectors are 2px in the phase tint of the 
+border of the same colour at 30%, with the step number and label at 55% and 
 
-node they leave.
+the metric at 75%. The ACTIVE node lifts to a 16% fill, a 2px border at 
+
+70%, a metric at full opacity in the phase colour, and a soft outer glow in 
+
+the phase colour at 14%. Connectors are 2px at 40% in the phase colour of 
+
+the step ABOVE them.
 
 Tints come from fill-opacity / stroke-opacity on a solid --tone, not from 
 
-colour-mix: the minifier emits a plain colour fallback ahead of any 
+colour-mix: the minifier emits a plain colour fallback ahead of any bare 
 
 colour-mix, and a browser that took that fallback would paint the nodes as 
 
@@ -208,33 +224,45 @@ the full column width.
 
 === 4. STACK ===
 
-A single ruled row of tool logos, grouped by what each tool is for: 
+Tool logos in five groups: DEMAND · AUTOMATION · AI & BUILD · VIDEO · 
 
-Demand, Automation, CRM, AI & Build, Design & Ops.
+DESIGN & OPS. Five will not sit on one row, so they wrap — 2-up below 
 
-Eight tools use Simple Icons at brand colour, by slug. The four Simple 
+1024px, 3-up above, giving two rows on desktop. Flex-basis is fixed rather 
 
-Icons has no mark for — Follow Up Boss, HeyGen, Lovable, Bolt.new — carry 
+than auto so the wrap points are deterministic, which is what lets the 
 
-a `domain` instead, and scripts/fetch-brand-logos.mjs downloads each 
+nth-child rules place a hairline divider between groups sharing a row while 
 
-brand's icon from Google's public favicon service into public/logos/ at 
+never putting one at the start of a row.
 
-build time (runs on `prebuild`, or `npm run logos`), writing the manifest 
+Tools with a Simple Icons mark use it, by slug, at brand colour: Meta Ads, 
 
-to src/content/brand-logos.generated.ts.
+Google Ads, n8n, Make.com, Claude Code, Figma, Notion, Asana, GitHub. The 
 
-All twelve marks render inside the same 40px box so they share one optical 
+rest carry a `domain` instead, and scripts/fetch-brand-logos.mjs downloads 
 
-cap height and one baseline. Downloaded icons are raster and read softer 
+each brand's icon from Google's public favicon service into public/logos/ 
 
-than the SVGs; they are not upscaled to hide that. A download that fails 
+at build time (runs on `prebuild`, or `npm run logos`), writing the 
 
-keeps whatever icon is already on disk, and a tool with no icon at all — 
+manifest to src/content/brand-logos.generated.ts: Follow Up Boss, Lovable, 
 
-or whose image fails to load in the browser — falls back to its text 
+Bolt.new, HeyGen, Higgsfield, CapCut. CapCut is not in Simple Icons — it 
 
-monogram. Never a broken image.
+has no slug there — so it goes through the favicon path like the others.
+
+All marks render inside the same 40px box so they share one optical cap 
+
+height and one baseline. Downloaded icons are raster and read softer than 
+
+the SVGs; they are not upscaled to hide that. A download that fails keeps 
+
+whatever icon is already on disk, and a tool with no icon at all — or whose 
+
+image fails to load in the browser — falls back to its text monogram. Never 
+
+a broken image.
 
 === 5. FOR [COMPANY] ===
 
