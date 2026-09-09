@@ -251,6 +251,11 @@
 }
 
 @layer components {
+  .hero-portrait {
+    /* warm duotone so the portraits sit in the cream palette, not against it */
+    filter: grayscale(1) sepia(0.3) contrast(1.02);
+  }
+
   .scroll-cue {
     /* the 50% opacity lives here so the icon's own fade can multiply into it */
     transform: translateX(-50%);

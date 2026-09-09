@@ -1,7 +1,9 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
+import { CaseStudy } from "@/components/resume/CaseStudy";
 import { LazyVimeo } from "@/components/resume/LazyVimeo";
 import { SYSTEM_STEPS, type MetricNumber, type StepTone, type SystemStep } from "@/content/resume";
+import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 // --- diagram geometry (SVG user units) -------------------------------------
@@ -166,20 +168,6 @@ function SystemNodeFragment({ step, h }: { step: SystemStep; h: number }) {
   );
 }
 
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setReduced(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
-  return reduced;
-}
-
 /**
  * Activates the step whose block is crossing the vertical centre of the
  * viewport. Purely observational — scroll is never intercepted — so scrubbing
@@ -307,14 +295,30 @@ export function System() {
               {step.body}
             </p>
 
-            {step.video ? (
-              <div className="mt-9 max-w-xl">
-                <LazyVimeo
-                  vimeoId={step.video.vimeoId}
-                  title={step.video.title}
-                  posterAlt={step.video.posterAlt}
-                  {...(step.video.posterSrc ? { posterSrc: step.video.posterSrc } : {})}
-                />
+            {step.video || step.caseStudy ? (
+              <div
+                className={cn(
+                  "mt-9",
+                  step.caseStudy && step.video
+                    ? // case study left, vertical video right, top-aligned;
+                      // under 900px they stack with the case study first
+                      "grid gap-8 min-[900px]:grid-cols-[1fr_auto] min-[900px]:items-start min-[900px]:gap-10"
+                    : "max-w-xl",
+                )}
+              >
+                {step.caseStudy ? (
+                  <CaseStudy study={step.caseStudy} tone={TONE[step.tone]} />
+                ) : null}
+
+                {step.video ? (
+                  <LazyVimeo
+                    vimeoId={step.video.vimeoId}
+                    title={step.video.title}
+                    posterAlt={step.video.posterAlt}
+                    className="min-[900px]:w-auto"
+                    {...(step.video.posterSrc ? { posterSrc: step.video.posterSrc } : {})}
+                  />
+                ) : null}
               </div>
             ) : null}
           </div>

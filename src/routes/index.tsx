@@ -14,6 +14,7 @@ import { ProofAsset, ProofBadge } from "@/components/resume/ProofSlot";
 import { BRAND_LOGOS } from "@/content/brand-logos.generated";
 import { System } from "@/components/resume/System";
 import { ScrollCue } from "@/components/resume/ScrollCue";
+import { HeroPortraits } from "@/components/resume/HeroPortraits";
 import {
   CONTACT,
   HEADLINE,
@@ -34,7 +35,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Louis Park: real estate and proptech growth leader. Five years of losses to $12.9M in twelve months, $25M funding secured, AI-native GTM systems.",
+          "Louis Park: real estate and proptech growth leader. $12.9M in fifteen months from a business line that had lost money for five straight years, $25M funding secured, AI-native GTM systems.",
       },
       {
         property: "og:title",
@@ -43,7 +44,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Interactive resume: $12.9M annual revenue in 12 months, $25M funding secured, 60,000-lead database activated in real estate and proptech.",
+          "Interactive resume: $12.9M in fifteen months, $25M funding secured, 60,000-lead database activated in real estate and proptech.",
       },
       { property: "og:type", content: "profile" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -94,42 +95,47 @@ function Intro() {
       id="intro"
       className={cn(
         shell,
-        "relative flex min-h-[92vh] flex-col justify-center py-24 lg:min-h-screen",
+        "relative flex min-h-[92vh] flex-col justify-center overflow-hidden py-24 lg:min-h-screen",
       )}
     >
-      <Reveal>
-        <p className="eyebrow">Louis Park — Interactive Resume</p>
-      </Reveal>
+      <HeroPortraits />
 
-      <Reveal delay={80}>
-        <h1 className="mt-8 max-w-5xl text-[2.1rem] leading-[1.05] sm:text-5xl lg:text-6xl xl:text-7xl">
-          {HEADLINE}
-        </h1>
-      </Reveal>
+      {/* the copy always sits above the portraits, at full contrast */}
+      <div className="relative z-10 lg:max-w-[60%]">
+        <Reveal>
+          <p className="eyebrow">Louis Park — Interactive Resume</p>
+        </Reveal>
 
-      <Reveal delay={160}>
-        <p className="mt-10 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-          {SUBHEAD}
-        </p>
-      </Reveal>
+        <Reveal delay={80}>
+          <h1 className="mt-8 max-w-3xl text-[1.8rem] leading-[1.12] sm:text-4xl lg:max-w-none lg:text-5xl xl:text-[3.25rem]">
+            {HEADLINE}
+          </h1>
+        </Reveal>
 
-      <Reveal delay={240}>
-        <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <a
-            href="#proof"
-            className="inline-flex items-center justify-center bg-foreground px-7 py-3.5 text-sm tracking-wide text-background transition-opacity hover:opacity-85"
-          >
-            See the proof
-          </a>
-          <a
-            href={RESUME_PDF_URL}
-            className="inline-flex items-center justify-center gap-2 border border-border px-7 py-3.5 text-sm tracking-wide transition-colors hover:border-foreground"
-          >
-            Download resume PDF
-            <ArrowUpRight className="size-4" aria-hidden />
-          </a>
-        </div>
-      </Reveal>
+        <Reveal delay={160}>
+          <p className="mt-10 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            {SUBHEAD}
+          </p>
+        </Reveal>
+
+        <Reveal delay={240}>
+          <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a
+              href="#proof"
+              className="inline-flex items-center justify-center bg-foreground px-7 py-3.5 text-sm tracking-wide text-background transition-opacity hover:opacity-85"
+            >
+              See the proof
+            </a>
+            <a
+              href={RESUME_PDF_URL}
+              className="inline-flex items-center justify-center gap-2 border border-border px-7 py-3.5 text-sm tracking-wide transition-colors hover:border-foreground"
+            >
+              Download resume PDF
+              <ArrowUpRight className="size-4" aria-hidden />
+            </a>
+          </div>
+        </Reveal>
+      </div>
 
       <ScrollCue href="#proof" />
     </section>

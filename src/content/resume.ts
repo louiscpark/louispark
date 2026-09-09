@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------------------
 
 export const HEADLINE =
-  "I turn stalled operations into revenue engines — five consecutive years of losses to $12.9M in twelve months.";
+  "I build go-to-market engines from zero. The last one generated $12.9M in fifteen months from a business line that had lost money for five straight years.";
 
 export const SUBHEAD =
   "Full-stack marketer and strategic planner. AI-native GTM systems from ad impression to booked appointment.";
@@ -112,6 +112,22 @@ export type StepMetric = {
   unit?: string;
 };
 
+export type CaseStat = { label: string; value: string };
+
+/** A single deal, shown as a compact before/after card inside a step. */
+export type CaseStudy = {
+  label: string;
+  beforeSrc: string;
+  afterSrc: string;
+  beforeAlt: string;
+  afterAlt: string;
+  stats: CaseStat[];
+  /** The delta, called out under the stat rows in --primary. */
+  highlight: CaseStat;
+  /** One line of context. Keep it under 20 words. */
+  context: string;
+};
+
 export type SystemStep = {
   /** "01" … "06" — printed on the node and in the right column. */
   index: string;
@@ -125,6 +141,7 @@ export type SystemStep = {
   /** The supporting detail underneath it. */
   body: string;
   video?: StepVideo;
+  caseStudy?: CaseStudy;
 };
 
 /**
@@ -155,6 +172,21 @@ export const SYSTEM_STEPS: SystemStep[] = [
       title: "Eagle Pacific Properties",
       posterAlt:
         "Opening frame of the Eagle Pacific Properties video, introducing the off-market acquisition division.",
+    },
+    // Every figure below is a placeholder — swap in a real deal.
+    caseStudy: {
+      label: "Off-market deal — sample",
+      beforeSrc: "/case-1-before.jpg",
+      afterSrc: "/case-1-after.jpg",
+      beforeAlt: "The property before renovation.",
+      afterAlt: "The same property after renovation.",
+      stats: [
+        { label: "Acquisition", value: "[$000,000]" },
+        { label: "Renovation", value: "[$00,000]" },
+        { label: "Resale", value: "[$000,000]" },
+      ],
+      highlight: { label: "Value created", value: "[+$000,000]" },
+      context: "[PLACEHOLDER — one line on how the deal was sourced and why the margin held.]",
     },
   },
   {

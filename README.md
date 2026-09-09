@@ -30,9 +30,11 @@ One large headline sentence, editable in one place in the code so it can
 
 be swapped per company. Default text:
 
-"I turn stalled operations into revenue engines — five consecutive years 
+"I build go-to-market engines from zero. The last one generated $12.9M in 
 
-of losses to $12.9M in twelve months."
+fifteen months from a business line that had lost money for five straight 
+
+years."
 
 Below it, one supporting line:
 
@@ -53,6 +55,26 @@ link to the next section, and it fades out for good once the reader is 15%
 of a viewport down the page — it never comes back. Under 
 
 prefers-reduced-motion it renders static and still works as a link.
+
+On the right ~40%, two or three transparent-PNG cut-out portraits from 
+
+public/portrait-1.png … portrait-3.png, layered largest-in-front at 
+
+different scales and heights so they overlap rather than sit in a grid. Any 
+
+file that is not there yet removes itself on the image's error event, so 
+
+the hero works with three, one, or none present. They are warm-duotoned 
+
+(grayscale plus a little sepia) at 90% opacity, and they lag the page by 
+
+0.15 — scrolling 1px moves them up 0.85px. Below 1024px they drop behind 
+
+the copy at 15% opacity as a faint ground.
+
+The copy holds the left ~60% and sits above the portraits in z-order at 
+
+full contrast. Text always wins.
 
 Keep this section restrained — lots of whitespace, one strong typeface, 
 
@@ -195,6 +217,24 @@ combined total would describe neither. A step with two figures stacks them
 on two lines in the node and grows the node by one line; the type does not 
 
 shrink.
+
+Step 02 also carries a case study beside its video: a compact card with a 
+
+before/after image pair at 4:3, three money rows (acquisition, renovation, 
+
+resale) separated by hairlines, the delta called out in --primary, and one 
+
+line of context. Card left, vertical video right, top-aligned; under 900px 
+
+they stack with the card first. <CaseStudy> takes its images and stats as 
+
+props so another deal can be dropped onto any other step. Images live at 
+
+public/case-1-before.jpg and -after.jpg; a file that is not there yet 
+
+renders a neutral labelled box, never a broken image. The seeded figures 
+
+are bracketed placeholders.
 
 Videos sit in steps 02, 04, and 05 via <LazyVimeo>, following the steps 
 
