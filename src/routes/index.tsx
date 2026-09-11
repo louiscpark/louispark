@@ -15,9 +15,11 @@ import { BRAND_LOGOS } from "@/content/brand-logos.generated";
 import { System } from "@/components/resume/System";
 import { ScrollCue } from "@/components/resume/ScrollCue";
 import { HeroPortraits } from "@/components/resume/HeroPortraits";
+import { AppCard } from "@/components/resume/AppCard";
 import {
   CONTACT,
   HEADLINE,
+  INTERNAL_APPS,
   METRICS,
   RESUME_PDF_URL,
   STACK_GROUPS,
@@ -64,6 +66,7 @@ function Index() {
         <Intro />
         <Proof onOpen={setOpenMetric} />
         <SystemSection />
+        <SystemsShipped />
         <Stack />
         <ForCompany />
         <Contact />
@@ -206,10 +209,32 @@ function SystemSection() {
   );
 }
 
+function SystemsShipped() {
+  return (
+    <section id="systems-shipped" className={cn(shell, "py-24 lg:py-32")}>
+      <SectionHead index="03" title="Systems I Shipped" />
+
+      <Reveal>
+        <p className="mb-14 max-w-xl text-sm leading-relaxed text-muted-foreground">
+          Internal tools built to take friction out of the operation.
+        </p>
+      </Reveal>
+
+      <div className="grid gap-6 md:grid-cols-3 lg:gap-8">
+        {INTERNAL_APPS.map((app, i) => (
+          <Reveal key={app.name} delay={i * 70}>
+            <AppCard app={app} />
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ForCompany() {
   return (
     <section id="for-company" className={cn(shell, "py-24 lg:py-32")}>
-      <SectionHead index="04" title={`For ${company.companyName}`} />
+      <SectionHead index="05" title={`For ${company.companyName}`} />
 
       <Reveal>
         <p className="max-w-3xl font-display text-2xl leading-snug sm:text-3xl">
@@ -314,7 +339,7 @@ function Stack() {
       <div className="stack-grid" aria-hidden />
       <div className="relative">
         <Reveal className="mb-10 flex items-baseline gap-6 border-b border-border pb-4">
-          <span className="eyebrow">03</span>
+          <span className="eyebrow">04</span>
           <h2 className="text-3xl sm:text-4xl">Stack</h2>
         </Reveal>
         <div className="stack-groups">

@@ -240,6 +240,68 @@ export const SYSTEM_STEPS: SystemStep[] = [
   },
 ];
 
+export type AppStatus = "shipped" | "in-development";
+
+/**
+ * An internal tool, framed by the friction it removed rather than by what it
+ * is. Screenshot and bullets are optional — a tool still in development shows
+ * neither.
+ */
+export type InternalApp = {
+  status: AppStatus;
+  name: string;
+  /** The friction that existed before. Rendered muted. */
+  problem: string;
+  /** What was built. Rendered at full contrast. */
+  solution: string;
+  bullets?: string[];
+  screenshotSrc?: string;
+  /** Describes the interface. Must not just repeat the tool name. */
+  screenshotAlt?: string;
+  /** Phase token for the card's border tint. */
+  tone?: StepTone;
+};
+
+export const INTERNAL_APPS: InternalApp[] = [
+  {
+    status: "shipped",
+    name: "Renovation Progress Tracker",
+    problem: "Realtor partners were calling for status updates on their listings.",
+    solution: "Agent-facing web app that pushes live project status to them instead.",
+    bullets: [
+      "Per-project status and milestone timeline",
+      "Photo updates delivered to partner agents",
+      "Removed the manual status-request loop",
+    ],
+    screenshotSrc: "/app-progress.png",
+    screenshotAlt:
+      "Project view with a milestone timeline running down the page and dated photo updates beside each stage.",
+    tone: "a",
+  },
+  {
+    status: "shipped",
+    name: "Agent Data Scraper",
+    problem: "Partner targeting ran on manually assembled agent lists.",
+    solution:
+      "Internal tool that compiles and structures realtor contact and performance data automatically.",
+    bullets: [
+      "Structured agent and brokerage records",
+      "Feeds the partner outreach pipeline",
+      "Replaced manual list building",
+    ],
+    screenshotSrc: "/app-scraper.png",
+    screenshotAlt:
+      "Table of compiled realtor records, one row per agent, with brokerage, contact and recent-performance columns.",
+    tone: "b",
+  },
+  {
+    status: "in-development",
+    name: "Future Project",
+    problem: "In development.",
+    solution: "In development.",
+  },
+];
+
 export type StackTool = {
   name: string;
   /** Simple Icons slug, for the tools it carries a mark for. */
@@ -336,6 +398,7 @@ export const SECTIONS = [
   { id: "intro", label: "Intro" },
   { id: "proof", label: "Proof" },
   { id: "system", label: "The System" },
+  { id: "systems-shipped", label: "Systems I Shipped" },
   { id: "stack", label: "Stack" },
   { id: "for-company", label: `For ${company.companyName}` },
   { id: "contact", label: "Contact" },

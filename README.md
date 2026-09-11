@@ -16,11 +16,13 @@ Single page, vertical scroll, with a sticky left sidebar navigation
 
 mobile the sidebar collapses to a slim top bar. Smooth scroll to anchors.
 
-Sections: Intro / Proof / The System / Stack / For [Company] / Contact
+Sections: Intro / Proof / The System / Systems I Shipped / Stack / 
 
-On the page only the middle four carry a printed numeral — Proof is 01, 
+For [Company] / Contact
 
-The System 02, Stack 03, For [Company] 04.
+On the page only the middle five carry a printed numeral — Proof is 01, 
+
+The System 02, Systems I Shipped 03, Stack 04, For [Company] 05.
 
 === 1. INTRO (full viewport height) ===
 
@@ -262,7 +264,47 @@ letterboxed. Two of the three are portrait. Portrait frames are capped at
 
 the full column width.
 
-=== 4. STACK ===
+=== 4. SYSTEMS I SHIPPED ===
+
+Internal tools, framed by the friction each one removed rather than by what 
+
+it is. Deliberately quieter than The System — this is evidence of range, not 
+
+the main argument. Three cards in a row on desktop, stacked on mobile, from 
+
+a reusable <AppCard>, so another tool is a content change to INTERNAL_APPS 
+
+and nothing else. The cards do not link anywhere: these are internal tools, 
+
+not public products.
+
+Each card runs status label, tool name, problem line, solution line, then an 
+
+optional 16:10 screenshot and two or three capability bullets. The problem 
+
+line is muted and the solution line full contrast, so the before/after reads 
+
+at a glance without either being labelled.
+
+Two states. SHIPPED renders at normal opacity with a phase-colour border 
+
+tint — laid over the hairline as an overlay rule at 30% rather than a 
+
+colour-mix border, for the same reason the diagram avoids colour-mix. IN 
+
+DEVELOPMENT holds back to 60% behind a dashed rule with no screenshot and no 
+
+bullets: unfinished on purpose, not broken.
+
+Screenshots live at public/app-progress.png and public/app-scraper.png; a 
+
+file that is not there yet renders a neutral box carrying the tool name, 
+
+never a broken image. Alt text describes the interface rather than repeating 
+
+the name. No new colours — the cards reuse the phase tokens.
+
+=== 5. STACK ===
 
 Tool logos in five groups: DEMAND · AUTOMATION · AI & BUILD · VIDEO · 
 
@@ -304,7 +346,7 @@ image fails to load in the browser — falls back to its text monogram. Never
 
 a broken image.
 
-=== 5. FOR [COMPANY] ===
+=== 6. FOR [COMPANY] ===
 
 A section built to be rewritten per application. Structure it so all the 
 
@@ -318,7 +360,7 @@ columns — "What I see" and "What I'd do in the first 90 days".
 
 Fill with clearly-marked placeholder text for now.
 
-=== 6. CONTACT ===
+=== 7. CONTACT ===
 
 Phone (as a tel: link, so it is tappable on mobile), LinkedIn, and a 
 

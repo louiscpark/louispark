@@ -2,8 +2,9 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { CaseStudy } from "@/components/resume/CaseStudy";
 import { LazyVimeo } from "@/components/resume/LazyVimeo";
-import { SYSTEM_STEPS, type MetricNumber, type StepTone, type SystemStep } from "@/content/resume";
+import { SYSTEM_STEPS, type MetricNumber, type SystemStep } from "@/content/resume";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+import { PHASE } from "@/lib/phase";
 import { cn } from "@/lib/utils";
 
 // --- diagram geometry (SVG user units) -------------------------------------
@@ -27,13 +28,6 @@ const VB_H = NODE_Y[NODE_Y.length - 1]! + NODE_H[NODE_H.length - 1]! + PAD;
 /** Widths taper top to bottom so the stack reads as one narrowing shape. */
 const nodeW = (i: number) => 280 - i * 18;
 const nodeX = (i: number) => (VB_W - nodeW(i)) / 2;
-
-/** The three phase hues: teal → amber → rust. */
-const TONE: Record<StepTone, string> = {
-  a: "var(--phase-1)",
-  b: "var(--phase-2)",
-  c: "var(--phase-3)",
-};
 
 function formatNumber({ prefix = "", value, suffix = "", decimals = 0 }: MetricNumber) {
   return `${prefix}${value.toLocaleString("en-US", {
@@ -68,7 +62,7 @@ function SystemNode({
     <g
       className="system-node"
       data-state={state}
-      style={{ "--tone": TONE[step.tone] } as React.CSSProperties}
+      style={{ "--tone": PHASE[step.tone] } as React.CSSProperties}
     >
       {/* soft outer glow, painted behind the box and only lit while active */}
       <rect x={x} y={y} width={w} height={h} rx={6} className="system-node-glow" aria-hidden />
@@ -129,7 +123,7 @@ function SystemDiagram({ active, reduced }: { active: number; reduced: boolean }
             className="system-connector"
             style={
               {
-                "--tone": TONE[step.tone],
+                "--tone": PHASE[step.tone],
                 strokeDasharray: len,
                 strokeDashoffset: drawn ? 0 : len,
               } as React.CSSProperties
@@ -262,7 +256,7 @@ export function System() {
 
             <p
               className="numeral mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-5xl lg:text-6xl"
-              style={{ color: TONE[step.tone] }}
+              style={{ color: PHASE[step.tone] }}
             >
               {step.metrics.map((metric, k) => (
                 <Fragment key={metric.unit ?? k}>
@@ -307,7 +301,7 @@ export function System() {
                 )}
               >
                 {step.caseStudy ? (
-                  <CaseStudy study={step.caseStudy} tone={TONE[step.tone]} />
+                  <CaseStudy study={step.caseStudy} tone={PHASE[step.tone]} />
                 ) : null}
 
                 {step.video ? (

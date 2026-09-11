@@ -251,6 +251,20 @@
 }
 
 @layer components {
+  /*
+   * Border tint for a shipped tool: an overlay rule at 30% rather than a
+   * colour-mix border, so the tint never depends on a colour function the
+   * browser might not have.
+   */
+  .app-card-tint {
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--tone);
+    border-radius: inherit;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
   .hero-portrait {
     /* warm duotone so the portraits sit in the cream palette, not against it */
     filter: grayscale(1) sepia(0.3) contrast(1.02);
