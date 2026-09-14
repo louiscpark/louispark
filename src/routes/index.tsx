@@ -37,7 +37,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Louis Park: real estate and proptech growth leader. $12.9M in fifteen months from a business line that had lost money for five straight years, $25M funding secured, AI-native GTM systems.",
+          "Louis Park: real estate and proptech growth leader. $22.9M in fifteen months from a business line that had lost money for five straight years, $25M funding secured, AI-native GTM systems.",
       },
       {
         property: "og:title",
@@ -46,7 +46,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Interactive resume: $12.9M in fifteen months, $25M funding secured, 60,000-lead database activated in real estate and proptech.",
+          "Interactive resume: $22.9M in fifteen months, $25M funding secured, 60,000-lead database activated in real estate and proptech.",
       },
       { property: "og:type", content: "profile" },
       { name: "twitter:card", content: "summary_large_image" },

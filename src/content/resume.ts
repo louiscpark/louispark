@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------------------
 
 export const HEADLINE =
-  "I build go-to-market engines from zero — two real estate divisions inside a construction company, and $12.9M in fifteen months.";
+  "I build go-to-market engines from zero — two real estate divisions inside a construction company, and $22.9M in fifteen months.";
 
 export const SUBHEAD =
   "Full-stack marketer and strategic planner. AI-native GTM systems from ad impression to booked appointment.";
@@ -39,10 +39,10 @@ export type Metric = {
 
 export const METRICS: Metric[] = [
   {
-    value: "$12.9M",
+    value: "$22.9M",
     label: "Annual revenue generated within 12 months",
     proof: { type: "none" },
-    number: { prefix: "$", value: 12.9, suffix: "M", decimals: 1 },
+    number: { prefix: "$", value: 22.9, suffix: "M", decimals: 1 },
   },
   {
     value: "$25M",
@@ -110,6 +110,8 @@ export type StepMetric = {
   number: MetricNumber;
   /** Unit that trails the number, e.g. "properties". */
   unit?: string;
+  /** Qualifier after the unit, set smaller so it stays subordinate to it. */
+  note?: string;
 };
 
 export type CaseStat = { label: string; value: string };
@@ -252,14 +254,14 @@ export const SYSTEM_STEPS: SystemStep[] = [
     // Two audiences on two channels — kept apart rather than summed into a
     // single total that would describe neither.
     metrics: [
-      { number: { value: 32000 }, unit: "homes" },
+      { number: { value: 32000 }, unit: "homeowners", note: "(D2C)" },
       { number: { value: 48000 }, unit: "agents" },
     ],
     // The node rolls the two audiences up; the right column keeps them apart.
     nodeMetrics: [{ number: { value: 80000, suffix: "+" }, unit: "homeowners & agents" }],
     tone: "b",
     statement: "Then reach.",
-    body: "Where Distribution went narrow and senior, Demand went wide. Integrated direct mail, email, and paid social to 80,000+ homeowners and newer-licensed agents across 12 high-equity cities — direct mail to 32,000 homes, email to 48,000+ agents. Landing page views came in at $0.70, three times below benchmark.",
+    body: "Distribution went narrow and senior. Demand went wide — direct mail to 32,000 homeowners, email to 48,000+ agents, paid social across 12 high-equity cities.",
     highlight: { label: "Cost per landing page view", value: "$0.70" },
     video: {
       vimeoId: "1224464015",
@@ -271,10 +273,10 @@ export const SYSTEM_STEPS: SystemStep[] = [
   {
     index: "06",
     label: "Revenue",
-    metrics: [{ number: { prefix: "$", value: 12.9, suffix: "M", decimals: 1 } }],
+    metrics: [{ number: { prefix: "$", value: 22.9, suffix: "M", decimals: 1 } }],
     tone: "c",
     statement: "The result.",
-    body: "$12.9M in annual revenue. $9M in assets acquired. 15 months.",
+    body: "$22.9M in annual revenue. $9M in assets acquired. 15 months.",
   },
 ];
 

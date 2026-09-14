@@ -46,7 +46,7 @@ function formatNumber({ prefix = "", value, suffix = "", decimals = 0 }: MetricN
 
 const metricLines = (step: SystemStep) =>
   nodeMetricsOf(step).map((m) =>
-    m.unit ? `${formatNumber(m.number)} ${m.unit}` : formatNumber(m.number),
+    [formatNumber(m.number), m.unit, m.note].filter(Boolean).join(" "),
   );
 
 type NodeState = "hidden" | "past" | "active" | "static";
@@ -321,6 +321,9 @@ export function System() {
                     {metric.unit ? (
                       <span className="font-sans text-sm tracking-wide text-muted-foreground">
                         {metric.unit}
+                        {metric.note ? (
+                          <span className="ml-1.5 text-[0.6875rem]">{metric.note}</span>
+                        ) : null}
                       </span>
                     ) : null}
                   </span>

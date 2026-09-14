@@ -34,7 +34,7 @@ be swapped per company. Default text:
 
 "I build go-to-market engines from zero — two real estate divisions inside 
 
-a construction company, and $12.9M in fifteen months."
+a construction company, and $22.9M in fifteen months."
 
 Below it, one supporting line:
 
@@ -94,7 +94,7 @@ proof opens a lightbox showing that asset. Cards without proof are static.
 
 Metrics:
 
-- $12.9M — Annual revenue generated within 12 months
+- $22.9M — Annual revenue generated within 12 months
 
 - $25M — Real estate investment funding secured (Kiavi, Easy Street 
 
@@ -214,19 +214,17 @@ Steps (node label / metric / statement / body):
 
 05 DEMAND — node: 80,000+ homeowners & agents — "Then reach."
 
-   Where Distribution went narrow and senior, Demand went wide. Integrated 
+   Distribution went narrow and senior. Demand went wide — direct mail to 
 
-   direct mail, email, and paid social to 80,000+ homeowners and 
+   32,000 homeowners, email to 48,000+ agents, paid social across 12 
 
-   newer-licensed agents across 12 high-equity cities — direct mail to 
-
-   32,000 homes, email to 48,000+ agents. Landing page views came in at 
-
-   $0.70, three times below benchmark.
+   high-equity cities.
 
    The node rolls the two audiences into one figure via `nodeMetrics`, while 
 
-   the right column keeps them apart as 32,000 homes · 48,000 agents. 
+   the right column keeps them apart as 32,000 homeowners (D2C) · 48,000 
+
+   agents, the "(D2C)" set a size down so it stays subordinate to the unit. 
 
    "$0.70" is pulled out beneath the body as a `highlight` row — label left, 
 
@@ -234,9 +232,9 @@ Steps (node label / metric / statement / body):
 
    case study's value-created row.
 
-06 REVENUE — $12.9M — "The result."
+06 REVENUE — $22.9M — "The result."
 
-   $12.9M in annual revenue. $9M in assets acquired. 15 months.
+   $22.9M in annual revenue. $9M in assets acquired. 15 months.
 
 Who to sell to is defined before the channel to reach them, so TARGETING 
 
