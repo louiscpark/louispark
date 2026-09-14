@@ -20,7 +20,10 @@ const METRIC_LINE_H = 18;
 const GAP = 28;
 const PAD = 3;
 
-const NODE_H = SYSTEM_STEPS.map((s) => BASE_H + (s.metrics.length - 1) * METRIC_LINE_H);
+/** What the diagram shows for a step — a rolled-up figure when one is given. */
+const nodeMetricsOf = (step: SystemStep) => step.nodeMetrics ?? step.metrics;
+
+const NODE_H = SYSTEM_STEPS.map((s) => BASE_H + (nodeMetricsOf(s).length - 1) * METRIC_LINE_H);
 
 const NODE_Y: number[] = [];
 NODE_H.reduce((y, h, i) => {
@@ -42,7 +45,7 @@ function formatNumber({ prefix = "", value, suffix = "", decimals = 0 }: MetricN
 }
 
 const metricLines = (step: SystemStep) =>
-  step.metrics.map((m) =>
+  nodeMetricsOf(step).map((m) =>
     m.unit ? `${formatNumber(m.number)} ${m.unit}` : formatNumber(m.number),
   );
 
@@ -335,6 +338,16 @@ export function System() {
 
             {step.segmentation ? (
               <SegmentationBreakdown segmentation={step.segmentation} tone={PHASE[step.tone]} />
+            ) : null}
+
+            {/* one figure pulled out of the body, same row treatment as the case study */}
+            {step.highlight ? (
+              <dl className="mt-6 flex max-w-xl items-baseline justify-between gap-4 border-t border-border pt-4">
+                <dt className="eyebrow text-[0.625rem]">{step.highlight.label}</dt>
+                <dd className="numeral text-2xl text-primary sm:text-[1.75rem]">
+                  {step.highlight.value}
+                </dd>
+              </dl>
             ) : null}
 
             {step.video || step.caseStudy ? (

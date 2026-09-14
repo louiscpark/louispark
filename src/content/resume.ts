@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------------------
 
 export const HEADLINE =
-  "I build go-to-market engines from zero. The last one generated $12.9M in fifteen months from a business line that had lost money for five straight years.";
+  "I build go-to-market engines from zero — two real estate divisions inside a construction company, and $12.9M in fifteen months.";
 
 export const SUBHEAD =
   "Full-stack marketer and strategic planner. AI-native GTM systems from ad impression to booked appointment.";
@@ -148,13 +148,20 @@ export type SystemStep = {
   index: string;
   /** Node label, e.g. CAPITAL. Rendered uppercase. */
   label: string;
-  /** Each counts up once, when the step first activates. */
+  /** Each counts up once, when the step first activates. Drives the right column. */
   metrics: StepMetric[];
+  /**
+   * What the diagram node shows, when a rolled-up figure reads better there
+   * than the component parts. Falls back to `metrics`.
+   */
+  nodeMetrics?: StepMetric[];
   tone: StepTone;
   /** The one-line statement that carries the narrative. */
   statement: string;
   /** The supporting detail underneath it. */
   body: string;
+  /** A single figure pulled out beneath the body, in --primary. */
+  highlight?: CaseStat;
   segmentation?: Segmentation;
   video?: StepVideo;
   caseStudy?: CaseStudy;
@@ -231,7 +238,7 @@ export const SYSTEM_STEPS: SystemStep[] = [
     metrics: [{ number: { value: 1100, suffix: "+" }, unit: "leaders" }],
     tone: "b",
     statement: "Then the channel.",
-    body: "B2B go-to-market to 1,100+ brokerage directors and top agents. Partnerships with The Agency, Berkshire Hathaway, eXp, Intero.",
+    body: "Targeted team leads, regional directors, and top-producing agents — the people who bring a whole office with them. Partnerships with The Agency, Berkshire Hathaway, eXp, and Intero.",
     video: {
       vimeoId: "1224464075",
       title: "Home-Ready Program kickoff",
@@ -248,9 +255,12 @@ export const SYSTEM_STEPS: SystemStep[] = [
       { number: { value: 32000 }, unit: "homes" },
       { number: { value: 48000 }, unit: "agents" },
     ],
+    // The node rolls the two audiences up; the right column keeps them apart.
+    nodeMetrics: [{ number: { value: 80000, suffix: "+" }, unit: "homeowners & agents" }],
     tone: "b",
     statement: "Then reach.",
-    body: "Direct mail to 32,000 homes, email to 48,000+ agents, paid social across 12 high-equity cities.",
+    body: "Where Distribution went narrow and senior, Demand went wide. Integrated direct mail, email, and paid social to 80,000+ homeowners and newer-licensed agents across 12 high-equity cities — direct mail to 32,000 homes, email to 48,000+ agents. Landing page views came in at $0.70, three times below benchmark.",
+    highlight: { label: "Cost per landing page view", value: "$0.70" },
     video: {
       vimeoId: "1224464015",
       title: "Home-Ready Program campaign spot",

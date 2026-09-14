@@ -32,11 +32,9 @@ One large headline sentence, editable in one place in the code so it can
 
 be swapped per company. Default text:
 
-"I build go-to-market engines from zero. The last one generated $12.9M in 
+"I build go-to-market engines from zero — two real estate divisions inside 
 
-fifteen months from a business line that had lost money for five straight 
-
-years."
+a construction company, and $12.9M in fifteen months."
 
 Below it, one supporting line:
 
@@ -208,15 +206,33 @@ Steps (node label / metric / statement / body):
 
 04 DISTRIBUTION — 1,100+ leaders — "Then the channel."
 
-   B2B go-to-market to 1,100+ brokerage directors and top agents. 
+   Targeted team leads, regional directors, and top-producing agents — the 
 
-   Partnerships with The Agency, Berkshire Hathaway, eXp, Intero.
+   people who bring a whole office with them. Partnerships with The Agency, 
 
-05 DEMAND — 32,000 homes · 48,000 agents — "Then reach."
+   Berkshire Hathaway, eXp, and Intero.
 
-   Direct mail to 32,000 homes, email to 48,000+ agents, paid social 
+05 DEMAND — node: 80,000+ homeowners & agents — "Then reach."
 
-   across 12 high-equity cities.
+   Where Distribution went narrow and senior, Demand went wide. Integrated 
+
+   direct mail, email, and paid social to 80,000+ homeowners and 
+
+   newer-licensed agents across 12 high-equity cities — direct mail to 
+
+   32,000 homes, email to 48,000+ agents. Landing page views came in at 
+
+   $0.70, three times below benchmark.
+
+   The node rolls the two audiences into one figure via `nodeMetrics`, while 
+
+   the right column keeps them apart as 32,000 homes · 48,000 agents. 
+
+   "$0.70" is pulled out beneath the body as a `highlight` row — label left, 
+
+   value right in --primary, over a hairline — the same treatment as the 
+
+   case study's value-created row.
 
 06 REVENUE — $12.9M — "The result."
 
@@ -226,9 +242,11 @@ Who to sell to is defined before the channel to reach them, so TARGETING
 
 precedes DISTRIBUTION. Step 05 carries two separate figures rather than one 
 
-aggregate: they are different channels reaching different audiences, and a 
+aggregate in the right column: they are different channels reaching 
 
-combined total would describe neither. A step with two figures stacks them 
+different audiences, and a combined total would describe neither. The node 
+
+is allowed the rolled-up figure, since a diagram wants one number. A step with two figures stacks them 
 
 on two lines in the node and grows the node by one line; the type does not 
 
