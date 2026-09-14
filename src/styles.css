@@ -265,6 +265,23 @@
     pointer-events: none;
   }
 
+  /* pill outline in the step's phase colour, as an overlay rather than a
+     colour-mix border */
+  .segment-pill {
+    position: relative;
+    border-radius: 9999px;
+  }
+
+  .segment-pill::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--tone);
+    border-radius: inherit;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
   .hero-portrait {
     /* warm duotone so the portraits sit in the cream palette, not against it */
     filter: grayscale(1) sepia(0.3) contrast(1.02);

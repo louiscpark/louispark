@@ -128,6 +128,21 @@ export type CaseStudy = {
   context: string;
 };
 
+/** One audience, and the one line that qualifies it. */
+export type AudienceProfile = { name: string; qualifier: string };
+
+/**
+ * The two cuts a step's market was segmented by, shown under the body as a
+ * compact breakdown rather than prose.
+ */
+export type Segmentation = {
+  signalsLabel: string;
+  signals: string[];
+  audienceLabel: string;
+  audiences: AudienceProfile[];
+  closing: string;
+};
+
 export type SystemStep = {
   /** "01" … "06" — printed on the node and in the right column. */
   index: string;
@@ -140,6 +155,7 @@ export type SystemStep = {
   statement: string;
   /** The supporting detail underneath it. */
   body: string;
+  segmentation?: Segmentation;
   video?: StepVideo;
   caseStudy?: CaseStudy;
 };
@@ -163,10 +179,10 @@ export const SYSTEM_STEPS: SystemStep[] = [
   {
     index: "02",
     label: "Supply",
-    metrics: [{ number: { value: 48 }, unit: "properties" }],
+    metrics: [{ number: { value: 4900, suffix: "+" }, unit: "off-market properties" }],
     tone: "a",
     statement: "Then inventory.",
-    body: "48 off-market California properties at $200K+ ARV each, plus 4,900 ready-to-buy records through national disposition networks.",
+    body: "4,900+ off-market California property records sourced through national wholesale disposition networks. 48 of those carried ARV spreads above $300K.",
     video: {
       vimeoId: "1224464076",
       title: "Eagle Pacific Properties",
@@ -186,7 +202,8 @@ export const SYSTEM_STEPS: SystemStep[] = [
         { label: "Resale", value: "[$000,000]" },
       ],
       highlight: { label: "Value created", value: "[+$000,000]" },
-      context: "[PLACEHOLDER — one line on how the deal was sourced and why the margin held.]",
+      context:
+        "Sourced through a wholesale disposition partner in Irvine that I brought into the company's acquisition pipeline.",
     },
   },
   {
@@ -195,7 +212,18 @@ export const SYSTEM_STEPS: SystemStep[] = [
     metrics: [{ number: { value: 12 }, unit: "profiles" }],
     tone: "b",
     statement: "Then who.",
-    body: "Segmented the distressed-seller market into 12 owner profiles and tested messaging against each to find the highest-converting segments.",
+    body: "Segmented the market twice — by distress signal, then by buyer type.",
+    segmentation: {
+      signalsLabel: "Distress signals",
+      signals: ["Probate", "Divorce", "Notice of Default", "Pre-foreclosure", "Tired landlords"],
+      audienceLabel: "Audience profiles",
+      audiences: [
+        { name: "Realtors", qualifier: "fix-and-flip program partners" },
+        { name: "Homeowners", qualifier: "direct distressed sellers" },
+        { name: "Investors", qualifier: "acquisition and disposition buyers" },
+      ],
+      closing: "Messaging tested against each to find the highest-converting segments.",
+    },
   },
   {
     index: "04",

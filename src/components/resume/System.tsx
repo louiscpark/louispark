@@ -2,7 +2,12 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { CaseStudy } from "@/components/resume/CaseStudy";
 import { LazyVimeo } from "@/components/resume/LazyVimeo";
-import { SYSTEM_STEPS, type MetricNumber, type SystemStep } from "@/content/resume";
+import {
+  SYSTEM_STEPS,
+  type MetricNumber,
+  type Segmentation,
+  type SystemStep,
+} from "@/content/resume";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { PHASE } from "@/lib/phase";
 import { cn } from "@/lib/utils";
@@ -163,6 +168,45 @@ function SystemNodeFragment({ step, h }: { step: SystemStep; h: number }) {
 }
 
 /**
+ * The two cuts a step's market was segmented by. Compact on purpose — it sits
+ * inside the step, under the body, and the vertical rhythm is kept tight so
+ * the block stays inside its 90vh min-height and the scroll timing is
+ * untouched.
+ */
+function SegmentationBreakdown({
+  segmentation,
+  tone,
+}: {
+  segmentation: Segmentation;
+  tone: string;
+}) {
+  return (
+    <div className="mt-7 max-w-xl" style={{ "--tone": tone } as React.CSSProperties}>
+      <p className="eyebrow text-[0.625rem]">{segmentation.signalsLabel}</p>
+      <ul className="mt-3 flex flex-wrap gap-2">
+        {segmentation.signals.map((signal) => (
+          <li key={signal} className="segment-pill px-4 py-1.5 text-xs text-muted-foreground">
+            {signal}
+          </li>
+        ))}
+      </ul>
+
+      <p className="eyebrow mt-6 text-[0.625rem]">{segmentation.audienceLabel}</p>
+      <ul className="mt-3 space-y-1.5">
+        {segmentation.audiences.map((audience) => (
+          <li key={audience.name} className="text-sm leading-relaxed">
+            <span className="text-foreground">{audience.name}</span>
+            <span className="text-muted-foreground"> — {audience.qualifier}</span>
+          </li>
+        ))}
+      </ul>
+
+      <p className="mt-5 text-sm leading-relaxed text-muted-foreground">{segmentation.closing}</p>
+    </div>
+  );
+}
+
+/**
  * Activates the step whose block is crossing the vertical centre of the
  * viewport. Purely observational — scroll is never intercepted — so scrubbing
  * back up walks the diagram back down again.
@@ -288,6 +332,10 @@ export function System() {
             <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted-foreground">
               {step.body}
             </p>
+
+            {step.segmentation ? (
+              <SegmentationBreakdown segmentation={step.segmentation} tone={PHASE[step.tone]} />
+            ) : null}
 
             {step.video || step.caseStudy ? (
               <div

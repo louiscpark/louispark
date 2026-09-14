@@ -180,17 +180,31 @@ Steps (node label / metric / statement / body):
 
    Secured $25M from Kiavi, Easy Street Capital, and KPRE Group.
 
-02 SUPPLY — 48 properties — "Then inventory."
+02 SUPPLY — 4,900+ off-market properties — "Then inventory."
 
-   48 off-market California properties at $200K+ ARV each, plus 4,900 
+   4,900+ off-market California property records sourced through national 
 
-   ready-to-buy records through national disposition networks.
+   wholesale disposition networks. 48 of those carried ARV spreads above 
+
+   $300K.
 
 03 TARGETING — 12 profiles — "Then who."
 
-   Segmented the distressed-seller market into 12 owner profiles and 
+   Segmented the market twice — by distress signal, then by buyer type.
 
-   tested messaging against each to find the highest-converting segments.
+   Followed by a compact breakdown inside the step (not a section of its 
+
+   own): DISTRESS SIGNALS as a wrapped row of hairline pill tags outlined 
+
+   in the step's phase colour at 30%, then AUDIENCE PROFILES as three 
+
+   name-plus-qualifier lines, the name at full contrast and the qualifier 
+
+   muted. Closes on the line about messaging being tested against each. The 
+
+   vertical rhythm is kept tight so the block stays inside its 90vh 
+
+   min-height and the scroll timing is unaffected.
 
 04 DISTRIBUTION — 1,100+ leaders — "Then the channel."
 
@@ -234,9 +248,9 @@ props so another deal can be dropped onto any other step. Images live at
 
 public/case-1-before.jpg and -after.jpg; a file that is not there yet 
 
-renders a neutral labelled box, never a broken image. The seeded figures 
+renders a neutral labelled box, never a broken image. The money figures are 
 
-are bracketed placeholders.
+bracketed placeholders; the context line underneath is real.
 
 Videos sit in steps 02, 04, and 05 via <LazyVimeo>, following the steps 
 
