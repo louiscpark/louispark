@@ -21,9 +21,7 @@ export function DocumentViewer({ pages, title }: DocumentViewerProps) {
 
   const step = useCallback(
     (dir: number) => {
-      setOpenIndex((i) =>
-        i === null ? i : (i + dir + pages.length) % pages.length,
-      );
+      setOpenIndex((i) => (i === null ? i : (i + dir + pages.length) % pages.length));
     },
     [pages.length],
   );

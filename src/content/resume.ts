@@ -46,8 +46,7 @@ export const METRICS: Metric[] = [
   },
   {
     value: "$25M",
-    label:
-      "Real estate investment funding secured (Kiavi, Easy Street Capital, KPRE Group)",
+    label: "Real estate investment funding secured (Kiavi, Easy Street Capital, KPRE Group)",
     proof: { type: "none" },
     number: { prefix: "$", value: 25, suffix: "M" },
   },
@@ -280,6 +279,21 @@ export const SYSTEM_STEPS: SystemStep[] = [
   },
 ];
 
+/** Named in the marquee band. Order is the reading order. */
+export const PARTNERS = [
+  "Kiavi",
+  "Easy Street Capital",
+  "KPRE Group",
+  "New Western",
+  "InvestorLift",
+  "Story Homes",
+  "The Agency",
+  "Berkshire Hathaway",
+  "eXp Realty",
+  "Intero",
+  "Century 21",
+];
+
 export type AppStatus = "shipped" | "in-development";
 
 /**
@@ -412,8 +426,7 @@ export const STACK_GROUPS: StackGroup[] = [
 // --- Rewrite this block for every application ------------------------------
 export const company = {
   companyName: "[Company]",
-  oneLineHook:
-    "[PLACEHOLDER — one line on why this company, and why now, in Louis's own words.]",
+  oneLineHook: "[PLACEHOLDER — one line on why this company, and why now, in Louis's own words.]",
   threeObservations: [
     "[PLACEHOLDER — observation 1 about the company's current GTM or market position.]",
     "[PLACEHOLDER — observation 2 about a gap, bottleneck, or untapped channel.]",
@@ -432,11 +445,14 @@ export const CONTACT = {
   phoneHref: "tel:+16616124137",
   linkedin: "https://www.linkedin.com/in/louiscpark/",
   linkedinLabel: "linkedin.com/in/louiscpark",
+  instagram: "https://instagram.com/louis_vici",
+  instagramLabel: "@louis_vici",
 };
 
 export const SECTIONS = [
   { id: "intro", label: "Intro" },
   { id: "proof", label: "Proof" },
+  { id: "partners", label: "Partners" },
   { id: "system", label: "The System" },
   { id: "systems-shipped", label: "Systems I Shipped" },
   { id: "stack", label: "Stack" },

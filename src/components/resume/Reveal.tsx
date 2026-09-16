@@ -5,11 +5,17 @@ export function Reveal({
   children,
   className,
   delay = 0,
+  shift,
+  duration,
   as: Tag = "div",
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
+  /** travel in px; defaults to the 18px house value */
+  shift?: number;
+  /** ms; defaults to the 700ms house value */
+  duration?: number;
   as?: "div" | "section" | "li" | "article";
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -27,7 +33,7 @@ export function Reveal({
           }
         });
       },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.1 },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0 },
     );
     io.observe(el);
     return () => io.disconnect();
@@ -37,7 +43,13 @@ export function Reveal({
     <Tag
       ref={ref as never}
       data-visible={visible}
-      style={{ transitionDelay: `${delay}ms` }}
+      style={
+        {
+          "--reveal-delay": `${delay}ms`,
+          ...(shift === undefined ? {} : { "--reveal-shift": `${shift}px` }),
+          ...(duration === undefined ? {} : { "--reveal-duration": `${duration}ms` }),
+        } as React.CSSProperties
+      }
       className={cn("reveal", className)}
     >
       {children}

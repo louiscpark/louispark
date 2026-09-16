@@ -6,9 +6,7 @@ export function SideNav() {
   const [active, setActive] = useState<string>(SECTIONS[0]?.id ?? "intro");
 
   useEffect(() => {
-    const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(
-      Boolean,
-    ) as HTMLElement[];
+    const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(Boolean) as HTMLElement[];
 
     const onScroll = () => {
       const mark = window.scrollY + window.innerHeight * 0.35;

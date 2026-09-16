@@ -1,12 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { Reveal } from "@/components/resume/Reveal";
 import { SideNav } from "@/components/resume/SideNav";
@@ -16,6 +11,9 @@ import { System } from "@/components/resume/System";
 import { ScrollCue } from "@/components/resume/ScrollCue";
 import { HeroPortraits } from "@/components/resume/HeroPortraits";
 import { AppCard } from "@/components/resume/AppCard";
+import { PartnerMarquee } from "@/components/resume/PartnerMarquee";
+import { RevealText } from "@/components/resume/RevealText";
+import { SmoothScroll } from "@/components/resume/SmoothScroll";
 import {
   CONTACT,
   HEADLINE,
@@ -60,11 +58,13 @@ function Index() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SmoothScroll />
       <SideNav />
 
       <main className="pt-14 lg:ml-64 lg:pt-0 xl:ml-72">
         <Intro />
         <Proof onOpen={setOpenMetric} />
+        <Partners />
         <SystemSection />
         <SystemsShipped />
         <Stack />
@@ -72,10 +72,7 @@ function Index() {
         <Contact />
       </main>
 
-      <Dialog
-        open={!!openMetric}
-        onOpenChange={(o) => !o && setOpenMetric(null)}
-      >
+      <Dialog open={!!openMetric} onOpenChange={(o) => !o && setOpenMetric(null)}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle className="font-display text-2xl font-normal">
@@ -109,11 +106,15 @@ function Intro() {
           <p className="eyebrow">Louis Park — Interactive Resume</p>
         </Reveal>
 
-        <Reveal delay={80}>
-          <h1 className="mt-8 max-w-3xl text-[1.8rem] leading-[1.12] sm:text-4xl lg:max-w-none lg:text-5xl xl:text-[3.25rem]">
-            {HEADLINE}
-          </h1>
-        </Reveal>
+        <RevealText
+          as="h1"
+          by="letter"
+          text={HEADLINE}
+          duration={900}
+          partStagger={52}
+          lineStagger={240}
+          className="mt-8 max-w-3xl text-[1.8rem] leading-[1.12] sm:text-4xl lg:max-w-none lg:text-5xl xl:text-[3.25rem]"
+        />
 
         <Reveal delay={160}>
           <p className="mt-10 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -147,10 +148,18 @@ function Intro() {
 
 function SectionHead({ index, title }: { index: string; title: string }) {
   return (
-    <Reveal className="mb-14 flex items-baseline gap-6 border-b border-border pb-6">
-      <span className="eyebrow">{index}</span>
-      <h2 className="text-3xl sm:text-4xl">{title}</h2>
-    </Reveal>
+    <div className="mb-14 flex items-baseline gap-6 border-b border-border pb-6">
+      <Reveal>
+        <span className="eyebrow">{index}</span>
+      </Reveal>
+      <RevealText
+        as="h2"
+        text={title}
+        duration={800}
+        lineStagger={90}
+        className="text-3xl sm:text-4xl"
+      />
+    </div>
   );
 }
 
@@ -164,7 +173,7 @@ function Proof({ onOpen }: { onOpen: (m: Metric) => void }) {
           const clickable = m.proof.type !== "none";
           const Wrapper = clickable ? "button" : "div";
           return (
-            <Reveal key={m.value + i} delay={(i % 3) * 70} className="bg-card">
+            <Reveal key={m.value + i} delay={i * 110} className="bg-card">
               <Wrapper
                 {...(clickable
                   ? {
@@ -178,11 +187,8 @@ function Proof({ onOpen }: { onOpen: (m: Metric) => void }) {
                   clickable && "transition-colors hover:bg-secondary",
                 )}
               >
-                <span className="numeral text-5xl lg:text-6xl">
-                  <AnimatedNumber
-                    {...m.number}
-                    delay={i * 80}
-                  />
+                <span className="metric-spring numeral text-5xl lg:text-6xl">
+                  <AnimatedNumber {...m.number} delay={i * 80} />
                 </span>
                 <span className="mt-5 max-w-[26ch] text-sm leading-relaxed text-muted-foreground">
                   {m.label}
@@ -195,7 +201,15 @@ function Proof({ onOpen }: { onOpen: (m: Metric) => void }) {
         {/* filler keeps the ruled grid complete at 3 columns */}
         <div className="hidden bg-card xl:block" aria-hidden />
       </div>
+    </section>
+  );
+}
 
+function Partners() {
+  return (
+    <section id="partners" className={cn(shell, "py-24 lg:py-32")}>
+      <SectionHead index="02" title="Partners" />
+      <PartnerMarquee />
     </section>
   );
 }
@@ -203,7 +217,7 @@ function Proof({ onOpen }: { onOpen: (m: Metric) => void }) {
 function SystemSection() {
   return (
     <section id="system" className={cn(shell, "pt-24 pb-16 lg:pt-32")}>
-      <SectionHead index="02" title="The System" />
+      <SectionHead index="03" title="The System" />
       <System />
     </section>
   );
@@ -212,7 +226,7 @@ function SystemSection() {
 function SystemsShipped() {
   return (
     <section id="systems-shipped" className={cn(shell, "py-24 lg:py-32")}>
-      <SectionHead index="03" title="Systems I Shipped" />
+      <SectionHead index="04" title="Systems I Shipped" />
 
       <Reveal>
         <p className="mb-14 max-w-xl text-sm leading-relaxed text-muted-foreground">
@@ -222,7 +236,7 @@ function SystemsShipped() {
 
       <div className="grid gap-6 md:grid-cols-3 lg:gap-8">
         {INTERNAL_APPS.map((app, i) => (
-          <Reveal key={app.name} delay={i * 70}>
+          <Reveal key={app.name} delay={i * 120}>
             <AppCard app={app} />
           </Reveal>
         ))}
@@ -234,7 +248,7 @@ function SystemsShipped() {
 function ForCompany() {
   return (
     <section id="for-company" className={cn(shell, "py-24 lg:py-32")}>
-      <SectionHead index="05" title={`For ${company.companyName}`} />
+      <SectionHead index="06" title={`For ${company.companyName}`} />
 
       <Reveal>
         <p className="max-w-3xl font-display text-2xl leading-snug sm:text-3xl">
@@ -253,9 +267,7 @@ function ForCompany() {
                 <span className="numeral text-lg text-primary">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="text-sm leading-relaxed text-muted-foreground">
-                  {o}
-                </span>
+                <span className="text-sm leading-relaxed text-muted-foreground">{o}</span>
               </Reveal>
             ))}
           </ol>
@@ -271,9 +283,7 @@ function ForCompany() {
                 <span className="numeral text-lg text-primary">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="text-sm leading-relaxed text-muted-foreground">
-                  {o}
-                </span>
+                <span className="text-sm leading-relaxed text-muted-foreground">{o}</span>
               </Reveal>
             ))}
           </ol>
@@ -326,49 +336,54 @@ function StackLogo({ tool }: { tool: StackTool }) {
   );
 }
 function Stack() {
-  let toolIndex = 0;
-
   return (
     <section
       id="stack"
-      className={cn(shell, "stack-section relative overflow-hidden border-y border-border py-16 lg:py-20")}
+      className={cn(
+        shell,
+        "stack-section relative overflow-hidden border-y border-border py-16 lg:py-20",
+      )}
     >
       <Reveal className="stack-sweep" aria-hidden>
         <span className="stack-sweep-line" />
       </Reveal>
       <div className="stack-grid" aria-hidden />
       <div className="relative">
-        <Reveal className="mb-10 flex items-baseline gap-6 border-b border-border pb-4">
-          <span className="eyebrow">04</span>
-          <h2 className="text-3xl sm:text-4xl">Stack</h2>
-        </Reveal>
+        <div className="mb-10 flex items-baseline gap-6 border-b border-border pb-4">
+          <Reveal>
+            <span className="eyebrow">05</span>
+          </Reveal>
+          <RevealText
+            as="h2"
+            text="Stack"
+            duration={800}
+            lineStagger={90}
+            className="text-3xl sm:text-4xl"
+          />
+        </div>
         <div className="stack-groups">
-          {STACK_GROUPS.map((group) => (
-            <div
+          {STACK_GROUPS.map((group, gi) => (
+            <Reveal
               key={group.label}
+              delay={gi * 90}
               className="stack-group flex flex-col items-center px-4 sm:px-6 lg:px-7"
             >
               <p className="eyebrow text-xs">{group.label}</p>
               <div className="mt-6 flex flex-wrap items-start justify-center gap-x-4 gap-y-6">
-                {group.tools.map((tool) => {
-                  const delay = toolIndex * 60;
-                  toolIndex += 1;
-                  return (
-                    <Reveal key={tool.name} delay={delay}>
-                      <div
-                        className="stack-tool relative flex w-[68px] flex-col items-center gap-2"
-                        style={{ "--brand": `#${tool.brandHex ?? "77736D"}` } as React.CSSProperties}
-                      >
-                        <StackLogo tool={tool} />
-                        <span className="text-center text-[0.6875rem] leading-tight text-muted-foreground">
-                          {tool.name}
-                        </span>
-                      </div>
-                    </Reveal>
-                  );
-                })}
+                {group.tools.map((tool) => (
+                  <div
+                    key={tool.name}
+                    className="stack-tool relative flex w-[68px] flex-col items-center gap-2"
+                    style={{ "--brand": `#${tool.brandHex ?? "77736D"}` } as React.CSSProperties}
+                  >
+                    <StackLogo tool={tool} />
+                    <span className="text-center text-[0.6875rem] leading-tight text-muted-foreground">
+                      {tool.name}
+                    </span>
+                  </div>
+                ))}
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -380,40 +395,44 @@ function Contact() {
   const links = [
     { label: "Phone", value: CONTACT.phone, href: CONTACT.phoneHref },
     { label: "LinkedIn", value: CONTACT.linkedinLabel, href: CONTACT.linkedin },
+    { label: "Instagram", value: CONTACT.instagramLabel, href: CONTACT.instagram },
     { label: "Resume", value: "Download PDF", href: RESUME_PDF_URL },
   ];
 
   return (
-    <section
-      id="contact"
-      className={cn(shell, "border-t border-border py-24 lg:py-32")}
-    >
-      <Reveal>
-        <h2 className="text-4xl sm:text-5xl">Let&apos;s talk.</h2>
-      </Reveal>
+    <section id="contact" className={cn(shell, "border-t border-border py-24 lg:py-32")}>
+      <RevealText
+        as="h2"
+        text="Let's talk."
+        duration={800}
+        lineStagger={90}
+        className="text-4xl sm:text-5xl"
+      />
 
-      <div className="mt-14 grid gap-px border border-border bg-border sm:grid-cols-3">
-        {links.map((l, i) => (
-          <Reveal key={l.label} delay={i * 70} className="bg-card">
-            <a
-              href={l.href}
-              target={l.href.startsWith("http") ? "_blank" : undefined}
-              rel="noreferrer noopener"
-              className="flex h-full flex-col gap-3 p-8 transition-colors hover:bg-secondary"
-            >
-              <span className="eyebrow">{l.label}</span>
-              <span className="flex items-center gap-2 text-base break-all">
-                {l.value}
-                <ArrowUpRight className="size-4 shrink-0 text-primary" aria-hidden />
-              </span>
-            </a>
-          </Reveal>
-        ))}
+      {/* four links now, so the ruled grid goes 2-up then 4-up rather than
+          leaving an orphan in a three-column row */}
+      <div className="mt-14 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
+        {links.map((l, i) => {
+          const external = l.href.startsWith("http");
+          return (
+            <Reveal key={l.label} delay={i * 70} className="bg-card">
+              <a
+                href={l.href}
+                {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className="contact-link flex h-full flex-col gap-3 p-8 hover:bg-secondary"
+              >
+                <span className="eyebrow">{l.label}</span>
+                <span className="contact-link-value flex items-center gap-2 text-base break-all">
+                  {l.value}
+                  <ArrowUpRight className="size-4 shrink-0 text-primary" aria-hidden />
+                </span>
+              </a>
+            </Reveal>
+          );
+        })}
       </div>
 
-      <p className="mt-16 text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Louis Park
-      </p>
+      <p className="mt-16 text-xs text-muted-foreground">© {new Date().getFullYear()} Louis Park</p>
     </section>
   );
 }

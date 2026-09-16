@@ -9,18 +9,10 @@ export function ProofBadge({ proof }: { proof: Proof }) {
   if (proof.type === "none") return null;
 
   const Icon =
-    proof.type === "image"
-      ? ImageIcon
-      : proof.type === "video"
-        ? PlayCircle
-        : ArrowUpRight;
+    proof.type === "image" ? ImageIcon : proof.type === "video" ? PlayCircle : ArrowUpRight;
 
   const text =
-    proof.type === "image"
-      ? "View proof"
-      : proof.type === "video"
-        ? "Watch proof"
-        : "Open source";
+    proof.type === "image" ? "View proof" : proof.type === "video" ? "Watch proof" : "Open source";
 
   return (
     <span className="mt-6 inline-flex items-center gap-1.5 border-b border-primary/40 pb-0.5 text-xs tracking-wide text-primary">

@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { CaseStudy } from "@/components/resume/CaseStudy";
+import { Reveal } from "@/components/resume/Reveal";
 import { LazyVimeo } from "@/components/resume/LazyVimeo";
 import {
   SYSTEM_STEPS,
@@ -302,8 +303,8 @@ export function System() {
             </p>
 
             <p
-              className="numeral mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-5xl lg:text-6xl"
-              style={{ color: PHASE[step.tone] }}
+              className="metric-spring numeral mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-5xl lg:text-6xl"
+              style={{ "--metric-color": PHASE[step.tone] } as React.CSSProperties}
             >
               {step.metrics.map((metric, k) => (
                 <Fragment key={metric.unit ?? k}>
@@ -331,13 +332,13 @@ export function System() {
               ))}
             </p>
 
-            <p className="mt-7 max-w-xl font-display text-2xl leading-snug sm:text-3xl">
-              {step.statement}
-            </p>
+            <Reveal shift={16} duration={520} className="mt-7 max-w-xl">
+              <p className="font-display text-2xl leading-snug sm:text-3xl">{step.statement}</p>
+            </Reveal>
 
-            <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              {step.body}
-            </p>
+            <Reveal shift={16} duration={520} delay={90} className="mt-5 max-w-xl">
+              <p className="text-sm leading-relaxed text-muted-foreground">{step.body}</p>
+            </Reveal>
 
             {step.segmentation ? (
               <SegmentationBreakdown segmentation={step.segmentation} tone={PHASE[step.tone]} />

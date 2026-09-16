@@ -72,6 +72,7 @@
 
 :root {
   --radius: 0.25rem;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --paper: oklch(0.976 0.006 85);
   --ink: oklch(0.19 0.012 60);
   --rule: oklch(0.88 0.008 80);
@@ -209,14 +210,23 @@
 
 @utility reveal {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(var(--reveal-shift, 18px));
   transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity var(--reveal-duration, 700ms) var(--ease-out-expo) var(--reveal-delay, 0ms),
+    transform var(--reveal-duration, 700ms) var(--ease-out-expo) var(--reveal-delay, 0ms);
 
   &[data-visible="true"] {
     opacity: 1;
     transform: none;
+  }
+}
+
+@keyframes marquee-slide {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
@@ -251,6 +261,104 @@
 }
 
 @layer components {
+  /* --- split-text reveals ------------------------------------------------- */
+  /*
+   * Instrument Serif's content area is 1.30em tall (descenders reach 0.309em
+   * below the baseline) while the headline runs at leading-[1.12], so ink
+   * overflows the line box by ~0.09em top and bottom. Two consequences:
+   *   - a mask sized to the line box would permanently clip ascenders and
+   *     descenders at rest, so the mask is released once the reveal finishes;
+   *   - translateY(100%) alone leaves a sliver of the glyph's top showing at
+   *     the mask's lower edge, so the letter shift carries a small extra em.
+   */
+  .rt-word {
+    display: inline-block;
+  }
+
+  .rt-mask {
+    display: inline-block;
+    overflow: hidden;
+  }
+
+  .rt-part {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(var(--rt-shift, 110%));
+    transition:
+      opacity var(--rt-duration, 800ms) var(--ease-out-expo) var(--rt-delay, 0ms),
+      transform var(--rt-duration, 800ms) var(--ease-out-expo) var(--rt-delay, 0ms);
+  }
+
+  .rt-root[data-state="play"] .rt-part,
+  .rt-root[data-state="done"] .rt-part {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* reveal over: drop the mask so nothing is clipped at rest */
+  .rt-root[data-state="done"] .rt-mask {
+    overflow: visible;
+  }
+
+  /* --- hover springs ------------------------------------------------------ */
+  .metric-spring {
+    color: var(--metric-color, currentColor);
+    transition: color 340ms ease-out;
+  }
+
+  .metric-spring:hover {
+    color: var(--primary);
+  }
+
+  .contact-link {
+    transition: background-color 340ms ease-out;
+  }
+
+  .contact-link-value {
+    transition:
+      color 340ms ease-out,
+      transform 340ms ease-out;
+  }
+
+  .contact-link:hover .contact-link-value,
+  .contact-link:focus-visible .contact-link-value {
+    color: var(--primary);
+    transform: translateX(8px);
+  }
+
+  /* --- partner marquee ---------------------------------------------------- */
+  .marquee {
+    overflow: hidden;
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-slide 22s linear infinite;
+  }
+
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  .marquee-list {
+    display: flex;
+    align-items: center;
+    flex: none;
+  }
+
+  .marquee-item {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .marquee-item::after {
+    content: "·";
+    color: var(--primary);
+    margin: 0 1.25rem;
+  }
+
   /*
    * Border tint for a shipped tool: an overlay rule at 30% rather than a
    * colour-mix border, so the tint never depends on a colour function the
@@ -419,6 +527,34 @@
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  /* split text resolves to plain text — no mask, no offset, no transition */
+  .rt-part {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .rt-mask {
+    overflow: visible;
+  }
+
+  /* the track holds at its start, so the first entries stay on screen */
+  .marquee-track {
+    animation: none;
+    transform: none;
+  }
+
+  .metric-spring,
+  .contact-link,
+  .contact-link-value {
+    transition: none;
+  }
+
+  .contact-link:hover .contact-link-value,
+  .contact-link:focus-visible .contact-link-value {
+    transform: none;
   }
 
   .stack-grid {
@@ -633,4 +769,26 @@
   .system-connector {
     transition: none;
   }
+}
+
+/*
+ * Lenis. The classes are applied to <html> by the library while it is running,
+ * so none of this is active under prefers-reduced-motion (where Lenis never
+ * mounts and the page keeps native scrolling).
+ */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }

@@ -16,13 +16,15 @@ Single page, vertical scroll, with a sticky left sidebar navigation
 
 mobile the sidebar collapses to a slim top bar. Smooth scroll to anchors.
 
-Sections: Intro / Proof / The System / Systems I Shipped / Stack / 
+Sections: Intro / Proof / Partners / The System / Systems I Shipped / 
 
-For [Company] / Contact
+Stack / For [Company] / Contact
 
-On the page only the middle five carry a printed numeral — Proof is 01, 
+On the page only the middle six carry a printed numeral — Proof is 01, 
 
-The System 02, Systems I Shipped 03, Stack 04, For [Company] 05.
+Partners 02, The System 03, Systems I Shipped 04, Stack 05, 
+
+For [Company] 06.
 
 === 1. INTRO (full viewport height) ===
 
@@ -112,7 +114,25 @@ Metrics:
 
 - 48,000+ — Real estate agents reached via email campaign
 
-=== 3. THE SYSTEM (scroll-driven) ===
+=== 3. PARTNERS (marquee) ===
+
+A single row of partner names looping left, hairline rule top and bottom, 
+
+2rem of vertical padding. The list is rendered twice and the track travels 
+
+exactly -50% on a 22s linear loop, so the second copy lands where the first 
+
+began and there is no seam; the duplicate is aria-hidden. Existing serif at 
+
+section-heading scale in muted foreground, with a small --primary dot 
+
+between entries. Pauses on hover. Under prefers-reduced-motion the track 
+
+holds at its start and the first few names simply sit there.
+
+Text only — no logos.
+
+=== 4. THE SYSTEM (scroll-driven) ===
 
 Replaces the three division sections. Sticky scrollytelling: on desktop a 
 
@@ -294,7 +314,7 @@ letterboxed. Two of the three are portrait. Portrait frames are capped at
 
 the full column width.
 
-=== 4. SYSTEMS I SHIPPED ===
+=== 5. SYSTEMS I SHIPPED ===
 
 Internal tools, framed by the friction each one removed rather than by what 
 
@@ -334,7 +354,7 @@ never a broken image. Alt text describes the interface rather than repeating
 
 the name. No new colours — the cards reuse the phase tokens.
 
-=== 5. STACK ===
+=== 6. STACK ===
 
 Tool logos in five groups: DEMAND · AUTOMATION · AI & BUILD · VIDEO · 
 
@@ -376,7 +396,7 @@ image fails to load in the browser — falls back to its text monogram. Never
 
 a broken image.
 
-=== 6. FOR [COMPANY] ===
+=== 7. FOR [COMPANY] ===
 
 A section built to be rewritten per application. Structure it so all the 
 
@@ -390,11 +410,81 @@ columns — "What I see" and "What I'd do in the first 90 days".
 
 Fill with clearly-marked placeholder text for now.
 
-=== 7. CONTACT ===
+=== 8. CONTACT ===
 
-Phone (as a tel: link, so it is tappable on mobile), LinkedIn, and a 
+Phone (as a tel: link, so it is tappable on mobile), LinkedIn, Instagram 
 
-"Download resume PDF" link. No contact form, no email address.
+(shown as @louis_vici, not the URL), and a "Download resume PDF" link, in 
+
+that order. External links open in a new tab with rel="noopener noreferrer". 
+
+Four cards, so the ruled grid runs 2-up then 4-up rather than leaving an 
+
+orphan. No contact form, no email address.
+
+=== MOTION ===
+
+Lenis (smoothWheel, RAF loop) drives the page. One delegated click listener 
+
+routes every same-page hash link through lenis.scrollTo() — a native anchor 
+
+jump moves the browser instantly while Lenis is mid-interpolation and the 
+
+two fight, so the sidebar nav, the hero button and the scroll cue all go 
+
+through it. The sticky System section is what this is really for. None of it 
+
+mounts under prefers-reduced-motion; the page keeps native scrolling.
+
+Everything eases on cubic-bezier(0.16, 1, 0.3, 1), exposed as 
+
+--ease-out-expo.
+
+Text reveals all fire once on IntersectionObserver at threshold 0, then 
+
+unobserve. They never reverse.
+
+- Hero headline, letter by letter: 900ms per letter, 52ms between letters 
+
+  within a line, each line starting 240ms after the one above.
+
+- Section headings, line by line: 800ms, 90ms between lines.
+
+- Step copy in The System: 16px rise over 520ms.
+
+<RevealText> does not take hard-coded lines. It splits on words (each an 
+
+inline-block so words never break mid-reveal), then reads each mask's 
+
+offsetTop on entry to work out which visual line it landed on — the cascade 
+
+stays correct at any width, which a fixed split could not manage for a 
+
+headline that reflows. It waits for document.fonts.ready before measuring, 
+
+because Instrument Serif is narrower than the fallback and measuring through 
+
+the swap would group letters onto the wrong lines.
+
+Masks are released once a reveal finishes. Instrument Serif's content area is 
+
+1.30em against a 1.12em headline leading, so ink overflows the line box by 
+
+~0.09em and a permanent mask would clip ascenders and descenders at rest. 
+
+For the same reason the letter shift is calc(100% + 0.12em) rather than a 
+
+bare 100%, which would leave a sliver of each glyph showing at the mask's 
+
+lower edge.
+
+Group staggers: Proof cards index x 110ms, Systems I Shipped cards 
+
+index x 120ms, Stack logo groups index x 90ms.
+
+Hover: metric figures in Proof and The System spring to --primary over 340ms; 
+
+contact links do the same and slide 8px right.
 
 === DESIGN ===
 
