@@ -752,11 +752,46 @@
     opacity: 1;
   }
 
-  .system-connector {
-    stroke: var(--tone);
-    stroke-opacity: 0.4;
+  /* --- Tracing beam ------------------------------------------------------- */
+  /*
+   * The line down the left edge of the system. --beam-tone is the active
+   * step's phase colour, set on the host; stroke and fill transition so the
+   * beam shifts hue as the reader crosses into the next phase, rather than
+   * cutting.
+   */
+  .tracing-beam {
+    /* the head's glow spreads past the 24px-wide box */
+    overflow: visible;
+  }
+
+  .tracing-beam-track,
+  .tracing-beam-progress {
+    fill: none;
     stroke-width: 2;
-    transition: stroke-dashoffset 300ms ease-out;
+    stroke-linecap: round;
+  }
+
+  .tracing-beam-track {
+    stroke: var(--foreground);
+    stroke-opacity: 0.12;
+  }
+
+  .tracing-beam-progress {
+    stroke: var(--beam-tone);
+    transition: stroke 400ms ease-out;
+  }
+
+  .tracing-beam-head {
+    fill: var(--beam-tone);
+    transition: fill 400ms ease-out;
+  }
+
+  .tracing-beam-glow {
+    fill: var(--beam-tone);
+    opacity: 0.14;
+    /* blur() takes a standard deviation, so half the intended 16px spread */
+    filter: blur(8px);
+    transition: fill 400ms ease-out;
   }
 }
 
@@ -765,8 +800,7 @@
   .system-node-glow,
   .system-node-box,
   .system-node-label,
-  .system-node-metric,
-  .system-connector {
+  .system-node-metric {
     transition: none;
   }
 }

@@ -3,6 +3,7 @@ import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { CaseStudy } from "@/components/resume/CaseStudy";
 import { Reveal } from "@/components/resume/Reveal";
 import { LazyVimeo } from "@/components/resume/LazyVimeo";
+import { TracingBeam } from "@/components/resume/TracingBeam";
 import {
   SYSTEM_STEPS,
   type MetricNumber,
@@ -117,31 +118,8 @@ function SystemDiagram({ active, reduced }: { active: number; reduced: boolean }
       aria-label={diagramLabel}
       className="system-diagram h-auto max-h-[78vh] w-full max-w-[380px]"
     >
-      {SYSTEM_STEPS.slice(0, -1).map((step, i) => {
-        const y1 = NODE_Y[i]! + NODE_H[i]!;
-        const y2 = NODE_Y[i + 1]!;
-        const len = y2 - y1;
-        const drawn = reduced || active > i;
-        return (
-          <line
-            key={`connector-${step.index}`}
-            x1={VB_W / 2}
-            y1={y1}
-            x2={VB_W / 2}
-            y2={y2}
-            className="system-connector"
-            style={
-              {
-                "--tone": PHASE[step.tone],
-                strokeDasharray: len,
-                strokeDashoffset: drawn ? 0 : len,
-              } as React.CSSProperties
-            }
-            vectorEffect="non-scaling-stroke"
-          />
-        );
-      })}
-
+      {/* The nodes carry no connectors — the tracing beam down the left edge
+          of the section is what joins them now. */}
       {SYSTEM_STEPS.map((step, i) => (
         <SystemNode
           key={step.index}
@@ -272,7 +250,9 @@ export function System() {
   }, [active]);
 
   return (
-    <div className="flex flex-col gap-8 min-[900px]:flex-row min-[900px]:gap-12 lg:gap-16">
+    <div className="relative flex flex-col gap-8 min-[900px]:flex-row min-[900px]:gap-12 lg:gap-16">
+      <TracingBeam tone={PHASE[SYSTEM_STEPS[active]!.tone]} reduced={reduced} />
+
       <div className="hidden min-[900px]:block min-[900px]:w-[45%]">
         <div className="sticky top-14 flex h-[calc(100vh-3.5rem)] items-center justify-center lg:top-0 lg:h-screen">
           <SystemDiagram active={active} reduced={reduced} />

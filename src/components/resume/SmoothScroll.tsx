@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
-import { getLenis, setLenis } from "@/lib/lenis";
+import { emitFrame, getLenis, setLenis } from "@/lib/lenis";
 
 /** Header height to clear when jumping to an anchor, matching scroll-padding-top. */
 const ANCHOR_OFFSET = -80;
@@ -29,6 +29,8 @@ export function SmoothScroll() {
     let raf = 0;
     const tick = (time: number) => {
       lenis.raf(time);
+      // scroll-driven work reads the position Lenis just settled on
+      emitFrame();
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
