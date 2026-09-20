@@ -37,7 +37,21 @@ export type Metric = {
   number: MetricNumber;
 };
 
-export const METRICS: Metric[] = [
+/**
+ * A proof card carrying no counted figure. The body is a wrapped row of tags
+ * instead, so it takes the same outer frame as the metric cards but leads with
+ * its title rather than a numeral.
+ */
+export type TagCard = {
+  title: string;
+  tags: string[];
+};
+
+export type ProofCard = Metric | TagCard;
+
+export const isTagCard = (card: ProofCard): card is TagCard => "tags" in card;
+
+export const METRICS: ProofCard[] = [
   {
     value: "$22.9M",
     label: "Annual revenue generated within 12 months",
@@ -57,10 +71,10 @@ export const METRICS: Metric[] = [
     number: { prefix: "$", value: 9, suffix: "M+" },
   },
   {
-    value: "60,000",
-    label: "Lead database activated with zero added headcount",
+    value: "200,000+",
+    label: "Prospect list built across owner and agent segments",
     proof: { type: "none" },
-    number: { value: 60000 },
+    number: { value: 200000, suffix: "+" },
   },
   {
     value: "48",
@@ -75,10 +89,19 @@ export const METRICS: Metric[] = [
     number: { prefix: "+", value: 34, suffix: "%" },
   },
   {
-    value: "3.5 → 4.4",
-    label: "Google rating, 9 to 150 reviews in 2 months",
-    proof: { type: "none" },
-    number: { prefix: "3.5 → ", value: 4.4, from: 3.5, decimals: 1 },
+    title: "Omnichannel Marketing",
+    tags: [
+      "Direct mail",
+      "Email",
+      "SMS",
+      "Meta Ads",
+      "YouTube Ads",
+      "Shopping cart ads",
+      "Signs & riders",
+      "Influencer realtor cross-marketing",
+      "Tom Ferry sponsorship",
+      "AREAA",
+    ],
   },
   {
     value: "48,000+",
@@ -217,10 +240,10 @@ export const SYSTEM_STEPS: SystemStep[] = [
   {
     index: "03",
     label: "Targeting",
-    metrics: [{ number: { value: 12 }, unit: "profiles" }],
+    metrics: [{ number: { value: 12 }, unit: "ICPs" }],
     tone: "b",
     statement: "Then who.",
-    body: "Segmented the market twice — by distress signal, then by buyer type.",
+    body: "Segmented the market twice — by distress signal, then by buyer type — into 12 ideal customer profiles (ICPs).",
     segmentation: {
       signalsLabel: "Distress signals",
       signals: ["Probate", "Divorce", "Notice of Default", "Pre-foreclosure", "Tired landlords"],
@@ -452,7 +475,7 @@ export const CONTACT = {
 export const SECTIONS = [
   { id: "intro", label: "Intro" },
   { id: "proof", label: "Proof" },
-  { id: "partners", label: "Partners" },
+  { id: "partnerships", label: "Partnerships Secured" },
   { id: "system", label: "The System" },
   { id: "systems-shipped", label: "Systems I Shipped" },
   { id: "stack", label: "Stack" },

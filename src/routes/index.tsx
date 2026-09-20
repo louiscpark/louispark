@@ -9,7 +9,7 @@ import { ProofAsset, ProofBadge } from "@/components/resume/ProofSlot";
 import { BRAND_LOGOS } from "@/content/brand-logos.generated";
 import { System } from "@/components/resume/System";
 import { ScrollCue } from "@/components/resume/ScrollCue";
-import { HeroPortraits } from "@/components/resume/HeroPortraits";
+import { HeroPortrait } from "@/components/resume/HeroPortrait";
 import { AppCard } from "@/components/resume/AppCard";
 import { PartnerMarquee } from "@/components/resume/PartnerMarquee";
 import { RevealText } from "@/components/resume/RevealText";
@@ -23,6 +23,7 @@ import {
   STACK_GROUPS,
   SUBHEAD,
   company,
+  isTagCard,
   type Metric,
   type StackTool,
 } from "@/content/resume";
@@ -44,7 +45,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Interactive resume: $22.9M in fifteen months, $25M funding secured, 60,000-lead database activated in real estate and proptech.",
+          "Interactive resume: $22.9M in fifteen months, $25M funding secured, a 200,000+ prospect list built in real estate and proptech.",
       },
       { property: "og:type", content: "profile" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -64,7 +65,7 @@ function Index() {
       <main className="pt-14 lg:ml-64 lg:pt-0 xl:ml-72">
         <Intro />
         <Proof onOpen={setOpenMetric} />
-        <Partners />
+        <Partnerships />
         <SystemSection />
         <SystemsShipped />
         <Stack />
@@ -98,14 +99,10 @@ function Intro() {
         "relative flex min-h-[92vh] flex-col justify-center overflow-hidden py-24 lg:min-h-screen",
       )}
     >
-      <HeroPortraits />
+      <HeroPortrait />
 
-      {/* the copy always sits above the portraits, at full contrast */}
-      <div className="relative z-10 lg:max-w-[60%]">
-        <Reveal>
-          <p className="eyebrow">Louis Park — Interactive Resume</p>
-        </Reveal>
-
+      {/* the copy always sits above the portrait, at full contrast */}
+      <div className="relative z-10 lg:max-w-[58%]">
         <RevealText
           as="h1"
           by="letter"
@@ -113,7 +110,7 @@ function Intro() {
           duration={900}
           partStagger={52}
           lineStagger={240}
-          className="mt-8 max-w-3xl text-[1.8rem] leading-[1.12] sm:text-4xl lg:max-w-none lg:text-5xl xl:text-[3.25rem]"
+          className="max-w-3xl text-[1.8rem] leading-[1.12] sm:text-4xl lg:max-w-none lg:text-5xl xl:text-[3.25rem]"
         />
 
         <Reveal delay={160}>
@@ -169,7 +166,33 @@ function Proof({ onOpen }: { onOpen: (m: Metric) => void }) {
       <SectionHead index="01" title="Proof" />
 
       <div className="grid gap-px border border-border bg-border sm:grid-cols-2 xl:grid-cols-3">
-        {METRICS.map((m, i) => {
+        {METRICS.map((card, i) => {
+          if (isTagCard(card)) {
+            return (
+              <Reveal key={card.title} delay={i * 110} className="bg-card">
+                {/* no numeral to lead with, so the title takes the top slot and
+                    the tags fill the body the metric label would occupy */}
+                <div
+                  className="flex h-full w-full flex-col items-start p-8 text-left lg:p-10"
+                  style={{ "--tone": "var(--primary)" } as React.CSSProperties}
+                >
+                  <h3 className="font-display text-2xl leading-snug">{card.title}</h3>
+                  <ul className="mt-6 flex flex-wrap gap-2">
+                    {card.tags.map((tag) => (
+                      <li
+                        key={tag}
+                        className="segment-pill px-4 py-1.5 text-xs text-muted-foreground"
+                      >
+                        {tag}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
+            );
+          }
+
+          const m = card;
           const clickable = m.proof.type !== "none";
           const Wrapper = clickable ? "button" : "div";
           return (
@@ -205,10 +228,10 @@ function Proof({ onOpen }: { onOpen: (m: Metric) => void }) {
   );
 }
 
-function Partners() {
+function Partnerships() {
   return (
-    <section id="partners" className={cn(shell, "py-24 lg:py-32")}>
-      <SectionHead index="02" title="Partners" />
+    <section id="partnerships" className={cn(shell, "py-24 lg:py-32")}>
+      <SectionHead index="02" title="Partnerships Secured" />
       <PartnerMarquee />
     </section>
   );

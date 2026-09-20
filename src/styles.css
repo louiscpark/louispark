@@ -390,9 +390,28 @@
     pointer-events: none;
   }
 
+  /* --- Hero portrait ------------------------------------------------------ */
   .hero-portrait {
-    /* warm duotone so the portraits sit in the cream palette, not against it */
+    /* warm duotone so the portrait sits in the cream palette, not against it */
     filter: grayscale(1) sepia(0.3) contrast(1.02);
+    /* the base melts into the page rather than stopping on a hard edge */
+    mask-image: linear-gradient(to bottom, #000 58%, transparent 94%);
+    transition: transform 400ms cubic-bezier(0.22, 1.12, 0.36, 1);
+  }
+
+  .hero-bloom {
+    background: radial-gradient(circle at 50% 42%, var(--phase-1) 0%, transparent 68%);
+    opacity: 0.1;
+    /* blur() takes a standard deviation, so half the intended 120px spread */
+    filter: blur(60px);
+    transition: transform 400ms cubic-bezier(0.22, 1.12, 0.36, 1);
+  }
+
+  .hero-arc {
+    fill: none;
+    stroke: var(--primary);
+    stroke-opacity: 0.4;
+    stroke-width: 1.5;
   }
 
   .scroll-cue {
@@ -521,6 +540,13 @@
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  /* the portrait holds still — no parallax, no pointer tracking */
+  .hero-portrait,
+  .hero-bloom {
+    transform: none;
+    transition: none;
   }
 
   .reveal {
