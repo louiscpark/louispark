@@ -15,7 +15,7 @@ const BLOOM_SHIFT = 16;
 /**
  * The hero portrait, in three layers back to front: a soft phase-1 bloom, a
  * single arc that passes behind the shoulder and exits frame right, and the
- * portrait itself in warm duotone.
+ * portrait itself, unfiltered, at its natural saturation.
  *
  * The image file is optional. Nothing paints until it has actually loaded, and
  * an error removes the whole treatment — so a missing public/portrait.png
@@ -125,7 +125,7 @@ export function HeroPortrait() {
         <circle cx="140" cy="140" r="139" />
       </svg>
 
-      {/* (c) the portrait, warm duotone, melting out at the bottom */}
+      {/* (c) the portrait, full colour, melting out at the bottom */}
       <div ref={scroller} className="absolute inset-0">
         <img
           ref={portrait}
