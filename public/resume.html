@@ -1,0 +1,1606 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Louis Park - Strategic Marketing / Real Estate Acquisition</title>
+    <meta
+      name="description"
+      content="Louis Park. Strategic marketing and real estate acquisition. $25M funding secured, $22.9M revenue in 15 months, $9M in assets acquired."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Poppins:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ===================================================================
+         TOKENS
+         =================================================================== */
+      :root {
+        --cream: #fbf9f5;
+        --ink: #14120f;
+        --ink-soft: #55504a;
+        --gold: #c09a4e;
+        --gold-lt: #c9a557;
+        --card-a: #1b1813;
+        --card-b: #0d0c0a;
+
+        /* beam geometry. --beam-x is the rail centre, measured from the
+           left edge of the experience block; --card-x is where cards start,
+           leaving the gutter between them for ticks and labels. */
+        --beam-x: 132px;
+        --card-x: 196px;
+        --tick-minor: 24px;
+        --tick-major: 120px;
+
+        --maxw: 1080px;
+      }
+
+      /* ===================================================================
+         BASE
+         =================================================================== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--cream);
+        color: var(--ink);
+        font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-weight: 600;
+        margin: 0;
+        line-height: 1.1;
+      }
+
+      h1 {
+        font-size: clamp(2.6rem, 6vw, 4.2rem);
+        font-weight: 700;
+        letter-spacing: -1.6px;
+      }
+
+      h2 {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        letter-spacing: -0.9px;
+      }
+
+      h3 {
+        font-size: 1.3rem;
+        letter-spacing: -0.5px;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      ul,
+      ol {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .wrap {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 0 32px;
+      }
+
+      .eyebrow {
+        font-size: 10px;
+        font-weight: 400;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+
+      .tabular {
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: "tnum" 1;
+      }
+
+      /* visible only to screen readers, and to the print stylesheet */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* a value the owner still has to supply. Deliberately loud on screen
+         and in print, so it cannot be sent out by accident. */
+      .ph {
+        color: #8a2b16;
+        background: rgba(192, 154, 78, 0.12);
+        border-bottom: 1px dashed rgba(138, 43, 22, 0.5);
+        padding: 0 3px;
+        font-style: normal;
+      }
+
+      /* ===================================================================
+         HEADER
+         =================================================================== */
+      .masthead {
+        padding: 92px 0 56px;
+      }
+
+      .masthead h1 {
+        margin-bottom: 10px;
+      }
+
+      .masthead .role-title {
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: clamp(1rem, 2vw, 1.2rem);
+        letter-spacing: -0.5px;
+        color: var(--gold);
+        margin-bottom: 26px;
+      }
+
+      .contact {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 28px;
+        font-size: 14px;
+        font-weight: 300;
+        color: var(--ink-soft);
+      }
+
+      .contact li {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+      }
+
+      .contact .label {
+        font-size: 9px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+
+      .contact a {
+        text-decoration: none;
+        border-bottom: 1px solid rgba(192, 154, 78, 0.4);
+        padding-bottom: 1px;
+        transition: border-color 180ms ease;
+      }
+
+      .contact a:hover,
+      .contact a:focus-visible {
+        border-color: var(--gold);
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--gold);
+        outline-offset: 3px;
+      }
+
+      .rule {
+        height: 1px;
+        background: rgba(20, 18, 15, 0.14);
+        margin: 0;
+        border: 0;
+      }
+
+      /* ===================================================================
+         DOWNLOAD BUTTON. A real file, not a print dialog.
+         =================================================================== */
+      .pdf-btn {
+        position: fixed;
+        top: 22px;
+        right: 22px;
+        z-index: 50;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 17px;
+        border: 1px solid var(--gold);
+        border-radius: 999px;
+        background: var(--cream);
+        color: var(--ink);
+        font-family: "Lato", -apple-system, sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        letter-spacing: 0.06em;
+        text-decoration: none;
+        white-space: nowrap;
+        transition:
+          background-color 180ms ease,
+          color 180ms ease;
+      }
+
+      .pdf-btn:hover,
+      .pdf-btn:focus-visible {
+        background: var(--gold);
+        color: var(--card-b);
+      }
+
+      .pdf-btn svg {
+        width: 13px;
+        height: 13px;
+        flex: none;
+      }
+
+      .pdf-btn .short {
+        display: none;
+      }
+
+      /* ===================================================================
+         SECTION HEADS
+         =================================================================== */
+      .sec-head {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        padding: 64px 0 34px;
+      }
+
+      .sec-head .idx {
+        font-size: 10px;
+        letter-spacing: 0.22em;
+        color: var(--gold);
+        font-weight: 400;
+      }
+
+      /* ===================================================================
+         EXPERIENCE + BEAM
+         =================================================================== */
+      .exp-inner {
+        position: relative;
+        padding-bottom: 40px;
+      }
+
+      .beam {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: var(--beam-x);
+        width: 2px;
+        pointer-events: none;
+      }
+
+      /* --- 1. calibrated rail ------------------------------------------- */
+      .rail {
+        position: absolute;
+        inset: 0;
+        /* the scale and its faint spine fade out together at both ends */
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          transparent 0,
+          #000 5%,
+          #000 95%,
+          transparent 100%
+        );
+        mask-image: linear-gradient(to bottom, transparent 0, #000 5%, #000 95%, transparent 100%);
+      }
+
+      /* the spine the ticks are measured against */
+      .rail::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        width: 2px;
+        background: rgba(20, 18, 15, 0.12);
+      }
+
+      .tick {
+        position: absolute;
+        right: 9px;
+        height: 1px;
+        width: 6px;
+        background: rgba(20, 18, 15, 0.18);
+        transition:
+          background-color 220ms ease-out,
+          width 220ms ease-out;
+      }
+
+      .tick.major {
+        width: 14px;
+        background: rgba(20, 18, 15, 0.3);
+      }
+
+      /* passed ticks latch gold and stay that way */
+      .tick.lit {
+        background: rgba(192, 154, 78, 0.55);
+      }
+
+      .tick.major.lit {
+        background: var(--gold);
+      }
+
+      .tick-label {
+        position: absolute;
+        right: 30px;
+        transform: translateY(-50%);
+        font-size: 9px;
+        font-weight: 300;
+        letter-spacing: 0.12em;
+        color: rgba(20, 18, 15, 0.28);
+        font-variant-numeric: tabular-nums;
+        transition: color 220ms ease-out;
+      }
+
+      .tick-label.lit {
+        color: var(--gold);
+      }
+
+      /* --- 2. living fill ----------------------------------------------- */
+      .fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 2px;
+        height: 0;
+        overflow: hidden;
+        background-image: linear-gradient(to bottom, var(--gold), var(--gold-lt));
+        box-shadow: 0 0 12px rgba(192, 154, 78, 0.45);
+      }
+
+      /* a 40px highlight band running the traced portion, the one sheen */
+      .shimmer {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 40px;
+        top: -40px;
+        opacity: 0.32;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 246, 226, 0) 0%,
+          rgba(255, 246, 226, 1) 50%,
+          rgba(255, 246, 226, 0) 100%
+        );
+        animation: sheen 3.4s linear infinite;
+      }
+
+      @keyframes sheen {
+        from {
+          top: -40px;
+        }
+        to {
+          top: 100%;
+        }
+      }
+
+      /* --- 3. comet tip -------------------------------------------------- */
+      .tip {
+        position: absolute;
+        left: 1px;
+        top: 0;
+        width: 0;
+        height: 0;
+        opacity: 0;
+      }
+
+      .tip.on {
+        opacity: 1;
+      }
+
+      .core {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 6px;
+        height: 6px;
+        margin: -3px 0 0 -3px;
+        border-radius: 50%;
+        background: #fff6e2;
+        box-shadow: 0 0 6px rgba(255, 246, 226, 0.9);
+      }
+
+      .halo {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 16px;
+        height: 16px;
+        margin: -8px 0 0 -8px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(201, 165, 87, 0.55) 0%, rgba(201, 165, 87, 0) 70%);
+      }
+
+      /* short tapered trail, above the tip, in the direction travelled from */
+      .trail {
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        width: 2px;
+        height: 26px;
+        margin-left: -1px;
+        background: linear-gradient(to top, rgba(201, 165, 87, 0.75), rgba(201, 165, 87, 0));
+      }
+
+      /* the instrument signature: four hairline arms, turning once per 8s */
+      .reticle {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 18px;
+        height: 18px;
+        margin: -9px 0 0 -9px;
+        animation: reticle-spin 8s linear infinite;
+      }
+
+      .reticle i {
+        position: absolute;
+        background: rgba(192, 154, 78, 0.5);
+      }
+
+      /* north and south arms */
+      .reticle i:nth-child(1),
+      .reticle i:nth-child(2) {
+        left: 50%;
+        width: 1px;
+        height: 4px;
+        margin-left: -0.5px;
+      }
+      .reticle i:nth-child(1) {
+        top: 0;
+      }
+      .reticle i:nth-child(2) {
+        bottom: 0;
+      }
+
+      /* east and west arms */
+      .reticle i:nth-child(3),
+      .reticle i:nth-child(4) {
+        top: 50%;
+        height: 1px;
+        width: 4px;
+        margin-top: -0.5px;
+      }
+      .reticle i:nth-child(3) {
+        right: 0;
+      }
+      .reticle i:nth-child(4) {
+        left: 0;
+      }
+
+      @keyframes reticle-spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .readout {
+        position: absolute;
+        left: 18px;
+        top: 0;
+        transform: translateY(-50%);
+        font-size: 10px;
+        font-weight: 300;
+        letter-spacing: 0.12em;
+        color: var(--gold);
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: "tnum" 1;
+        opacity: 0;
+        white-space: nowrap;
+      }
+
+      .readout.on {
+        opacity: 1;
+      }
+
+      /* ===================================================================
+         ROLES, NODES, CARDS
+         =================================================================== */
+      .roles {
+        margin-left: var(--card-x);
+      }
+
+      .role {
+        position: relative;
+        margin-bottom: 72px;
+      }
+
+      .role:last-child {
+        margin-bottom: 0;
+      }
+
+      /* --- 4. node ------------------------------------------------------- */
+      .node {
+        position: absolute;
+        left: calc(var(--beam-x) - var(--card-x));
+        top: 34px;
+        width: 14px;
+        height: 14px;
+        margin-left: -6px;
+        border-radius: 50%;
+        background: var(--cream);
+        border: 1px solid rgba(20, 18, 15, 0.25);
+        transition:
+          border-color 260ms ease-out,
+          background-color 260ms ease-out,
+          box-shadow 260ms ease-out;
+      }
+
+      .node.lit {
+        background: var(--gold);
+        border-color: var(--gold-lt);
+        box-shadow: 0 0 10px rgba(192, 154, 78, 0.5);
+      }
+
+      .node-year {
+        position: absolute;
+        right: 26px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 11px;
+        font-weight: 300;
+        letter-spacing: 0.1em;
+        color: rgba(20, 18, 15, 0.35);
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: "tnum" 1;
+        transition: color 260ms ease-out;
+      }
+
+      .node.lit .node-year {
+        color: var(--gold);
+      }
+
+      /* two rings, the second thinner and 120ms later: a lock-on, once */
+      .ring {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 14px;
+        height: 14px;
+        margin: -7px 0 0 -7px;
+        border-radius: 50%;
+        border: 2px solid var(--gold);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .ring-2 {
+        border-width: 1px;
+      }
+
+      .node.lit .ring-1 {
+        animation: ring-out 760ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      .node.lit .ring-2 {
+        animation: ring-out 760ms cubic-bezier(0.16, 1, 0.3, 1) 120ms forwards;
+      }
+
+      @keyframes ring-out {
+        0% {
+          opacity: 0.85;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(3.6);
+        }
+      }
+
+      /* the spur draws outward rather than appearing */
+      .spur {
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        height: 1px;
+        width: 0;
+        margin-top: -0.5px;
+        background: linear-gradient(to right, var(--gold), rgba(192, 154, 78, 0.15));
+        transition: width 280ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .node.lit .spur {
+        width: 36px;
+      }
+
+      /* --- card ---------------------------------------------------------- */
+      .card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 22px;
+        border: 1px solid rgba(201, 165, 87, 0.3);
+        background: linear-gradient(160deg, var(--card-a), var(--card-b));
+        /* the deep bottom padding is the ghost numeral's reserved corner:
+           text stops above it, so nothing ever sits on the figure */
+        padding: 34px 38px 92px;
+        color: #efe9dd;
+        opacity: 0;
+        transform: translateY(38px);
+        transition:
+          opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+          border-color 150ms ease-out,
+          box-shadow 150ms ease-out;
+      }
+
+      .card.in {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* 150ms brightness flash as the spur lands */
+      .card.connect {
+        border-color: rgba(201, 165, 87, 0.75);
+        box-shadow: 0 0 22px rgba(192, 154, 78, 0.22);
+      }
+
+      /* the layer the parallax offset is written to */
+      .card-body {
+        position: relative;
+        z-index: 1;
+      }
+
+      .card h3 {
+        color: #fff8ec;
+        margin-bottom: 4px;
+      }
+
+      .card .job {
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 0.95rem;
+        letter-spacing: -0.4px;
+        color: var(--gold-lt);
+      }
+
+      .card .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 16px;
+        margin-top: 8px;
+        font-size: 12px;
+        font-weight: 300;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(239, 233, 221, 0.6);
+      }
+
+      .card .bullets {
+        margin-top: 22px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .card .bullets li {
+        position: relative;
+        padding-left: 20px;
+        font-weight: 300;
+        font-size: 15px;
+        line-height: 1.62;
+        color: rgba(239, 233, 221, 0.86);
+      }
+
+      .card .bullets li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 11px;
+        width: 8px;
+        height: 1px;
+        background: var(--gold);
+      }
+
+      /* Large ghosted number, bottom corner. It is cropped by the card edge
+         so it reads as a big figure while occupying only the 78px strip the
+         card's bottom padding already holds clear of text. */
+      .ghost {
+        position: absolute;
+        right: 24px;
+        bottom: -40px;
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+        font-size: 118px;
+        line-height: 1;
+        letter-spacing: -4px;
+        color: rgba(201, 165, 87, 0.06);
+        pointer-events: none;
+        user-select: none;
+      }
+
+      /* ===================================================================
+         COMPACT BLOCKS: EDUCATION, SKILLS, CERTIFICATIONS
+         =================================================================== */
+      .blocks {
+        display: grid;
+        gap: 34px;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        padding-bottom: 8px;
+      }
+
+      .block h3 {
+        font-size: 1rem;
+        letter-spacing: -0.5px;
+        padding-bottom: 12px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid rgba(20, 18, 15, 0.14);
+      }
+
+      .block li {
+        font-size: 14px;
+        font-weight: 300;
+        color: var(--ink-soft);
+        margin-bottom: 12px;
+      }
+
+      .block li strong {
+        display: block;
+        font-weight: 400;
+        color: var(--ink);
+      }
+
+      .skill-group {
+        margin-bottom: 16px;
+      }
+
+      .skill-group .eyebrow {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .skill-group p {
+        font-size: 14px;
+        font-weight: 300;
+        color: var(--ink-soft);
+      }
+
+      /* ===================================================================
+         CLOSING PANEL
+         =================================================================== */
+      .closing {
+        margin: 72px 0 96px;
+        padding: 34px 38px;
+        border-radius: 22px;
+        border: 1px solid rgba(201, 165, 87, 0.55);
+        background: rgba(192, 154, 78, 0.06);
+      }
+
+      .closing p {
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: clamp(1.05rem, 2.2vw, 1.45rem);
+        letter-spacing: -0.7px;
+        line-height: 1.35;
+      }
+
+      /* ===================================================================
+         RESPONSIVE: below 860px the beam sits in the left gutter
+         =================================================================== */
+      @media (max-width: 860px) {
+        :root {
+          --beam-x: 18px;
+          --card-x: 48px;
+        }
+
+        .wrap {
+          padding: 0 20px;
+        }
+
+        .masthead {
+          padding: 56px 0 40px;
+        }
+
+        /* labels and readout drop; ticks, reticle and ignition stay */
+        .tick-label,
+        .readout {
+          display: none;
+        }
+
+        .node-year {
+          right: auto;
+          left: 24px;
+          top: -20px;
+          transform: none;
+        }
+
+        .card {
+          padding: 26px 22px 72px;
+          border-radius: 18px;
+        }
+
+        .ghost {
+          font-size: 84px;
+          right: 14px;
+          bottom: -28px;
+        }
+
+        /* the button stays top right, but shrinks to the icon plus PDF */
+        .pdf-btn {
+          top: 12px;
+          right: 12px;
+          padding: 8px 13px;
+        }
+
+        .pdf-btn .full {
+          display: none;
+        }
+
+        .pdf-btn .short {
+          display: inline;
+        }
+
+        .role {
+          margin-bottom: 54px;
+        }
+
+        .closing {
+          padding: 26px 22px;
+        }
+      }
+
+      /* ===================================================================
+         REDUCED MOTION: everything in its final state
+         =================================================================== */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+
+        .shimmer,
+        .reticle,
+        .readout,
+        .ring {
+          display: none !important;
+        }
+
+        .card {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      }
+
+      /* ===================================================================
+         PRINT: conventional, ATS safe, one to two pages
+         =================================================================== */
+      @media print {
+        @page {
+          margin: 14mm 14mm;
+        }
+
+        html,
+        body {
+          background: #fff !important;
+          color: #000 !important;
+          font-family: Arial, Helvetica, sans-serif !important;
+          font-size: 10.5pt;
+          line-height: 1.38;
+        }
+
+        /* the whole instrument is screen only */
+        .beam,
+        .node,
+        .spur,
+        .ring,
+        .tick,
+        .tick-label,
+        .readout,
+        .reticle,
+        .ghost,
+        .pdf-btn,
+        .sec-head .idx {
+          display: none !important;
+        }
+
+        .wrap {
+          max-width: none;
+          padding: 0;
+        }
+
+        h1,
+        h2,
+        h3 {
+          font-family: Georgia, "Times New Roman", serif !important;
+          color: #000 !important;
+          letter-spacing: 0 !important;
+        }
+
+        h1 {
+          font-size: 20pt;
+          margin-bottom: 2pt;
+        }
+
+        h2 {
+          font-size: 12pt;
+          text-transform: uppercase;
+          letter-spacing: 0.06em !important;
+          border-bottom: 1pt solid #000;
+          padding-bottom: 3pt;
+          margin-bottom: 8pt;
+        }
+
+        h3 {
+          font-size: 11pt;
+        }
+
+        .masthead {
+          padding: 0 0 10pt;
+        }
+
+        .masthead .role-title {
+          color: #000 !important;
+          font-size: 11pt;
+          margin-bottom: 6pt;
+        }
+
+        .contact {
+          gap: 2pt 14pt;
+          font-size: 9.5pt;
+          color: #000 !important;
+        }
+
+        .contact .label,
+        .eyebrow,
+        .block .eyebrow {
+          color: #000 !important;
+          font-size: 8pt;
+        }
+
+        .contact a {
+          border: 0 !important;
+          text-decoration: none;
+        }
+
+        .sec-head {
+          padding: 12pt 0 0;
+          display: block;
+        }
+
+        /* in print the three blocks stand as their own sections, so the
+           wrapper heading above them would just read as a duplicate */
+        #detail > .sec-head {
+          display: none;
+        }
+
+        /* single column, no gutter, no card chrome */
+        .exp-inner {
+          padding-bottom: 0;
+        }
+
+        .roles {
+          margin-left: 0 !important;
+        }
+
+        .role {
+          margin-bottom: 10pt;
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+
+        .card {
+          background: none !important;
+          background-image: none !important;
+          border: 0 !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          color: #000 !important;
+          padding: 0 !important;
+          opacity: 1 !important;
+          transform: none !important;
+          overflow: visible;
+        }
+
+        .card .job {
+          color: #000 !important;
+          font-family: Georgia, "Times New Roman", serif !important;
+          font-size: 10.5pt;
+        }
+
+        .card .meta {
+          color: #000 !important;
+          text-transform: none;
+          letter-spacing: 0;
+          font-size: 9.5pt;
+          margin-top: 1pt;
+          gap: 2pt 10pt;
+        }
+
+        .card .bullets {
+          margin-top: 5pt;
+          gap: 2pt;
+        }
+
+        .card .bullets li {
+          color: #000 !important;
+          font-size: 10pt;
+          padding-left: 12pt;
+        }
+
+        .card .bullets li::before {
+          content: "\2022";
+          background: none;
+          width: auto;
+          height: auto;
+          top: 0;
+          color: #000;
+        }
+
+        .blocks {
+          display: block;
+        }
+
+        .block {
+          margin-bottom: 8pt;
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+
+        .block h3 {
+          font-size: 12pt;
+          text-transform: uppercase;
+          letter-spacing: 0.06em !important;
+          border-bottom: 1pt solid #000;
+          padding-bottom: 3pt;
+          margin-bottom: 6pt;
+        }
+
+        .block li,
+        .skill-group p {
+          color: #000 !important;
+          font-size: 10pt;
+          margin-bottom: 4pt;
+        }
+
+        .skill-group {
+          margin-bottom: 5pt;
+        }
+
+        .closing {
+          margin: 8pt 0 0;
+          padding: 0;
+          border: 0 !important;
+          border-radius: 0 !important;
+          background: none !important;
+          break-inside: avoid;
+        }
+
+        .closing p {
+          font-family: Georgia, "Times New Roman", serif !important;
+          font-size: 10.5pt;
+          font-weight: 400;
+          letter-spacing: 0 !important;
+        }
+
+        .rule {
+          display: none;
+        }
+
+        .ph {
+          color: #000 !important;
+          background: none !important;
+          border-bottom: 1px solid #000;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- A real file, generated by scripts/build-resume-pdf.mjs. The path is
+         relative so it resolves both when served at /resume.html and when
+         the file is opened straight from disk. -->
+    <a
+      class="pdf-btn"
+      href="louis-park-resume.pdf"
+      download="Louis-Park-Resume.pdf"
+      aria-label="Download resume as PDF"
+    >
+      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
+        <path
+          d="M8 1.6v9.2M4.4 7.6 8 11.2l3.6-3.6M2 13.6h12"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span class="full">Download PDF</span>
+      <span class="short">PDF</span>
+    </a>
+
+    <div class="wrap">
+      <!-- ============================================================
+           HEADER. No beam here.
+           ============================================================ -->
+      <header class="masthead">
+        <h1>Louis Park</h1>
+        <p class="role-title">Strategic Marketing / Real Estate Acquisition</p>
+
+        <ul class="contact">
+          <li><span class="label">Location</span> Orange County, California</li>
+          <li>
+            <span class="label">Email</span>
+            <span class="ph">[PLACEHOLDER: email address]</span>
+          </li>
+          <li>
+            <span class="label">Phone</span>
+            <a href="tel:+16616124137">661 612 4137</a>
+          </li>
+          <li>
+            <span class="label">LinkedIn</span>
+            <a href="https://www.linkedin.com/in/louiscpark/" target="_blank" rel="noopener"
+              >linkedin.com/in/louiscpark</a
+            >
+          </li>
+        </ul>
+      </header>
+
+      <hr class="rule" />
+
+      <main>
+        <!-- ==========================================================
+             EXPERIENCE. The beam runs down this section.
+             ========================================================== -->
+        <section id="experience" aria-labelledby="experience-head">
+          <div class="sec-head">
+            <span class="idx">01</span>
+            <h2 id="experience-head">Experience</h2>
+          </div>
+
+          <div class="exp-inner" id="expInner">
+            <!-- the instrument. Decorative: the resume reads without it. -->
+            <div class="beam" aria-hidden="true">
+              <div class="rail" id="rail"></div>
+              <div class="fill" id="fill"><span class="shimmer"></span></div>
+              <div class="tip" id="tip">
+                <span class="trail"></span>
+                <span class="halo"></span>
+                <span class="core"></span>
+                <span class="reticle"><i></i><i></i><i></i><i></i></span>
+              </div>
+              <div class="readout tabular" id="readout">000%</div>
+            </div>
+
+            <ol class="roles">
+              <li class="role">
+                <div class="node" data-year="2024" aria-hidden="true">
+                  <span class="node-year tabular">----</span>
+                  <span class="ring ring-1"></span>
+                  <span class="ring ring-2"></span>
+                  <span class="spur"></span>
+                </div>
+
+                <article class="card" aria-labelledby="role-1">
+                  <div class="card-body">
+                    <h3 id="role-1">Regency General Contractors</h3>
+                    <p class="job">Strategic Marketing / Real Estate Acquisition</p>
+                    <p class="meta">
+                      <span>Sep 2024 to Present</span>
+                      <span>Costa Mesa, CA</span>
+                    </p>
+                    <ul class="bullets">
+                      <li>
+                        Secured $25M in real estate investment funding from Kiavi, Easy Street
+                        Capital, and KPRE Group.
+                      </li>
+                      <li>
+                        Built two real estate divisions from zero inside a construction company,
+                        generating $22.9M in annual revenue and $9M in assets acquired across 15
+                        months.
+                      </li>
+                      <li>
+                        Sourced 4,900+ off-market California property records through national
+                        wholesale disposition networks, 48 of them carrying ARV spreads above $300K.
+                      </li>
+                      <li>
+                        Segmented the market into 12 ideal customer profiles, reached 1,100+
+                        brokerage leaders, and ran demand to 32,000 homeowners and 48,000+ agents at
+                        $0.70 per landing page view.
+                      </li>
+                    </ul>
+                  </div>
+                  <span class="ghost" aria-hidden="true">01</span>
+                </article>
+              </li>
+
+              <li class="role">
+                <div class="node" data-year="" aria-hidden="true">
+                  <span class="node-year tabular">----</span>
+                  <span class="ring ring-1"></span>
+                  <span class="ring ring-2"></span>
+                  <span class="spur"></span>
+                </div>
+
+                <article class="card" aria-labelledby="role-2">
+                  <div class="card-body">
+                    <h3 id="role-2"><span class="ph">[PLACEHOLDER: company name]</span></h3>
+                    <p class="job"><span class="ph">[PLACEHOLDER: job title]</span></p>
+                    <p class="meta">
+                      <span class="ph">[PLACEHOLDER: start date to end date]</span>
+                      <span class="ph">[PLACEHOLDER: city, state]</span>
+                    </p>
+                    <ul class="bullets">
+                      <li><span class="ph">[PLACEHOLDER: achievement with a figure]</span></li>
+                      <li><span class="ph">[PLACEHOLDER: achievement with a figure]</span></li>
+                      <li><span class="ph">[PLACEHOLDER: achievement with a figure]</span></li>
+                    </ul>
+                  </div>
+                  <span class="ghost" aria-hidden="true">02</span>
+                </article>
+              </li>
+
+              <li class="role">
+                <div class="node" data-year="" aria-hidden="true">
+                  <span class="node-year tabular">----</span>
+                  <span class="ring ring-1"></span>
+                  <span class="ring ring-2"></span>
+                  <span class="spur"></span>
+                </div>
+
+                <article class="card" aria-labelledby="role-3">
+                  <div class="card-body">
+                    <h3 id="role-3"><span class="ph">[PLACEHOLDER: company name]</span></h3>
+                    <p class="job"><span class="ph">[PLACEHOLDER: job title]</span></p>
+                    <p class="meta">
+                      <span class="ph">[PLACEHOLDER: start date to end date]</span>
+                      <span class="ph">[PLACEHOLDER: city, state]</span>
+                    </p>
+                    <ul class="bullets">
+                      <li><span class="ph">[PLACEHOLDER: achievement with a figure]</span></li>
+                      <li><span class="ph">[PLACEHOLDER: achievement with a figure]</span></li>
+                      <li><span class="ph">[PLACEHOLDER: achievement with a figure]</span></li>
+                    </ul>
+                  </div>
+                  <span class="ghost" aria-hidden="true">03</span>
+                </article>
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- ==========================================================
+             EDUCATION, SKILLS, CERTIFICATIONS
+             ========================================================== -->
+        <section id="detail" aria-labelledby="detail-head">
+          <div class="sec-head">
+            <span class="idx">02</span>
+            <h2 id="detail-head">Education, Skills, Certifications</h2>
+          </div>
+
+          <div class="blocks">
+            <div class="block">
+              <h3>Education</h3>
+              <ul>
+                <li>
+                  <strong><span class="ph">[PLACEHOLDER: degree and field of study]</span></strong>
+                  <span class="ph">[PLACEHOLDER: institution]</span>,
+                  <span class="ph">[PLACEHOLDER: city, state]</span>,
+                  <span class="ph">[PLACEHOLDER: graduation year]</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="block">
+              <h3>Skills</h3>
+              <div class="skill-group">
+                <span class="eyebrow">Demand</span>
+                <p>Meta Ads, Google Ads, direct mail, email, SMS, paid social</p>
+              </div>
+              <div class="skill-group">
+                <span class="eyebrow">Automation</span>
+                <p>n8n, Make.com, Follow Up Boss</p>
+              </div>
+              <div class="skill-group">
+                <span class="eyebrow">AI and build</span>
+                <p>Claude Code, Lovable, Bolt.new</p>
+              </div>
+              <div class="skill-group">
+                <span class="eyebrow">Video</span>
+                <p>Higgsfield, CapCut, HeyGen</p>
+              </div>
+              <div class="skill-group">
+                <span class="eyebrow">Design and ops</span>
+                <p>Figma, Notion, Asana, GitHub</p>
+              </div>
+              <div class="skill-group">
+                <span class="eyebrow">Internal tools shipped</span>
+                <p>Renovation Progress Tracker, Agent Data Scraper</p>
+              </div>
+            </div>
+
+            <div class="block">
+              <h3>Certifications</h3>
+              <ul>
+                <li>
+                  <strong
+                    ><span class="ph">[PLACEHOLDER: certification name]</span></strong
+                  >
+                  <span class="ph">[PLACEHOLDER: issuing body]</span>,
+                  <span class="ph">[PLACEHOLDER: year]</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- closing panel -->
+        <section class="closing" aria-label="Summary">
+          <p>
+            Full-stack marketer and strategic planner. AI-native GTM systems from ad impression to
+            booked appointment.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+
+        var reduce =
+          window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        var expInner = document.getElementById("expInner");
+        var rail = document.getElementById("rail");
+        var fill = document.getElementById("fill");
+        var tip = document.getElementById("tip");
+        var readout = document.getElementById("readout");
+        if (!expInner || !rail || !fill) return;
+
+        var MINOR = 24;
+        var MAJOR = 120;
+
+        var ticks = []; // { el, label, offset, lit }
+        var nodes = []; // { el, year, prevYear, offset, lit, yearEl }
+        var cards = [];
+        var railH = 0;
+
+        /* ---------------------------------------------------------------
+           Build the calibrated scale. Ticks are laid out from the rail's
+           own height, so the scale stays true when the text reflows.
+           --------------------------------------------------------------- */
+        function buildScale() {
+          rail.innerHTML = "";
+          ticks.length = 0;
+          railH = expInner.offsetHeight;
+
+          for (var y = 0; y <= railH; y += MINOR) {
+            var isMajor = y % MAJOR === 0;
+            var el = document.createElement("span");
+            el.className = "tick" + (isMajor ? " major" : "");
+            el.style.top = y + "px";
+            rail.appendChild(el);
+
+            var label = null;
+            if (isMajor && y > 0) {
+              label = document.createElement("span");
+              label.className = "tick-label tabular";
+              label.style.top = y + "px";
+              // the scale reads in percent of the section, matching the tip readout
+              label.textContent = String(Math.round((y / railH) * 100));
+              rail.appendChild(label);
+            }
+
+            ticks.push({ el: el, label: label, offset: y, lit: false });
+          }
+        }
+
+        /* ---------------------------------------------------------------
+           Measure nodes and cards against the rail.
+           --------------------------------------------------------------- */
+        function measure() {
+          var railTop = expInner.getBoundingClientRect().top + window.pageYOffset;
+
+          nodes.length = 0;
+          cards.length = 0;
+
+          var nodeEls = expInner.querySelectorAll(".node");
+          var prevYear = null;
+
+          for (var i = 0; i < nodeEls.length; i++) {
+            var el = nodeEls[i];
+            var box = el.getBoundingClientRect();
+            var year = parseInt(el.getAttribute("data-year"), 10);
+            nodes.push({
+              el: el,
+              yearEl: el.querySelector(".node-year"),
+              year: isNaN(year) ? null : year,
+              prevYear: prevYear,
+              offset: box.top + window.pageYOffset + box.height / 2 - railTop,
+              lit: false,
+              card: el.parentNode.querySelector(".card"),
+            });
+            if (!isNaN(year)) prevYear = year;
+          }
+
+          var cardEls = expInner.querySelectorAll(".card");
+          for (var j = 0; j < cardEls.length; j++) {
+            cards.push({ el: cardEls[j], body: cardEls[j].querySelector(".card-body") });
+          }
+        }
+
+        /* ---------------------------------------------------------------
+           Node ignition. Fires once, on arrival, and latches.
+           --------------------------------------------------------------- */
+        function tweenYear(node) {
+          if (node.year === null) return; // nothing real to count to yet
+          var from = node.prevYear === null ? node.year : node.prevYear;
+          var to = node.year;
+          if (from === to || reduce) {
+            node.yearEl.textContent = String(to);
+            return;
+          }
+          var start = performance.now();
+          var dur = 500;
+          (function step(now) {
+            var t = Math.min(1, (now - start) / dur);
+            // ease out so the last digits settle rather than snap
+            var e = 1 - Math.pow(1 - t, 3);
+            node.yearEl.textContent = String(Math.round(from + (to - from) * e));
+            if (t < 1) requestAnimationFrame(step);
+          })(start);
+        }
+
+        function ignite(node) {
+          if (node.lit) return;
+          node.lit = true;
+          node.el.classList.add("lit"); // lights the node, fires both rings, draws the spur
+          tweenYear(node);
+
+          if (node.card) {
+            // the flash lands when the spur connects, 280ms out
+            window.setTimeout(function () {
+              node.card.classList.add("connect");
+              window.setTimeout(function () {
+                node.card.classList.remove("connect");
+              }, 150);
+            }, 280);
+          }
+        }
+
+        /* ---------------------------------------------------------------
+           Final state, for reduced motion.
+           --------------------------------------------------------------- */
+        function renderFinal() {
+          buildScale();
+          measure();
+
+          fill.style.height = railH + "px";
+          for (var i = 0; i < ticks.length; i++) {
+            ticks[i].el.classList.add("lit");
+            if (ticks[i].label) ticks[i].label.classList.add("lit");
+          }
+          for (var j = 0; j < nodes.length; j++) {
+            nodes[j].el.classList.add("lit");
+            nodes[j].lit = true;
+            if (nodes[j].year !== null) nodes[j].yearEl.textContent = String(nodes[j].year);
+          }
+          for (var k = 0; k < cards.length; k++) cards[k].el.classList.add("in");
+        }
+
+        /* ---------------------------------------------------------------
+           The single rAF loop. Everything scroll driven happens here:
+           no scroll listeners anywhere in this file.
+           --------------------------------------------------------------- */
+        var lastP = -1;
+        var lastH = -1;
+
+        function frame() {
+          var vh = window.innerHeight;
+          var rect = expInner.getBoundingClientRect();
+
+          // the tip tracks a fixed reading line, 62% down the viewport
+          var anchor = vh * 0.62;
+          var p = rect.height > 0 ? (anchor - rect.top) / rect.height : 0;
+          p = p < 0 ? 0 : p > 1 ? 1 : p;
+
+          // re-measure when the block's height changes, e.g. on resize or reflow
+          if (Math.abs(expInner.offsetHeight - lastH) > 1) {
+            lastH = expInner.offsetHeight;
+            buildScale();
+            measure();
+            lastP = -1;
+          }
+
+          if (Math.abs(p - lastP) > 0.0002) {
+            lastP = p;
+
+            var h = p * railH;
+            fill.style.height = h.toFixed(1) + "px";
+
+            tip.style.top = h.toFixed(1) + "px";
+            tip.style.transform = "scale(" + (1 + p * 0.25).toFixed(3) + ")";
+            tip.classList.toggle("on", p > 0.001);
+
+            readout.style.top = h.toFixed(1) + "px";
+            readout.classList.toggle("on", p > 0.001);
+            var pct = Math.round(p * 100);
+            readout.textContent = (pct < 100 ? (pct < 10 ? "00" : "0") : "") + pct + "%";
+
+            // ticks latch gold as they are passed, and stay gold
+            for (var i = 0; i < ticks.length; i++) {
+              if (!ticks[i].lit && ticks[i].offset <= h) {
+                ticks[i].lit = true;
+                ticks[i].el.classList.add("lit");
+                if (ticks[i].label) ticks[i].label.classList.add("lit");
+              }
+            }
+
+            for (var j = 0; j < nodes.length; j++) {
+              if (!nodes[j].lit && nodes[j].offset <= h) ignite(nodes[j]);
+            }
+
+            // parallax: card content lags the beam by up to 6px
+            for (var k = 0; k < cards.length; k++) {
+              var cb = cards[k].el.getBoundingClientRect();
+              if (cb.bottom < -200 || cb.top > vh + 200) continue;
+              var d = (cb.top + cb.height / 2 - anchor) / (vh * 0.5);
+              d = d < 0 ? 0 : d > 1 ? 1 : d;
+              cards[k].body.style.transform = "translateY(" + (d * 6).toFixed(2) + "px)";
+            }
+          }
+
+          requestAnimationFrame(frame);
+        }
+
+        /* --------------------------------------------------------------- */
+        if (reduce) {
+          renderFinal();
+          return;
+        }
+
+        buildScale();
+        measure();
+
+        // cards fade up 38px as they arrive
+        if ("IntersectionObserver" in window) {
+          var io = new IntersectionObserver(
+            function (entries) {
+              for (var i = 0; i < entries.length; i++) {
+                if (entries[i].isIntersecting) {
+                  entries[i].target.classList.add("in");
+                  io.unobserve(entries[i].target);
+                }
+              }
+            },
+            { rootMargin: "0px 0px -12% 0px", threshold: 0.08 },
+          );
+          var all = expInner.querySelectorAll(".card");
+          for (var i = 0; i < all.length; i++) io.observe(all[i]);
+        } else {
+          var fallback = expInner.querySelectorAll(".card");
+          for (var f = 0; f < fallback.length; f++) fallback[f].classList.add("in");
+        }
+
+        // fonts change the block height, so remeasure once they land
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(function () {
+            buildScale();
+            measure();
+            lastP = -1;
+          });
+        }
+
+        requestAnimationFrame(frame);
+      })();
+    </script>
+  </body>
+</html>

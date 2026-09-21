@@ -128,10 +128,12 @@ function Intro() {
               See the proof
             </a>
             <a
-              href={RESUME_PDF_URL}
+              href="/resume.html"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 border border-border px-7 py-3.5 text-sm tracking-wide transition-colors hover:border-foreground"
             >
-              Download resume PDF
+              View resume
               <ArrowUpRight className="size-4" aria-hidden />
             </a>
           </div>
@@ -415,11 +417,13 @@ function Stack() {
 }
 
 function Contact() {
-  const links = [
+  // newTab is explicit: the resume is a same-origin page, so it would not be
+  // caught by the http check the outbound links rely on.
+  const links: { label: string; value: string; href: string; newTab?: boolean }[] = [
     { label: "Phone", value: CONTACT.phone, href: CONTACT.phoneHref },
     { label: "LinkedIn", value: CONTACT.linkedinLabel, href: CONTACT.linkedin },
     { label: "Instagram", value: CONTACT.instagramLabel, href: CONTACT.instagram },
-    { label: "Resume", value: "Download PDF", href: RESUME_PDF_URL },
+    { label: "Resume", value: "View resume", href: RESUME_PDF_URL, newTab: true },
   ];
 
   return (
@@ -436,12 +440,12 @@ function Contact() {
           leaving an orphan in a three-column row */}
       <div className="mt-14 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
         {links.map((l, i) => {
-          const external = l.href.startsWith("http");
+          const newTab = l.newTab === true || l.href.startsWith("http");
           return (
             <Reveal key={l.label} delay={i * 70} className="bg-card">
               <a
                 href={l.href}
-                {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                {...(newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 className="contact-link flex h-full flex-col gap-3 p-8 hover:bg-secondary"
               >
                 <span className="eyebrow">{l.label}</span>

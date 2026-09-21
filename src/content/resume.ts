@@ -9,7 +9,8 @@ export const HEADLINE =
 export const SUBHEAD =
   "Full-stack marketer and strategic planner. AI-native GTM systems from ad impression to booked appointment.";
 
-export const RESUME_PDF_URL = "#"; // placeholder — drop the PDF link here
+/** The standalone resume page in public/. Carries its own Download PDF button. */
+export const RESUME_PDF_URL = "/resume.html";
 
 export type ProofType = "image" | "video" | "link" | "none";
 
