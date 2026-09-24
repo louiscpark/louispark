@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState, type ElementType } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState, type ElementType } from "react";
 import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
@@ -40,7 +40,16 @@ export function RevealText({
   const Tag = (as ?? "p") as ElementType;
   const ref = useRef<HTMLElement>(null);
   const reduced = usePrefersReducedMotion();
-  const [state, setState] = useState<"idle" | "play" | "done">("idle");
+  // "idle" renders as plain, readable text. The hidden state is "armed", and
+  // only script sets it, so the headline is legible on first paint and stays
+  // legible if the animation never runs.
+  const [state, setState] = useState<"idle" | "armed" | "play" | "done">("idle");
+
+  // Hide before the browser paints the hydrated tree, so arming is invisible.
+  useLayoutEffect(() => {
+    if (reduced) return;
+    setState((s) => (s === "idle" ? "armed" : s));
+  }, [reduced]);
 
   useEffect(() => {
     if (reduced) return;
@@ -48,10 +57,14 @@ export function RevealText({
     if (!el) return;
 
     let settle = 0;
+    let startBy = 0;
     let cancelled = false;
+    let started = false;
 
     const play = () => {
-      if (cancelled) return;
+      if (cancelled || started) return;
+      started = true;
+      window.clearTimeout(startBy);
 
       const masks = Array.from(el.querySelectorAll<HTMLElement>(".rt-mask"));
       let lineTop: number | null = null;
@@ -84,10 +97,15 @@ export function RevealText({
         io.disconnect();
         // The webfont loads with display:swap, and Instrument Serif is narrower
         // than the fallback — measuring before the swap would group letters
-        // onto the wrong lines. Wait for the final layout.
-        if (document.fonts?.status === "loaded") play();
-        else if (document.fonts) void document.fonts.ready.then(play);
-        else play();
+        // onto the wrong lines, so wait for the final layout. Only briefly,
+        // though: a slow font must never hold the headline blank, so whichever
+        // comes first, the swap or 120ms, starts the reveal.
+        if (document.fonts?.status === "loaded" || !document.fonts) {
+          play();
+        } else {
+          startBy = window.setTimeout(play, 120);
+          void document.fonts.ready.then(play);
+        }
       },
       { threshold: 0 },
     );
@@ -97,6 +115,7 @@ export function RevealText({
       cancelled = true;
       io.disconnect();
       if (settle) window.clearTimeout(settle);
+      if (startBy) window.clearTimeout(startBy);
     };
   }, [reduced, duration, partStagger, lineStagger]);
 

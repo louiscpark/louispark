@@ -6,6 +6,7 @@ import { LazyVimeo } from "@/components/resume/LazyVimeo";
 import { TracingBeam } from "@/components/resume/TracingBeam";
 import {
   SYSTEM_STEPS,
+  caseStudyIsReady,
   type MetricNumber,
   type Segmentation,
   type SystemStep,
@@ -24,6 +25,9 @@ const PAD = 3;
 
 /** What the diagram shows for a step — a rolled-up figure when one is given. */
 const nodeMetricsOf = (step: SystemStep) => step.nodeMetrics ?? step.metrics;
+
+/** A step's case study is shown only once its figures are real, never as a sample. */
+const showCase = (step: SystemStep) => !!step.caseStudy && caseStudyIsReady(step.caseStudy);
 
 const NODE_H = SYSTEM_STEPS.map((s) => BASE_H + (nodeMetricsOf(s).length - 1) * METRIC_LINE_H);
 
@@ -334,19 +338,19 @@ export function System() {
               </dl>
             ) : null}
 
-            {step.video || step.caseStudy ? (
+            {step.video || showCase(step) ? (
               <div
                 className={cn(
                   "mt-9",
-                  step.caseStudy && step.video
+                  showCase(step) && step.video
                     ? // case study left, vertical video right, top-aligned;
                       // under 900px they stack with the case study first
                       "grid gap-8 min-[900px]:grid-cols-[1fr_auto] min-[900px]:items-start min-[900px]:gap-10"
                     : "max-w-xl",
                 )}
               >
-                {step.caseStudy ? (
-                  <CaseStudy study={step.caseStudy} tone={PHASE[step.tone]} />
+                {showCase(step) ? (
+                  <CaseStudy study={step.caseStudy!} tone={PHASE[step.tone]} />
                 ) : null}
 
                 {step.video ? (

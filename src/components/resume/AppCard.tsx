@@ -1,31 +1,51 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { InternalApp } from "@/content/resume";
 import { PHASE } from "@/lib/phase";
 import { cn } from "@/lib/utils";
 
 /**
- * Tool screenshot at 16:10. A file that is not in public/ yet resolves to a
- * neutral box carrying the tool name, never a broken image.
+ * Tool screenshot at 16:10. A file that is not in public/ yet takes the slot
+ * out of the card altogether: an empty grey box reads as something that failed
+ * to load, and says less than saying nothing.
  */
-function Screenshot({ src, alt, name }: { src: string; alt: string; name: string }) {
+function Screenshot({ src, alt }: { src: string; alt: string }) {
+  const img = useRef<HTMLImageElement>(null);
+  const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
 
+  // The tag is server rendered, so a missing file can 404 before React has
+  // attached its handlers and the error event is missed. Settle from the
+  // element itself on mount.
+  useEffect(() => {
+    const el = img.current;
+    if (!el || !el.complete) return;
+    if (el.naturalWidth > 0) setLoaded(true);
+    else setFailed(true);
+  }, []);
+
+  if (failed) return null;
+
   return (
-    <div className="relative mt-6 aspect-[16/10] w-full overflow-hidden rounded-sm border border-border bg-muted">
-      {failed ? (
-        <span className="flex size-full items-center justify-center px-4 text-center text-[0.625rem] tracking-[0.18em] text-muted-foreground uppercase">
-          {name}
-        </span>
-      ) : (
-        <img
-          src={src}
-          alt={alt}
-          onError={() => setFailed(true)}
-          loading="lazy"
-          decoding="async"
-          className="size-full object-cover"
-        />
+    // The frame is drawn only once the file has decoded. Until then the slot
+    // takes no height, so a missing screenshot leaves no trace rather than a
+    // grey box that later pops out of the layout.
+    <div
+      className={cn(
+        "relative w-full overflow-hidden",
+        loaded ? "mt-6 aspect-[16/10] rounded-sm border border-border bg-muted" : "h-0",
       )}
+    >
+      <img
+        ref={img}
+        src={src}
+        alt={alt}
+        onLoad={() => setLoaded(true)}
+        onError={() => setFailed(true)}
+        // eager on purpose: lazy defers the error until the card is scrolled
+        // to, which is exactly when the empty frame would be seen
+        decoding="async"
+        className="size-full object-cover"
+      />
     </div>
   );
 }
@@ -71,7 +91,6 @@ export function AppCard({ app }: { app: InternalApp }) {
         <Screenshot
           src={app.screenshotSrc}
           alt={app.screenshotAlt ?? `Interface of the ${app.name} tool.`}
-          name={app.name}
         />
       ) : null}
 

@@ -12,14 +12,20 @@ export const SUBHEAD =
 /** The standalone resume page in public/. Carries its own Download PDF button. */
 export const RESUME_PDF_URL = "/resume.html";
 
-export type ProofType = "image" | "video" | "link" | "none";
-
-export type Proof = {
-  type: ProofType;
-  /** image src, video embed URL (YouTube/Vimeo/Loom), or external href */
-  src?: string;
-  caption?: string;
-};
+/**
+ * The artifact sitting behind a figure. A card offers "View proof" only when
+ * this is present, so the page never promises evidence it cannot produce.
+ *
+ * src is the shape the type implies: a path in public/ for an image, a Vimeo
+ * id for a video, an ordered list of image paths for a gallery, an href for a
+ * link. `source` is the one line saying where the number itself comes from.
+ */
+export type Evidence = { source: string; caption?: string } & (
+  | { type: "image"; src: string }
+  | { type: "video"; src: string }
+  | { type: "gallery"; src: string[] }
+  | { type: "link"; src: string }
+);
 
 export type MetricNumber = {
   prefix?: string;
@@ -34,8 +40,8 @@ export type MetricNumber = {
 export type Metric = {
   value: string;
   label: string;
-  proof: Proof;
   number: MetricNumber;
+  evidence?: Evidence;
 };
 
 /**
@@ -46,6 +52,7 @@ export type Metric = {
 export type TagCard = {
   title: string;
   tags: string[];
+  evidence?: Evidence;
 };
 
 export type ProofCard = Metric | TagCard;
@@ -55,38 +62,44 @@ export const isTagCard = (card: ProofCard): card is TagCard => "tags" in card;
 export const METRICS: ProofCard[] = [
   {
     value: "$22.9M",
-    label: "Annual revenue generated within 12 months",
-    proof: { type: "none" },
+    label: "Annual revenue generated in 15 months",
     number: { prefix: "$", value: 22.9, suffix: "M", decimals: 1 },
+    evidence: {
+      type: "video",
+      src: "1224464075",
+      caption: "Home-Ready Program kickoff",
+      source: "Program kickoff presented to brokerage partners.",
+    },
   },
   {
     value: "$25M",
     label: "Real estate investment funding secured (Kiavi, Easy Street Capital, KPRE Group)",
-    proof: { type: "none" },
     number: { prefix: "$", value: 25, suffix: "M" },
   },
   {
     value: "$9M+",
-    label: "Assets acquired in Year 1 under a new division",
-    proof: { type: "none" },
+    label: "Assets acquired in 15 months under a new division",
     number: { prefix: "$", value: 9, suffix: "M+" },
   },
   {
     value: "200,000+",
     label: "Prospect list built across owner and agent segments",
-    proof: { type: "none" },
     number: { value: 200000, suffix: "+" },
   },
   {
     value: "48",
-    label: "Off-market California properties acquired, $200K+ ARV each",
-    proof: { type: "none" },
+    label: "Off-market California properties acquired, $300K+ ARV each",
     number: { value: 48 },
+    evidence: {
+      type: "video",
+      src: "1224464076",
+      caption: "Eagle Pacific Properties",
+      source: "Introduction to the off-market acquisition division.",
+    },
   },
   {
     value: "+34%",
     label: "Customer LTV increase after repositioning to residential",
-    proof: { type: "none" },
     number: { prefix: "+", value: 34, suffix: "%" },
   },
   {
@@ -103,11 +116,16 @@ export const METRICS: ProofCard[] = [
       "Tom Ferry sponsorship",
       "AREAA",
     ],
+    evidence: {
+      type: "gallery",
+      src: ["/flyer-1.png", "/flyer-2.png", "/flyer-3.png", "/flyer-4.png"],
+      caption: "Campaign flyers",
+      source: "Print and direct mail assets produced for the program.",
+    },
   },
   {
     value: "48,000+",
     label: "Real estate agents reached via email campaign",
-    proof: { type: "none" },
     number: { value: 48000, suffix: "+" },
   },
 ];
@@ -152,6 +170,16 @@ export type CaseStudy = {
   /** One line of context. Keep it under 20 words. */
   context: string;
 };
+
+/**
+ * A case study only renders once its figures are real. Bracketed stand-ins
+ * like [$000,000] are the tell, so the card hides itself until a deal is
+ * dropped in rather than publishing a sample as if it were work.
+ */
+export const caseStudyIsReady = (study: CaseStudy) =>
+  ![...study.stats.map((s) => s.value), study.highlight.value, study.context].some((v) =>
+    v.includes("["),
+  );
 
 /** One audience, and the one line that qualifies it. */
 export type AudienceProfile = { name: string; qualifier: string };
@@ -372,12 +400,6 @@ export const INTERNAL_APPS: InternalApp[] = [
       "Table of compiled realtor records, one row per agent, with brokerage, contact and recent-performance columns.",
     tone: "b",
   },
-  {
-    status: "in-development",
-    name: "Future Project",
-    problem: "In development.",
-    solution: "In development.",
-  },
 ];
 
 export type StackTool = {
@@ -480,6 +502,5 @@ export const SECTIONS = [
   { id: "system", label: "The System" },
   { id: "systems-shipped", label: "Systems I Shipped" },
   { id: "stack", label: "Stack" },
-  { id: "for-company", label: `For ${company.companyName}` },
   { id: "contact", label: "Contact" },
 ];

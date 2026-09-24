@@ -1,16 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AnimatedNumber } from "@/components/resume/AnimatedNumber";
 import { Reveal } from "@/components/resume/Reveal";
 import { SideNav } from "@/components/resume/SideNav";
-import { ProofAsset, ProofBadge } from "@/components/resume/ProofSlot";
 import { BRAND_LOGOS } from "@/content/brand-logos.generated";
 import { System } from "@/components/resume/System";
 import { ScrollCue } from "@/components/resume/ScrollCue";
 import { HeroPortrait } from "@/components/resume/HeroPortrait";
 import { AppCard } from "@/components/resume/AppCard";
+import { EvidenceDialog } from "@/components/resume/EvidenceDialog";
 import { PartnerMarquee } from "@/components/resume/PartnerMarquee";
 import { RevealText } from "@/components/resume/RevealText";
 import { SmoothScroll } from "@/components/resume/SmoothScroll";
@@ -22,9 +21,8 @@ import {
   RESUME_PDF_URL,
   STACK_GROUPS,
   SUBHEAD,
-  company,
   isTagCard,
-  type Metric,
+  type ProofCard,
   type StackTool,
 } from "@/content/resume";
 import { cn } from "@/lib/utils";
@@ -55,7 +53,11 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [openMetric, setOpenMetric] = useState<Metric | null>(null);
+  const [openCard, setOpenCard] = useState<ProofCard | null>(null);
+  // The card that opened the dialog, so focus can be handed back to it on
+  // close. Done here rather than left to the dialog, so the card the reader
+  // was on is always where they land again.
+  const trigger = useRef<HTMLButtonElement | null>(null);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -64,26 +66,27 @@ function Index() {
 
       <main className="pt-14 lg:ml-64 lg:pt-0 xl:ml-72">
         <Intro />
-        <Proof onOpen={setOpenMetric} />
+        <Proof
+          onOpen={(card, el) => {
+            trigger.current = el;
+            setOpenCard(card);
+          }}
+        />
         <Partnerships />
         <SystemSection />
         <SystemsShipped />
         <Stack />
-        <ForCompany />
         <Contact />
       </main>
 
-      <Dialog open={!!openMetric} onOpenChange={(o) => !o && setOpenMetric(null)}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle className="font-display text-2xl font-normal">
-              {openMetric?.value}
-            </DialogTitle>
-            <p className="text-sm text-muted-foreground">{openMetric?.label}</p>
-          </DialogHeader>
-          {openMetric ? <ProofAsset proof={openMetric.proof} /> : null}
-        </DialogContent>
-      </Dialog>
+      <EvidenceDialog
+        open={!!openCard}
+        onOpenChange={(o) => !o && setOpenCard(null)}
+        onCloseFocus={() => trigger.current?.focus()}
+        value={openCard ? (isTagCard(openCard) ? openCard.title : openCard.value) : ""}
+        label={openCard && !isTagCard(openCard) ? openCard.label : ""}
+        evidence={openCard?.evidence}
+      />
     </div>
   );
 }
@@ -162,63 +165,82 @@ function SectionHead({ index, title }: { index: string; title: string }) {
   );
 }
 
-function Proof({ onOpen }: { onOpen: (m: Metric) => void }) {
+/** The bottom-right affordance, shown only on cards that can actually open. */
+function ViewProof() {
+  return (
+    <span className="proof-cue mt-auto inline-flex items-center gap-1.5 pt-8 text-xs tracking-wide text-muted-foreground">
+      View proof
+      <ArrowUpRight className="size-3.5" aria-hidden />
+    </span>
+  );
+}
+
+function Proof({ onOpen }: { onOpen: (c: ProofCard, el: HTMLButtonElement) => void }) {
   return (
     <section id="proof" className={cn(shell, "py-24 lg:py-32")}>
       <SectionHead index="01" title="Proof" />
 
       <div className="grid gap-px border border-border bg-border sm:grid-cols-2 xl:grid-cols-3">
         {METRICS.map((card, i) => {
-          if (isTagCard(card)) {
-            return (
-              <Reveal key={card.title} delay={i * 110} className="bg-card">
-                {/* no numeral to lead with, so the title takes the top slot and
-                    the tags fill the body the metric label would occupy */}
-                <div
-                  className="flex h-full w-full flex-col items-start p-8 text-left lg:p-10"
-                  style={{ "--tone": "var(--primary)" } as React.CSSProperties}
-                >
-                  <h3 className="font-display text-2xl leading-snug">{card.title}</h3>
-                  <ul className="mt-6 flex flex-wrap gap-2">
-                    {card.tags.map((tag) => (
-                      <li
-                        key={tag}
-                        className="segment-pill px-4 py-1.5 text-xs text-muted-foreground"
-                      >
-                        {tag}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
-            );
-          }
+          // A card is interactive only when there is something to show. No
+          // evidence means no cue, no hover, and no empty dialog.
+          const openable = !!card.evidence;
+          const title = isTagCard(card) ? card.title : card.value;
 
-          const m = card;
-          const clickable = m.proof.type !== "none";
-          const Wrapper = clickable ? "button" : "div";
+          // button when it opens something, plain div when it does not, so the
+          // tab order carries exactly the cards that respond to Enter/Space
+          const Wrapper = openable ? "button" : "div";
+          const interactive = openable
+            ? {
+                type: "button" as const,
+                onClick: (e: React.MouseEvent) =>
+                  onOpen(card, e.currentTarget as HTMLButtonElement),
+                "aria-label": `View proof for ${title}`,
+              }
+            : {};
+
           return (
-            <Reveal key={m.value + i} delay={i * 110} className="bg-card">
+            <Reveal key={title + i} delay={i * 110} className="bg-card">
               <Wrapper
-                {...(clickable
-                  ? {
-                      onClick: () => onOpen(m),
-                      type: "button" as const,
-                      "aria-label": `View proof for ${m.value}`,
-                    }
-                  : {})}
+                {...interactive}
                 className={cn(
                   "flex h-full w-full flex-col items-start p-8 text-left lg:p-10",
-                  clickable && "transition-colors hover:bg-secondary",
+                  openable && "proof-card cursor-pointer transition-colors hover:bg-secondary",
                 )}
+                style={
+                  isTagCard(card)
+                    ? ({ "--tone": "var(--primary)" } as React.CSSProperties)
+                    : undefined
+                }
               >
-                <span className="metric-spring numeral text-5xl lg:text-6xl">
-                  <AnimatedNumber {...m.number} delay={i * 80} />
-                </span>
-                <span className="mt-5 max-w-[26ch] text-sm leading-relaxed text-muted-foreground">
-                  {m.label}
-                </span>
-                <ProofBadge proof={m.proof} />
+                {isTagCard(card) ? (
+                  <>
+                    {/* no numeral to lead with, so the title takes the top slot
+                        and the tags fill the body the metric label would occupy */}
+                    <h3 className="font-display text-2xl leading-snug">{card.title}</h3>
+                    <ul className="mt-6 flex flex-wrap gap-2">
+                      {card.tags.map((tag) => (
+                        <li
+                          key={tag}
+                          className="segment-pill px-4 py-1.5 text-xs text-muted-foreground"
+                        >
+                          {tag}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <>
+                    <span className="metric-spring numeral text-5xl lg:text-6xl">
+                      <AnimatedNumber {...card.number} delay={i * 80} />
+                    </span>
+                    <span className="mt-5 max-w-[26ch] text-sm leading-relaxed text-muted-foreground">
+                      {card.label}
+                    </span>
+                  </>
+                )}
+
+                {openable ? <ViewProof /> : null}
               </Wrapper>
             </Reveal>
           );
@@ -265,54 +287,6 @@ function SystemsShipped() {
             <AppCard app={app} />
           </Reveal>
         ))}
-      </div>
-    </section>
-  );
-}
-
-function ForCompany() {
-  return (
-    <section id="for-company" className={cn(shell, "py-24 lg:py-32")}>
-      <SectionHead index="06" title={`For ${company.companyName}`} />
-
-      <Reveal>
-        <p className="max-w-3xl font-display text-2xl leading-snug sm:text-3xl">
-          {company.oneLineHook}
-        </p>
-      </Reveal>
-
-      <div className="mt-16 grid gap-12 md:grid-cols-2 md:gap-16">
-        <div>
-          <Reveal>
-            <h3 className="eyebrow">What I see</h3>
-          </Reveal>
-          <ol className="mt-6 space-y-6">
-            {company.threeObservations.map((o, i) => (
-              <Reveal as="li" key={i} delay={i * 70} className="flex gap-4">
-                <span className="numeral text-lg text-primary">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="text-sm leading-relaxed text-muted-foreground">{o}</span>
-              </Reveal>
-            ))}
-          </ol>
-        </div>
-
-        <div>
-          <Reveal>
-            <h3 className="eyebrow">What I&apos;d do in the first 90 days</h3>
-          </Reveal>
-          <ol className="mt-6 space-y-6">
-            {company.whatIdDoFirst90.map((o, i) => (
-              <Reveal as="li" key={i} delay={i * 70} className="flex gap-4">
-                <span className="numeral text-lg text-primary">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="text-sm leading-relaxed text-muted-foreground">{o}</span>
-              </Reveal>
-            ))}
-          </ol>
-        </div>
       </div>
     </section>
   );

@@ -280,19 +280,23 @@
     overflow: hidden;
   }
 
+  /*
+   * Default is plain, readable text. Split text only hides once script has
+   * armed it, which happens before paint — so the headline is legible on
+   * first paint, and stays legible if the script never runs at all.
+   */
   .rt-part {
     display: inline-block;
-    opacity: 0;
-    transform: translateY(var(--rt-shift, 110%));
     transition:
       opacity var(--rt-duration, 800ms) var(--ease-out-expo) var(--rt-delay, 0ms),
       transform var(--rt-duration, 800ms) var(--ease-out-expo) var(--rt-delay, 0ms);
   }
 
-  .rt-root[data-state="play"] .rt-part,
-  .rt-root[data-state="done"] .rt-part {
-    opacity: 1;
-    transform: none;
+  .rt-root[data-state="armed"] .rt-part {
+    opacity: 0;
+    transform: translateY(var(--rt-shift, 110%));
+    /* arming must land instantly, or it would animate the text out first */
+    transition: none;
   }
 
   /* reveal over: drop the mask so nothing is clipped at rest */
@@ -375,6 +379,51 @@
 
   /* pill outline in the step's phase colour, as an overlay rather than a
      colour-mix border */
+  /* --- Proof evidence ----------------------------------------------------- */
+  /* the cue sits bottom right, quiet until the card is hovered or focused */
+  .proof-cue {
+    align-self: flex-end;
+    transition: color 220ms ease-out;
+  }
+
+  .proof-card:hover .proof-cue,
+  .proof-card:focus-visible .proof-cue {
+    color: var(--primary);
+  }
+
+  /* --- ROI calculator ----------------------------------------------------- */
+  /* a hairline track with a solid thumb, to sit inside the ruled layout */
+  .roi-slider {
+    appearance: none;
+    height: 1px;
+    background: var(--border);
+    cursor: pointer;
+  }
+
+  .roi-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 0;
+    cursor: pointer;
+  }
+
+  .roi-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 0;
+    cursor: pointer;
+  }
+
+  .roi-slider:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 6px;
+  }
+
   .segment-pill {
     position: relative;
     border-radius: 9999px;
@@ -850,4 +899,52 @@ html.lenis body {
 
 .lenis.lenis-stopped {
   overflow: hidden;
+}
+
+/*
+ * Evidence dialog motion: fade and a 12px rise, replacing the zoom the shared
+ * dialog ships with.
+ *
+ * Deliberately unlayered. The shared DialogContent carries tw-animate-css
+ * utilities, and a cascade layer always loses to unlayered rules no matter how
+ * specific it is, so inside @layer components these were ignored and the
+ * utility animation ran instead. That matters beyond looks: Radix unmounts the
+ * dialog on animationend, and the animation it was left with never completed,
+ * so a closed dialog stayed in the DOM and focus never returned to the card.
+ */
+.evidence-dialog[data-state="open"] {
+  animation: evidence-in 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.evidence-dialog[data-state="closed"] {
+  animation: evidence-out 180ms ease-in;
+}
+
+@keyframes evidence-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 12px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes evidence-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 12px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .evidence-dialog[data-state="open"],
+  .evidence-dialog[data-state="closed"] {
+    animation-duration: 1ms;
+  }
 }
