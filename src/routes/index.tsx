@@ -124,20 +124,18 @@ function Intro() {
 
         <Reveal delay={240}>
           <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <a
-              href="#proof"
-              className="inline-flex items-center justify-center bg-foreground px-7 py-3.5 text-sm tracking-wide text-background transition-opacity hover:opacity-85"
-            >
-              See the proof
+            <a href="#proof" className="chamfer">
+              <span className="chamfer-inner px-7 py-3.5">
+                <span className="chamfer-label text-sm tracking-wide">See the proof</span>
+              </span>
             </a>
-            <a
-              href="/resume.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 border border-border px-7 py-3.5 text-sm tracking-wide transition-colors hover:border-foreground"
-            >
-              View resume
-              <ArrowUpRight className="size-4" aria-hidden />
+            <a href="/resume.html" target="_blank" rel="noopener noreferrer" className="chamfer">
+              <span className="chamfer-inner px-7 py-3.5">
+                <span className="chamfer-label text-sm tracking-wide">
+                  View resume
+                  <ArrowUpRight className="chamfer-arrow size-4" aria-hidden />
+                </span>
+              </span>
             </a>
           </div>
         </Reveal>
